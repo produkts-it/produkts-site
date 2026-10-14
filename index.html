@@ -25,6 +25,9 @@
 }
 html,body{height:100%}
 body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--ui);-webkit-font-smoothing:antialiased}
+/* Selezione del testo: diventa arancione, senza sfondo; il testo già arancione diventa blu */
+::selection{color:var(--ember);background:transparent}
+.kicker::selection,.accent::selection{color:var(--steel);background:transparent}
 a{color:var(--fg);text-decoration:none}
 a:hover{color:var(--ember-hi)}
 a:focus-visible{outline:1px solid var(--ember-hi);outline-offset:4px}
