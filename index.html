@@ -112,8 +112,10 @@ html.intro .loader{display:flex}
 html.intro{overflow:hidden}
 html.intro .top,html.intro .top *,html.intro .stage,html.intro .stage *,html.intro .foot,html.intro .foot *{animation-play-state:paused!important}
 .loader{position:fixed;inset:0;z-index:100;background:var(--bg);align-items:center;justify-content:center;cursor:pointer;
-  transition:opacity .7s cubic-bezier(.6,0,.2,1),filter .7s ease,transform .7s cubic-bezier(.6,0,.2,1)}
-.loader.out{opacity:0;filter:blur(12px);transform:scale(1.06);pointer-events:none}
+  border-bottom:1px solid var(--ember);transition:transform .8s cubic-bezier(.77,0,.18,1) .18s}
+.loader.out{display:flex;transform:translateY(-101%);pointer-events:none}
+.loader svg{transition:opacity .45s ease,filter .45s ease,transform .6s cubic-bezier(.6,0,.2,1)}
+.loader.out svg{opacity:0;filter:blur(6px);transform:translateY(-18px) scale(.94)}
 .loader svg{width:min(80vw,520px);height:auto;overflow:visible}
 .loader .g{fill:none;stroke:#a7a9ac;stroke-opacity:.32;stroke-width:1;stroke-dasharray:1;stroke-dashoffset:1;animation:lddraw .9s cubic-bezier(.6,0,.2,1) both}
 .loader .g.d1{animation-delay:.35s}.loader .g.d2{animation-delay:.45s}.loader .g.d3{animation-delay:.55s}.loader .g.d4{animation-delay:.65s}.loader .g.d0{animation-delay:.25s}
@@ -193,7 +195,7 @@ html.intro .top,html.intro .top *,html.intro .stage,html.intro .stage *,html.int
   var done=false;
   function end(){if(done)return;done=true;l.classList.add('out');h.classList.remove('intro');
     try{sessionStorage.setItem('pk-intro','1')}catch(e){}
-    setTimeout(function(){l.remove()},800)}
+    setTimeout(function(){l.remove()},1100)}
   setTimeout(end,3000);
   l.addEventListener('click',end);
   window.addEventListener('keydown',end,{once:true});
