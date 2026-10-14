@@ -106,7 +106,7 @@ h1{margin:0;font-family:var(--display);font-style:italic;font-weight:300;font-si
 <div class="page">
   <header class="top">
     <a class="wordmark" href="/">produkts<span>.it</span></a>
-    <div class="rec" aria-hidden="true"><i></i><span id="tc">00:00:00:00</span></div>
+    <div class="rec" title="Ora locale ad Altamura"><i aria-hidden="true"></i><span>Altamura</span><span id="tc" aria-label="Ora locale ad Altamura">--:--:--:--</span></div>
   </header>
 
   <main class="stage">
@@ -148,14 +148,23 @@ h1{margin:0;font-family:var(--display);font-style:italic;font-weight:300;font-si
 
 <script>
 (function(){
+  // Timecode = ora locale di Altamura (Europe/Rome), frame a 24 fps
   var el=document.getElementById('tc'); if(!el) return;
-  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  var start=Date.now();
+  var still = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var fmt;
+  try { fmt=new Intl.DateTimeFormat('it-IT',{timeZone:'Europe/Rome',hour:'2-digit',minute:'2-digit',second:'2-digit',hourCycle:'h23'}); } catch(e) { fmt=null; }
   function p(n){return (n<10?'0':'')+n}
-  setInterval(function(){
-    var ms=Date.now()-start, s=Math.floor(ms/1000);
-    el.textContent=p(Math.floor(s/3600))+':'+p(Math.floor(s/60)%60)+':'+p(s%60)+':'+p(Math.floor((ms%1000)/(1000/24)));
-  },1000/24);
+  function tick(){
+    var now=new Date(), h, m, s;
+    if (fmt && fmt.formatToParts) {
+      var parts=fmt.formatToParts(now);
+      for (var i=0;i<parts.length;i++){ var t=parts[i]; if(t.type==='hour')h=t.value; else if(t.type==='minute')m=t.value; else if(t.type==='second')s=t.value; }
+    } else { h=p(now.getHours()); m=p(now.getMinutes()); s=p(now.getSeconds()); }
+    var f = still ? '00' : p(Math.floor(now.getMilliseconds()/(1000/24)));
+    el.textContent=h+':'+m+':'+s+':'+f;
+  }
+  tick();
+  setInterval(tick, still ? 1000 : 1000/24);
 })();
 </script>
 </body>
