@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="produkts.it di Karim Ismail, direttore della fotografia, videomaker e fotografo ad Altamura. Il nuovo sito è in lavorazione.">
+<meta property="og:title" content="produkts.it">
+<meta property="og:description" content="Il nuovo sito è in messa a fuoco. Karim Ismail, direttore della fotografia, videomaker e fotografo.">
+<meta property="og:image" content="https://produkts.it/dynamis.jpg">
+<meta name="theme-color" content="#080808">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23080808'/%3E%3Cpath d='M10 22V16h8M54 22V16h-8M10 42v6h8M54 42v6h-8' fill='none' stroke='%23336699' stroke-width='3'/%3E%3Ccircle cx='32' cy='32' r='5' fill='%23B46428'/%3E%3C/svg%3E">
+<title>produkts.it</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Space+Grotesk:wght@400;500&display=swap">
+<style>
+/* Layout: one screen — a camera viewfinder centred on the page, holding the message; Dynamis teaser below; credits line at the foot. Single dark look by choice (brand). */
+:root{
+  --bg:#080808; --surface:#161616; --line:#1F1F1F;
+  --fg:#E8E4DF; --fg-2:#C9C4BD; --muted:#9A948C;
+  --steel:#336699; --ember:#B46428; --ember-hi:#D98A4E;
+  --display:'Cormorant Garamond', 'Cormorant', Garamond, 'Times New Roman', serif;
+  --ui:'Space Grotesk', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  color-scheme:dark;
+}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--ui);-webkit-font-smoothing:antialiased}
+a{color:var(--fg);text-decoration:none}
+a:hover{color:var(--ember-hi)}
+a:focus-visible{outline:1px solid var(--ember-hi);outline-offset:4px}
+
+.page{min-height:100%;box-sizing:border-box;display:flex;flex-direction:column;gap:40px;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-block:24px 28px;
+  max-width:1280px;margin:0 auto}
+
+.top{display:flex;justify-content:space-between;align-items:center;gap:16px}
+.wordmark{font-family:var(--display);font-style:italic;font-weight:300;font-size:28px;letter-spacing:.01em}
+.wordmark span{font-style:normal;opacity:.5}
+.rec{display:flex;align-items:center;gap:10px;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);font-variant-numeric:tabular-nums}
+.rec i{width:8px;height:8px;border-radius:50%;background:var(--ember);animation:blink 1.2s steps(1) infinite}
+
+.stage{flex:1;display:flex;align-items:center;justify-content:center}
+.finder{position:relative;width:100%;max-width:1080px;aspect-ratio:2.39/1;min-height:420px;max-height:100%;box-sizing:border-box;
+  display:flex;align-items:center;justify-content:center;padding:48px 24px;text-align:center}
+.finder .grid{position:absolute;inset:0;pointer-events:none;
+  background:
+    linear-gradient(to right, transparent calc(33.333% - .5px), rgba(51,102,153,.16) calc(33.333% - .5px), rgba(51,102,153,.16) calc(33.333% + .5px), transparent calc(33.333% + .5px)),
+    linear-gradient(to right, transparent calc(66.666% - .5px), rgba(51,102,153,.16) calc(66.666% - .5px), rgba(51,102,153,.16) calc(66.666% + .5px), transparent calc(66.666% + .5px)),
+    linear-gradient(to bottom, transparent calc(33.333% - .5px), rgba(51,102,153,.16) calc(33.333% - .5px), rgba(51,102,153,.16) calc(33.333% + .5px), transparent calc(33.333% + .5px)),
+    linear-gradient(to bottom, transparent calc(66.666% - .5px), rgba(51,102,153,.16) calc(66.666% - .5px), rgba(51,102,153,.16) calc(66.666% + .5px), transparent calc(66.666% + .5px));
+  animation:fadein 1.4s ease .6s both}
+.br{position:absolute;width:44px;height:44px;border-color:var(--steel);border-style:solid;border-width:0}
+.br.tl{top:0;left:0;border-top-width:1px;border-left-width:1px}
+.br.tr{top:0;right:0;border-top-width:1px;border-right-width:1px}
+.br.bl{bottom:0;left:0;border-bottom-width:1px;border-left-width:1px}
+.br.bri{bottom:0;right:0;border-bottom-width:1px;border-right-width:1px}
+.br{animation:draw 1s cubic-bezier(.2,.7,.2,1) .2s both}
+.finder .meta{position:absolute;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.finder .meta.a{top:16px;left:64px}
+.finder .meta.b{bottom:16px;right:64px}
+.focus-ring{position:absolute;width:min(46vw,300px);aspect-ratio:1;border-radius:50%;border:1px dashed rgba(51,102,153,.35);pointer-events:none;animation:ring 30s linear infinite, fadein 1.4s ease .8s both}
+
+.msg{position:relative;display:flex;flex-direction:column;align-items:center;gap:18px;max-width:640px}
+.kicker{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--ember-hi);animation:fadein .8s ease 1s both}
+h1{margin:0;font-family:var(--display);font-style:italic;font-weight:300;font-size:clamp(40px,6.4vw,84px);line-height:1;text-wrap:balance;
+  animation:pull 2.4s cubic-bezier(.3,.6,.2,1) .9s both}
+.sub{margin:0;font-size:16px;line-height:1.6;color:var(--fg-2);max-width:46ch;text-wrap:pretty;animation:fadein 1s ease 1.9s both}
+
+.cta{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:12px 24px;animation:fadein 1s ease 2.1s both}
+.btn{display:inline-flex;align-items:center;gap:10px;height:48px;padding:0 24px;border-radius:24px;background:var(--fg);color:var(--bg);font-size:13px;letter-spacing:.14em;text-transform:uppercase;transition:background .3s,color .3s}
+.btn:hover{background:var(--ember);color:var(--bg)}
+.mails{font-size:14px;color:var(--fg-2);user-select:all}
+.mails a{color:var(--fg-2);border-bottom:1px solid var(--line)}
+.mails a:hover{color:var(--ember-hi)}
+.teaser{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:16px 28px;animation:fadein 1s ease 2.2s both}
+.teaser .poster{width:64px;aspect-ratio:4/5;object-fit:cover;display:block;max-width:100%}
+.teaser .laurel{height:56px;width:auto;display:block}
+.teaser .txt{display:flex;flex-direction:column;gap:6px;min-width:0}
+.teaser .t1{font-size:14px;color:var(--fg-2);line-height:1.4}
+.teaser .t1 em{font-family:var(--display);font-size:20px;color:var(--fg)}
+.teaser .t2{font-size:12px;letter-spacing:.14em;text-transform:uppercase;display:inline-flex;gap:8px;align-items:center}
+.teaser a.t2{color:var(--fg)}
+.teaser a.t2:hover{color:var(--ember-hi)}
+
+.foot{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px 24px;border-top:1px solid var(--line);padding-top:18px;font-size:13px;color:var(--muted)}
+.foot a{color:var(--fg)}
+
+@keyframes blink{0%,55%{opacity:1}56%,100%{opacity:.15}}
+@keyframes fadein{from{opacity:0}to{opacity:1}}
+@keyframes draw{from{width:0;height:0}to{width:44px;height:44px}}
+@keyframes ring{to{transform:rotate(360deg)}}
+@keyframes pull{0%{filter:blur(18px);opacity:0;transform:scale(1.04)}55%{filter:blur(0);opacity:1;transform:none}70%{filter:blur(3px)}100%{filter:blur(0)}}
+
+@media (max-width:640px){
+  .finder{aspect-ratio:auto;min-height:480px;padding:56px 20px}
+  .finder .meta.a{left:20px;top:14px}
+  .finder .meta.b{right:20px;bottom:14px}
+  .br{width:28px;height:28px}
+  @keyframes draw{from{width:0;height:0}to{width:28px;height:28px}}
+}
+@media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+</head>
+<body>
+<div class="page">
+  <header class="top">
+    <a class="wordmark" href="/">produkts<span>.it</span></a>
+    <div class="rec" aria-hidden="true"><i></i><span id="tc">00:00:00:00</span></div>
+  </header>
+
+  <main class="stage">
+    <section class="finder" aria-labelledby="wip-title">
+      <div class="grid" aria-hidden="true"></div>
+      <div class="focus-ring" aria-hidden="true"></div>
+      <span class="br tl" aria-hidden="true"></span><span class="br tr" aria-hidden="true"></span>
+      <span class="br bl" aria-hidden="true"></span><span class="br bri" aria-hidden="true"></span>
+      <span class="meta a" aria-hidden="true">AF · ricerca fuoco</span>
+      <span class="meta b" aria-hidden="true">2.39:1</span>
+      <div class="msg">
+        <span class="kicker">Work in progress</span>
+        <h1 id="wip-title">Il nuovo sito è in messa a fuoco.</h1>
+        <p class="sub">Sto montando la nuova versione di produkts.it. Per un progetto, un preventivo o due chiacchiere, scrivimi pure.</p>
+        <div class="cta">
+          <a class="btn" href="https://wa.me/393711444875?text=Ciao%20Karim%2C%20ti%20scrivo%20dal%20sito%20produkts.it%3A%20" target="_blank" rel="noopener">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M20.5 11.6a8.4 8.4 0 0 1-12.4 7.4L3.5 20.5l1.6-4.4a8.4 8.4 0 1 1 15.4-4.5z"></path></svg>
+            Scrivimi su WhatsApp</a>
+          <span class="mails"><a href="mailto:info@produkts.it">info@produkts.it</a><span aria-hidden="true"> · </span><a href="mailto:karim@produkts.it">karim@produkts.it</a></span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <aside class="teaser" aria-label="Ultimo lavoro">
+    <img class="poster" src="dynamis.jpg" alt="Locandina di Dynamis">
+    <img class="laurel" src="laurel.png" alt="Nomination VerticalMovie 2026">
+    <div class="txt">
+      <span class="t1"><em>Dynamis</em> · selezionato al VerticalMovie Festival 2026, Casa del Cinema di Roma</span>
+      <a class="t2" href="https://www.youtube.com/watch?v=nLLtk0Lwxq8" target="_blank" rel="noopener">Guarda il corto su YouTube <span aria-hidden="true">↗</span></a>
+    </div>
+  </aside>
+
+  <footer class="foot">
+    <span>Karim Ismail · Direttore della fotografia, videomaker, fotografo · Altamura (BA)</span>
+    <span><a href="https://www.instagram.com/produkts.it/" target="_blank" rel="noopener">Instagram</a> · <a href="https://www.youtube.com/@produkts-it" target="_blank" rel="noopener">YouTube</a> · +39 371 144 4875 · © 2026 Produkts</span>
+  </footer>
+</div>
+
+<script>
+(function(){
+  var el=document.getElementById('tc'); if(!el) return;
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var start=Date.now();
+  function p(n){return (n<10?'0':'')+n}
+  setInterval(function(){
+    var ms=Date.now()-start, s=Math.floor(ms/1000);
+    el.textContent=p(Math.floor(s/3600))+':'+p(Math.floor(s/60)%60)+':'+p(s%60)+':'+p(Math.floor((ms%1000)/(1000/24)));
+  },1000/24);
+})();
+</script>
+</body>
+</html>
