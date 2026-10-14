@@ -8,7 +8,8 @@
 <meta property="og:description" content="Il nuovo sito è in messa a fuoco. Karim Ismail, direttore della fotografia, videomaker e fotografo.">
 <meta property="og:image" content="https://produkts.it/dynamis.jpg">
 <meta name="theme-color" content="#080808">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23080808'/%3E%3Cpath d='M10 22V16h8M54 22V16h-8M10 42v6h8M54 42v6h-8' fill='none' stroke='%23336699' stroke-width='3'/%3E%3Ccircle cx='32' cy='32' r='5' fill='%23B46428'/%3E%3C/svg%3E">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <title>produkts.it</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -37,6 +38,9 @@ a:focus-visible{outline:1px solid var(--ember-hi);outline-offset:4px}
   max-width:1280px;margin:0 auto}
 
 .top{display:flex;justify-content:space-between;align-items:center;gap:16px}
+.logo{display:block;line-height:0}
+.logo img{display:block;height:30px;width:auto;max-width:60vw}
+@media (max-width:640px){.logo img{height:22px}}
 .wordmark{font-family:var(--display);font-style:italic;font-weight:300;font-size:28px;letter-spacing:.01em}
 .wordmark span{font-style:normal;opacity:.5}
 .rec{display:flex;align-items:center;gap:10px;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);font-variant-numeric:tabular-nums}
@@ -108,7 +112,7 @@ h1{margin:0;font-family:var(--display);font-style:italic;font-weight:300;font-si
 <body>
 <div class="page">
   <header class="top">
-    <a class="wordmark" href="/">produkts<span>.it</span></a>
+    <a class="logo" href="/"><img src="logo-produkts.png" alt="produkts.it" width="960" height="138"></a>
     <div class="rec" title="Ora locale ad Altamura"><i aria-hidden="true"></i><span>Altamura</span><span id="tc" aria-label="Ora locale ad Altamura">--:--:--:--</span></div>
   </header>
 
