@@ -138,7 +138,8 @@ html.intro .top,html.intro .top *,html.intro .stage,html.intro .stage *,html.int
 <body>
 <div class="page">
 <div class="loader" id="loader" aria-hidden="true">
-<script>try{if(!sessionStorage.getItem('pk-intro')&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('intro')}catch(e){}</script>
+<script>try{(function(){var n=(performance.getEntriesByType&&performance.getEntriesByType('navigation')[0]||{}).type,r=document.referrer,same=false;try{same=!!r&&new URL(r).origin===location.origin}catch(e){}
+var show=n==='reload'||(n!=='back_forward'&&!same);if(show&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('intro')})()}catch(e){}</script>
 <svg viewBox="0 0 450 251.5" role="presentation">
 <rect class="g d0" pathLength="1" x="75" y="1.5" width="300" height="128.57"/>
 <line class="g d1" pathLength="1" x1="75" y1="44.36" x2="375" y2="44.36"/><line class="g d2" pathLength="1" x1="75" y1="87.21" x2="375" y2="87.21"/><line class="g d3" pathLength="1" x1="175" y1="1.5" x2="175" y2="130.07"/><line class="g d4" pathLength="1" x1="275" y1="1.5" x2="275" y2="130.07"/>
@@ -196,7 +197,6 @@ html.intro .top,html.intro .top *,html.intro .stage,html.intro .stage *,html.int
   if(!h.classList.contains('intro')){l.remove();return}
   var done=false;
   function end(){if(done)return;done=true;l.classList.add('out');h.classList.remove('intro');
-    try{sessionStorage.setItem('pk-intro','1')}catch(e){}
     setTimeout(function(){l.remove()},1100)}
   setTimeout(end,3000);
   l.addEventListener('click',end);
