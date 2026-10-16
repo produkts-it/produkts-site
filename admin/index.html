@@ -36,6 +36,7 @@ h2{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:400;font
 .az button.on{background:var(--fg);color:var(--bg);border-color:var(--fg)}
 .push{margin-top:24px;padding:16px 20px;border:1px solid var(--line);display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;justify-content:space-between;color:var(--muted);font-size:14px;line-height:1.5}
 .push.on{border-color:var(--steel)}
+.push[hidden]{display:none}
 .vuoto,.err{color:var(--muted);margin-top:24px}
 .err{color:#D98A4E}
 a{color:var(--fg)}
@@ -73,7 +74,7 @@ var lista=document.getElementById('lista'),login=document.getElementById('login'
    viaggia solo in HTTPS verso le API del pannello. "Esci" la cancella. */
 function pw(){try{return localStorage.getItem('pk-admin')||''}catch(e){return ''}}
 login.addEventListener('submit',function(ev){ev.preventDefault();try{localStorage.setItem('pk-admin',document.getElementById('pw').value)}catch(e){}login.hidden=true;carica()});
-esci.addEventListener('click',function(){try{localStorage.removeItem('pk-admin')}catch(e){}esci.hidden=true;lista.innerHTML='';login.hidden=false;document.getElementById('pw').value=''});
+esci.addEventListener('click',function(){try{localStorage.removeItem('pk-admin')}catch(e){}esci.hidden=true;document.getElementById('push').hidden=true;lista.innerHTML='';login.hidden=false;document.getElementById('pw').value=''});
 /* Link dalle notifiche Telegram: /admin/#contatti o /admin/#recensioni apre la sezione giusta */
 function daHash(){var h=location.hash.slice(1);if(h==='contatti'||h==='recensioni'){tab=h;document.querySelectorAll('[data-tab]').forEach(function(t){t.setAttribute('aria-pressed',t.dataset.tab===h)})}}
 daHash();window.addEventListener('hashchange',function(){daHash();carica()});
