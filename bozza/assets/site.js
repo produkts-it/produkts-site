@@ -102,6 +102,29 @@ c.style.transform='translate3d('+(x-W/2-o.left).toFixed(2)+'px,'+(y-H/2-o.top).t
   return function(){cancelAnimationFrame(raf);d.removeEventListener('pointermove',move);d.removeEventListener('pointerdown',down);d.removeEventListener('touchstart',hide);d.documentElement.removeEventListener('mouseleave',hide);w.removeEventListener('blur',hide);setBlur(null,true);c.remove();org.remove();st.remove();};
 }
 
+/* Orologio con timecode: ora locale di Altamura (Europe/Rome), frame a 24 fps, come nella pagina WIP. Va nell'intestazione di ogni pagina. */
+function clock(){
+  /* Anche le pagine con due stati (galleria: accesso e foto) hanno un'intestazione per stato: orologio in tutte */
+  d.querySelectorAll('header').forEach(function(hh){clockIn(hh.querySelector(':scope > div')||hh)});
+}
+function clockIn(hd){
+  var el=d.createElement('div');el.className='pk-clock';el.title='Ora locale ad Altamura';
+  el.innerHTML='<i aria-hidden="true"></i><span>Altamura</span><span class="t" aria-label="Ora locale ad Altamura">--:--:--:--</span>';
+  var mb=hd.querySelector('.mb');
+  if(mb)hd.insertBefore(el,mb);else hd.appendChild(el);
+  hd.classList.add('pk-hdr');
+  var t=el.querySelector('.t'),fmt=null;
+  try{fmt=new Intl.DateTimeFormat('it-IT',{timeZone:'Europe/Rome',hour:'2-digit',minute:'2-digit',second:'2-digit',hourCycle:'h23'})}catch(e){}
+  function p(n){return (n<10?'0':'')+n}
+  function tick(){
+    var now=new Date(),hh,mm,ss;
+    if(fmt&&fmt.formatToParts){fmt.formatToParts(now).forEach(function(x){if(x.type==='hour')hh=x.value;else if(x.type==='minute')mm=x.value;else if(x.type==='second')ss=x.value})}
+    else{hh=p(now.getHours());mm=p(now.getMinutes());ss=p(now.getSeconds())}
+    t.textContent=hh+':'+mm+':'+ss+':'+(still?'00':p(Math.floor(now.getMilliseconds()/(1000/24))));
+  }
+  tick();setInterval(tick,still?1000:1000/24);
+}
+
 /* Menu a schermo intero */
 var ITEMS=[
   ['01','Home','./','home','[ Showreel ]'],
@@ -200,6 +223,7 @@ PK.acts.carNext=function(a,el){var t=el.closest('section').querySelector('.car-t
 
 intro();
 pkCursor();
+clock();
 menu();
 acts();
 })();

@@ -168,6 +168,13 @@ html.vt-local::view-transition-old(*),html.vt-local::view-transition-new(*){heig
 .car-btn:hover{border-color:#D98A4E!important;color:#D98A4E!important}
 @media (max-width:640px){.car-track{gap:8px}.car-item{flex-basis:30vw;max-width:140px}.car-nav{display:none!important}}
 
+/* Orologio di Altamura nell'intestazione; su telefono va su una riga sotto logo e menu */
+.pk-hdr{flex-wrap:wrap}
+.pk-clock{display:flex;align-items:center;gap:10px;margin-left:auto;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#9A948C;font-variant-numeric:tabular-nums;white-space:nowrap}
+.pk-clock i{width:8px;height:8px;border-radius:50%;background:#B46428;animation:rec 1.2s steps(1) infinite}
+.pk-hdr .mb{margin-left:24px}
+@media (max-width:640px){.pk-clock{order:3;flex-basis:100%;margin:-8px 0 0;font-size:11px;letter-spacing:.12em}.pk-hdr .mb{margin-left:auto}}
+
 /* Menu */
 @keyframes mopen{from{clip-path:circle(0% at calc(100% - 90px) 52px)}to{clip-path:circle(150% at calc(100% - 90px) 52px)}}
 @keyframes mclose{from{clip-path:circle(150% at calc(100% - 90px) 52px)}to{clip-path:circle(0% at calc(100% - 90px) 52px)}}

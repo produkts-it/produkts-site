@@ -44,13 +44,17 @@ a:focus-visible{outline:1px solid #D98A4E;outline-offset:4px}
 .btn{transition:background .3s,color .3s}
 .btn:hover{background:#B46428!important;color:#080808!important}
 @media (max-width:640px){.stage .meta{display:none!important}}
+.pk-clock{display:flex;align-items:center;gap:10px;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#9A948C;font-variant-numeric:tabular-nums;white-space:nowrap}
+.pk-clock i{width:8px;height:8px;border-radius:50%;background:#B46428;animation:blink 1.2s steps(1) infinite}
+@media (max-width:420px){.pk-clock{font-size:11px;letter-spacing:.1em}}
 @media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}.blurry{filter:blur(1.6px)}}
 </style>
 </head>
 <body>
 <div style="background: #080808; color: #E8E4DF; font-family: 'Space Grotesk', sans-serif; min-height: 100vh; display: flex; flex-direction: column">
-<header style="max-width: 1440px; width: 100%; margin: 0 auto; padding: 28px 56px; box-sizing: border-box">
+<header style="max-width: 1440px; width: 100%; margin: 0 auto; padding: 28px 56px; box-sizing: border-box; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 24px">
 <a href="/" style="font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300; font-size: 30px">produkts<span style="font-style: normal; opacity: 0.5">.it</span></a>
+<div class="pk-clock" title="Ora locale ad Altamura"><i aria-hidden="true"></i><span>Altamura</span><span class="t" id="tc" aria-label="Ora locale ad Altamura">--:--:--:--</span></div>
 </header>
 <main class="stage" style="flex: 1; width: 100%; max-width: 1440px; margin: 0 auto; padding: 24px 56px 72px; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 40px; text-align: center">
 <div style="position: relative; width: 100%; max-width: 960px; aspect-ratio: 2.39 / 1; display: flex; align-items: center; justify-content: center">
@@ -160,6 +164,25 @@ c.style.transform='translate3d('+(x-W/2-o.left).toFixed(2)+'px,'+(y-H/2-o.top).t
   return function(){cancelAnimationFrame(raf);d.removeEventListener('pointermove',move);d.removeEventListener('pointerdown',down);d.removeEventListener('touchstart',hide);d.documentElement.removeEventListener('mouseleave',hide);w.removeEventListener('blur',hide);setBlur(null,true);c.remove();org.remove();st.remove();};
 }
 pkCursor();
+(function(){
+  // Timecode = ora locale di Altamura (Europe/Rome), frame a 24 fps
+  var el=document.getElementById('tc'); if(!el) return;
+  var still = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var fmt;
+  try { fmt=new Intl.DateTimeFormat('it-IT',{timeZone:'Europe/Rome',hour:'2-digit',minute:'2-digit',second:'2-digit',hourCycle:'h23'}); } catch(e) { fmt=null; }
+  function p(n){return (n<10?'0':'')+n}
+  function tick(){
+    var now=new Date(), h, m, s;
+    if (fmt && fmt.formatToParts) {
+      var parts=fmt.formatToParts(now);
+      for (var i=0;i<parts.length;i++){ var t=parts[i]; if(t.type==='hour')h=t.value; else if(t.type==='minute')m=t.value; else if(t.type==='second')s=t.value; }
+    } else { h=p(now.getHours()); m=p(now.getMinutes()); s=p(now.getSeconds()); }
+    var f = still ? '00' : p(Math.floor(now.getMilliseconds()/(1000/24)));
+    el.textContent=h+':'+m+':'+s+':'+f;
+  }
+  tick();
+  setInterval(tick, still ? 1000 : 1000/24);
+})();
 </script>
 </body>
 </html>

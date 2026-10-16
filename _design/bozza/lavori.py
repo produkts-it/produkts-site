@@ -60,10 +60,10 @@ WORKS = [
          meta=[('Artista', 'Bartek Dabrowski'), ('Uscita', '29 marzo 2024 · YouTube')],
          crew=[('Artista', 'Bartek Dabrowski'), ('Direzione della fotografia', KI), ('Riprese', KI), ('Montaggio', KI),
                ('Color', KI), ('VFX', KI)]),
-    dict(slug='korvo', t='Korvo', sub='Videoclip musicale', year='2023', date='giugno 2023',
+    dict(slug='korvo', t='Hai perso', sub='Korvo', year='2023', date='giugno 2023',
          vimeo='888211568', img='https://i.vimeocdn.com/video/1827512944-964bac90703858cc9e174129dd46cb4674a3071036ff2f2ba992aea82ef1e2e4-d_1280', cats=['Videoclip'],
          kicker='Videoclip musicale · 2023',
-         line="Videoclip per Korvo, curato dall'idea alla consegna: regia, riprese, montaggio e color.",
+         line="Videoclip di «Hai perso» per Korvo, curato dall'idea alla consegna: regia, riprese, montaggio e color.",
          role='Regia, direzione della fotografia, riprese, montaggio e color', role_short='Regia, D.O.P., montaggio e color',
          meta=[('Artista', 'Korvo'), ('Uscita', 'Giugno 2023 · Vimeo')],
          crew=[('Artista e musica', 'Korvo'), ('Regia', KI), ('Direzione della fotografia', KI), ('Riprese', KI),
@@ -81,17 +81,14 @@ CAT_LABELS = [('Tutti', 'Tutti'), ('Cortometraggio', 'Cortometraggi'), ('Videocl
               ('Video aziendale', 'Video aziendali'), ('Opera personale', 'Opere personali')]
 HOME_WORKS = ['dynamis', 'schizophrenia', 'coseco', 'wake-up']
 
-# Filmografia: titolo, ruolo, produzione, pagina (se c'è)
+# Filmografia: solo cinema (cortometraggi, lungometraggi, film, docufilm, documentari). Niente videoclip, social, corporate.
+# Titolo, ruolo, produzione, pagina (se c'è)
 FILMOGRAFIA = [
     ('Dynamis', 'Produttore, D.O.P., montaggio, color, VFX', 'produkts.it', 'dynamis.html'),
     ('Tra i Piedi', 'Direttore della fotografia', 'AMARCORD', None),
     ("L'Inventario", 'Co-D.O.P.', 'AMARCORD', None),
     ('Schizophrenia — Io e Nessun Altro', 'Regia e fotografia', 'Produkts', 'schizophrenia.html'),
-    ('Romance Anónimo', 'D.O.P., montaggio, color', 'Bartek Dabrowski', 'romance-anonimo.html'),
-    ('Coseco Industrie — 50 anni', 'Riprese e post-produzione', 'kontents.eu', 'coseco.html'),
-    ('Wake Up', 'D.O.P., montaggio, color', 'Bartek Dabrowski', 'wake-up.html'),
-    ('Korvo', 'Regia, D.O.P., montaggio, color', 'Korvo', 'korvo.html'),
-    ('Troppo bella per loro', 'Regia, riprese e montaggio', 'Produkts', 'troppo-bella-per-loro.html'),
+    ('Troppo bella per loro', 'Docufilm · regia, riprese e montaggio', 'Produkts', 'troppo-bella-per-loro.html'),
     ('Sbaglio Dunque Esisto', 'Operatore, 1ª camera', 'AMARCORD', None),
     ('La Seduta', 'Operatore', 'AMARCORD', None),
     ('Paranoia', 'Operatore, 2ª camera', 'AMARCORD', None),
