@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>Produkts — Galleria cliente</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&amp;family=Space+Grotesk:wght@400;500&amp;display=swap">
+<style>
+html,body{overflow-x:clip;max-width:100%}
+@media (max-width:640px){[style*="px 56px"],[style*="padding: 0 56px"]{padding-left:16px!important;padding-right:16px!important}}
+body{margin:0;background:#080808}
+a{color:#E8E4DF;text-decoration:none}a:hover{color:#D98A4E}
+@keyframes curtain{0%{transform:translateY(0)}100%{transform:translateY(-100%)}}
+@keyframes wm{0%{opacity:0}30%,70%{opacity:1}100%{opacity:0}}
+@keyframes rise{from{transform:translateY(110%)}to{transform:none}}
+@keyframes fade{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@keyframes fadein{from{opacity:0}to{opacity:1}}
+@keyframes zoom{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:none}}
+@keyframes draw{from{width:0;height:0}to{width:44px;height:44px}}
+@keyframes lb{from{height:50%}to{height:0}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+.curtain{animation:curtain .9s cubic-bezier(.8,0,.2,1) .55s both}
+.curtain .wm{animation:wm .9s ease both}
+.rise{animation:rise 1.1s cubic-bezier(.2,.7,.1,1) .9s both}
+.fade{animation:fade 1s ease 1.2s both}
+.d2{animation-delay:1.4s}
+.d3{animation-delay:1.6s}
+.draw{animation:draw 1s cubic-bezier(.2,.7,.2,1) .3s both}
+.lb{animation:lb 1.6s cubic-bezier(.7,0,.2,1) 1s both}
+.lb-b{bottom:0}
+.intro{animation:fade .9s ease both}
+@keyframes vtin{from{opacity:0;transform:scale(.85) translateY(30px);filter:blur(6px)}to{opacity:1;transform:none;filter:none}}
+@keyframes vtout{to{opacity:0;transform:scale(.85);filter:blur(6px)}}
+::view-transition-old(root),::view-transition-new(root){animation:none}
+::view-transition-group(*){animation-duration:.85s;animation-timing-function:cubic-bezier(.7,0,.15,1)}
+::view-transition-new(*):only-child{animation:vtin .7s cubic-bezier(.2,.7,.2,1) .25s both}
+::view-transition-old(*):only-child{animation:vtout .4s cubic-bezier(.7,0,.8,.3) both}
+::view-transition-old(*),::view-transition-new(*){height:100%;object-fit:cover}
+.ph .img{transition:transform .9s cubic-bezier(.2,.7,.2,1),background .5s}
+.ph:hover .img{transform:scale(1.03);background:#1D1D1D}
+.ph .ov{opacity:0;transition:opacity .4s}
+.ph:hover .ov,.ph:focus-visible .ov{opacity:1}
+.lbx{animation:fadein .35s ease both}
+.lbx .big{animation:zoom .5s cubic-bezier(.2,.7,.2,1) both}
+.dot{animation:pulse 2s ease infinite}
+.field:focus{outline:none;border-color:#B46428!important}
+.btn{transition:background .3s,color .3s}
+.btn:hover{background:#B46428!important;color:#080808!important}
+@media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+</style>
+</helmet>
+<div style="background: #080808; color: #E8E4DF; font-family: 'Space Grotesk', sans-serif; min-height: 100vh">
+
+<sc-if value="{{locked}}" hint-placeholder-val="{{ false }}">
+<section style="min-height: 100vh; box-sizing: border-box; padding: 40px 24px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 48px">
+<a href="Main.dc.html" class="fade" style="font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300; font-size: 30px">produkts<span style="font-style: normal; opacity: 0.5">.it</span></a>
+<div style="position: relative; width: 100%; max-width: 560px; padding: 64px 48px; box-sizing: border-box; display: flex; flex-direction: column; gap: 28px; align-items: center; text-align: center">
+<span aria-hidden="true" class="draw" style="position: absolute; top: 0; left: 0; border-top: 1px solid #336699; border-left: 1px solid #336699"></span>
+<span aria-hidden="true" class="draw" style="position: absolute; top: 0; right: 0; border-top: 1px solid #336699; border-right: 1px solid #336699"></span>
+<span aria-hidden="true" class="draw" style="position: absolute; bottom: 0; left: 0; border-bottom: 1px solid #336699; border-left: 1px solid #336699"></span>
+<span aria-hidden="true" class="draw" style="position: absolute; bottom: 0; right: 0; border-bottom: 1px solid #336699; border-right: 1px solid #336699"></span>
+<span class="fade" style="font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: #9A948C; display: flex; align-items: center; gap: 10px"><span aria-hidden="true" class="dot" style="width: 6px; height: 6px; border-radius: 50%; background: {{accent}}"></span>Galleria privata</span>
+<h1 style="margin: 0; font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300; font-size: clamp(44px, 6vw, 72px); line-height: 1; overflow: hidden; padding-bottom: 0.08em"><span class="rise" style="display: block">[Nome cliente]</span></h1>
+<form class="fade d2" style="width: 100%; display: flex; flex-direction: column; gap: 12px; align-items: stretch">
+<label for="g-code" style="font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: #9A948C">Codice di accesso</label>
+<input id="g-code" class="field" type="password" placeholder="••••••" style="height: 56px; background: #080808; border: 1px solid #3A3A3A; color: #E8E4DF; padding: 0 16px; font-family: 'Space Grotesk', sans-serif; font-size: 18px; letter-spacing: 0.3em; text-align: center; box-sizing: border-box">
+<button type="button" class="btn" onClick="{{enter}}" style="height: 56px; background: #E8E4DF; color: #080808; border: 0; font-family: 'Space Grotesk', sans-serif; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; cursor: pointer">Apri la galleria</button>
+</form>
+<p class="fade d3" style="margin: 0; font-size: 14px; line-height: 1.6; color: #9A948C">Trovi il codice nel messaggio che ti ho inviato con il link.</p>
+</div>
+</section>
+</sc-if>
+
+<sc-if value="{{open}}" hint-placeholder-val="{{ true }}">
+<div aria-hidden="true" class="curtain" style="position: fixed; inset: 0; background: #0E0E0E; z-index: 50; display: flex; align-items: center; justify-content: center; pointer-events: none; border-bottom: 1px solid #B46428"><span class="wm" style="font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300; font-size: 40px">[Nome cliente]</span></div>
+
+<header style="max-width: 1440px; margin: 0 auto; padding: 28px 56px; box-sizing: border-box; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 40px">
+<a href="Main.dc.html" style="font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300; font-size: 30px">produkts<span style="font-style: normal; opacity: 0.5">.it</span></a>
+<span style="font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: #9A948C; display: flex; align-items: center; gap: 10px"><span aria-hidden="true" class="dot" style="width: 6px; height: 6px; border-radius: 50%; background: {{accent}}"></span>Galleria privata</span>
+</header>
+
+<section style="max-width: 1440px; margin: 0 auto; padding: 16px 56px 0; box-sizing: border-box">
+<div style="position: relative; width: 100%; aspect-ratio: 2.39 / 1; background: #161616; overflow: hidden; display: flex; align-items: flex-end">
+<span aria-hidden="true" class="lb" style="position: absolute; left: 0; right: 0; top: 0; background: #080808; z-index: 2"></span>
+<span aria-hidden="true" class="lb lb-b" style="position: absolute; left: 0; right: 0; background: #080808; z-index: 2"></span>
+<span aria-hidden="true" style="position: absolute; top: 24px; left: 24px; width: 36px; height: 36px; border-top: 1px solid #336699; border-left: 1px solid #336699"></span>
+<span aria-hidden="true" style="position: absolute; bottom: 24px; right: 24px; width: 36px; height: 36px; border-bottom: 1px solid #336699; border-right: 1px solid #336699"></span>
+<span style="position: absolute; top: 34px; right: 72px; font-size: 12px; letter-spacing: 0.12em; color: #6E6A64">[ FOTO DI COPERTINA ]</span>
+<div style="padding: 0 0 48px 64px; display: flex; flex-direction: column; gap: 12px">
+<span class="fade" style="font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: {{accent}}">[Matrimonio] · [20.09.2026]</span>
+<h1 style="margin: 0; font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300; font-size: clamp(48px, 7vw, 112px); line-height: 0.95; overflow: hidden; padding-bottom: 0.08em"><span class="rise" style="display: block">[Nome cliente]</span></h1>
+</div>
+</div>
+</section>
+
+<section style="max-width: 1440px; margin: 0 auto; padding: 40px 56px 0; box-sizing: border-box">
+<div class="fade d2" style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 24px; padding-bottom: 24px; border-bottom: 1px solid #1F1F1F">
+<div style="display: flex; flex-wrap: wrap; gap: 4px 24px; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase">
+<sc-for list="{{tabs}}" as="t" hint-placeholder-count="4">
+<button type="button" onClick="{{t.pick}}" aria-pressed="{{t.pressed}}" style="background: transparent; border: 0; border-bottom: 1px solid {{t.line}}; color: {{t.color}}; padding: 12px 0; font-family: 'Space Grotesk', sans-serif; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; cursor: pointer">{{t.label}}</button>
+</sc-for>
+</div>
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 16px 24px">
+<span style="font-size: 13px; color: #9A948C">{{count}} foto · link attivo fino al [DATA]</span>
+<a href="#" class="btn" style="height: 48px; padding: 0 24px; background: #E8E4DF; color: #080808; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; display: inline-flex; align-items: center; gap: 12px">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"></path></svg>
+Scarica tutto in HD</a>
+</div>
+</div>
+</section>
+
+<section aria-label="Fotografie" style="max-width: 1440px; margin: 0 auto; padding: 32px 56px 120px; box-sizing: border-box">
+<div style="column-width: 300px; column-gap: 16px">
+<sc-for list="{{photos}}" as="p" hint-placeholder-count="12">
+<button type="button" class="{{p.cls}}" onClick="{{p.open}}" aria-label="Apri {{p.label}}" style="view-transition-name: {{p.vt}}; display: block; width: 100%; margin: 0 0 16px; padding: 0; border: 0; background: transparent; cursor: zoom-in; break-inside: avoid; position: relative; overflow: hidden; animation-delay: {{p.delay}}">
+<div class="img" style="aspect-ratio: {{p.ratio}}; background: #161616; display: flex; align-items: flex-end; padding: 14px; box-sizing: border-box; font-family: 'Space Grotesk', sans-serif; font-size: 12px; letter-spacing: 0.1em; color: #6E6A64">{{p.label}}</div>
+<span class="ov" style="position: absolute; top: 12px; right: 12px; width: 40px; height: 40px; border-radius: 50%; background: rgba(8,8,8,0.7); color: #E8E4DF; display: flex; align-items: center; justify-content: center">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"></path></svg>
+</span>
+</button>
+</sc-for>
+</div>
+</section>
+
+<footer style="border-top: 1px solid #1F1F1F">
+<div style="max-width: 1440px; margin: 0 auto; padding: 48px 56px; box-sizing: border-box; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 24px">
+<p style="margin: 0; font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300; font-size: 32px">Ti sono piaciute? Raccontalo.</p>
+<a href="Recensioni.dc.html" style="padding: 15px 28px; border: 1px solid #3A3A3A; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase">Lascia una recensione</a>
+</div>
+</footer>
+
+<sc-if value="{{lightbox}}" hint-placeholder-val="{{ false }}">
+<div class="lbx" role="dialog" aria-modal="true" aria-label="Foto ingrandita" style="position: fixed; inset: 0; z-index: 40; background: rgba(5,5,5,0.97); display: flex; flex-direction: column">
+<div style="display: flex; justify-content: space-between; align-items: center; padding: 20px 28px; font-size: 13px; letter-spacing: 0.14em; color: #9A948C">
+<span style="font-variant-numeric: tabular-nums">{{pos}}</span>
+<div style="display: flex; gap: 8px; align-items: center">
+<a href="#" style="height: 44px; padding: 0 16px; display: inline-flex; align-items: center; gap: 10px; text-transform: uppercase; font-size: 12px; letter-spacing: 0.14em">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"></path></svg>Scarica</a>
+<button type="button" onClick="{{close}}" aria-label="Chiudi" style="width: 44px; height: 44px; background: transparent; border: 1px solid #3A3A3A; border-radius: 50%; color: #E8E4DF; cursor: pointer; display: flex; align-items: center; justify-content: center">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+</button>
+</div>
+</div>
+<div style="flex: 1; min-height: 0; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 0 20px 40px">
+<button type="button" onClick="{{prev}}" aria-label="Foto precedente" style="width: 52px; height: 52px; flex: none; background: transparent; border: 0; color: #E8E4DF; cursor: pointer; display: flex; align-items: center; justify-content: center">
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>
+</button>
+<div class="big" key="{{curKey}}" style="height: 100%; max-height: 78vh; max-width: 100%; aspect-ratio: {{curRatio}}; background: #161616; display: flex; align-items: flex-end; padding: 18px; box-sizing: border-box; font-size: 13px; letter-spacing: 0.1em; color: #6E6A64">{{curLabel}}</div>
+<button type="button" onClick="{{next}}" aria-label="Foto successiva" style="width: 52px; height: 52px; flex: none; background: transparent; border: 0; color: #E8E4DF; cursor: pointer; display: flex; align-items: center; justify-content: center">
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M9 5l7 7-7 7"></path></svg>
+</button>
+</div>
+</div>
+</sc-if>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#B46428","options":["#B46428","#336699","#E8E4DF"]},"$preview":{"width":1440,"height":3200}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { entered: false, section: 'Tutte', idx: -1 };
+  }
+  renderVals() {
+    const accent = this.props.accent ?? '#B46428';
+    const ratios = ['3 / 2', '2 / 3', '4 / 5', '3 / 2', '4 / 5', '2 / 3', '3 / 2', '3 / 2', '2 / 3', '4 / 5', '3 / 2', '2 / 3', '4 / 5', '3 / 2', '2 / 3', '3 / 2', '4 / 5', '3 / 2'];
+    const secs = ['Preparativi', 'Cerimonia', 'Ritratti', 'Ricevimento'];
+    const all = ratios.map((r, i) => ({ id: i, ratio: r, section: secs[Math.floor(i / 4.5)], label: '[ FOTO ' + String(i + 1).padStart(2, '0') + ' ]' }));
+    const filterTo = (s) => {
+      if (s === this.state.section) return;
+      const apply = () => new Promise((done) => this.setState({ section: s, idx: -1, filtered: true }, done));
+      const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (document.startViewTransition && !reduce) document.startViewTransition(apply);
+      else apply();
+    };
+    const sec = this.state.section;
+    const list = sec === 'Tutte' ? all : all.filter((p) => p.section === sec);
+    const idx = this.state.idx;
+    const cur = idx >= 0 && idx < list.length ? list[idx] : null;
+    const go = (d) => () => this.setState({ idx: (idx + d + list.length) % list.length });
+    return {
+      accent: accent,
+      locked: !this.state.entered,
+      open: this.state.entered,
+      enter: () => this.setState({ entered: true }),
+      tabs: ['Tutte'].concat(secs).map((s) => ({
+        label: s,
+        pressed: s === sec ? 'true' : 'false',
+        color: s === sec ? '#E8E4DF' : '#9A948C',
+        line: s === sec ? accent : 'transparent',
+        pick: () => filterTo(s)
+      })),
+      count: String(list.length),
+      photos: list.map((p, i) => ({
+        cls: this.state.filtered ? 'ph' : 'ph intro',
+        vt: 'ph' + p.id,
+        ratio: p.ratio,
+        label: p.label,
+        delay: (1.3 + i * 0.07).toFixed(2) + 's',
+        open: () => this.setState({ idx: i })
+      })),
+      lightbox: !!cur,
+      close: () => this.setState({ idx: -1 }),
+      prev: go(-1),
+      next: go(1),
+      pos: cur ? String(idx + 1).padStart(2, '0') + ' / ' + String(list.length).padStart(2, '0') : '',
+      curKey: cur ? cur.label : 'none',
+      curRatio: cur ? cur.ratio : '3 / 2',
+      curLabel: cur ? cur.label : ''
+    };
+  }
+}
+</script>
+</body>
+</html>

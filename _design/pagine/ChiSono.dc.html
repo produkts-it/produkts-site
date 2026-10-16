@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>Produkts — Chi sono</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&amp;family=Space+Grotesk:wght@400;500&amp;display=swap">
+<style>
+html,body{overflow-x:clip;max-width:100%}
+@media (max-width:640px){[style*="px 56px"],[style*="padding: 0 56px"]{padding-left:16px!important;padding-right:16px!important}}
+body{margin:0;background:#080808}
+a{color:#E8E4DF;text-decoration:none}a:hover{color:#D98A4E}
+@keyframes curtain{0%{transform:translateY(0)}100%{transform:translateY(-100%)}}
+@keyframes wm{0%{opacity:0}30%,70%{opacity:1}100%{opacity:0}}
+@keyframes rise{from{transform:translateY(110%)}to{transform:none}}
+@keyframes fade{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@keyframes lbv{from{width:50%}to{width:0}}
+@keyframes grow{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+.curtain{animation:curtain .9s cubic-bezier(.8,0,.2,1) .55s both}
+.curtain .wm{animation:wm .9s ease both}
+.rise{animation:rise 1.1s cubic-bezier(.2,.7,.1,1) 1.2s both}
+.d2{animation-delay:1.35s}
+.fade{animation:fade 1s ease 1.6s both}
+.lbv{animation:lbv 1.6s cubic-bezier(.7,0,.2,1) 1s both}
+.lbv-r{right:0}
+.kit{transition:border-color .4s,background .4s}
+.kit:hover{border-color:#336699!important;background:#0F0F0F}
+.kit .kn{transition:transform .5s cubic-bezier(.2,.7,.2,1)}
+.kit:hover .kn{transform:translateX(8px)}
+.row{transition:padding .5s cubic-bezier(.2,.7,.2,1),background .4s}
+.row:hover{padding-left:16px!important;background:#0D0D0D}
+@supports (animation-timeline: view()){
+.reveal{animation:fade linear both;animation-timeline:view();animation-range:entry 0% entry 45%}
+.line{animation:grow linear both;animation-timeline:view();animation-range:entry 10% cover 60%}
+}
+@keyframes mopen{from{clip-path:circle(0% at calc(100% - 90px) 52px)}to{clip-path:circle(150% at calc(100% - 90px) 52px)}}
+@keyframes mclose{from{clip-path:circle(150% at calc(100% - 90px) 52px)}to{clip-path:circle(0% at calc(100% - 90px) 52px)}}
+@keyframes mlink{from{opacity:0;transform:translateY(60%) skewY(4deg)}to{opacity:1;transform:none}}
+@keyframes pv{from{opacity:0;letter-spacing:.4em}to{opacity:1}}
+.mo{animation:mopen .9s cubic-bezier(.77,0,.18,1) both}
+.mo.closing{animation:mclose .6s cubic-bezier(.77,0,.18,1) both}
+.ml{animation:mlink .8s cubic-bezier(.2,.7,.1,1) both}
+.ml .mt{display:inline-block;transition:transform .5s cubic-bezier(.2,.7,.2,1),color .3s}
+.ml:hover .mt,.ml:focus-visible .mt{transform:translateX(24px);color:#D98A4E!important}
+.mfade{animation:fade .8s ease .7s both}
+.pv{animation:pv .5s ease both}
+.mb .l1,.mb .l2{transition:width .4s cubic-bezier(.2,.7,.2,1)}
+.mb:hover .l1{width:16px!important}.mb:hover .l2{width:28px!important}
+.mx .x1,.mx .x2{transition:transform .5s cubic-bezier(.2,.7,.2,1)}
+.mx:hover .x1{transform:rotate(135deg)!important}.mx:hover .x2{transform:rotate(45deg)!important}
+@media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+</style>
+</helmet>
+<div style="background: #080808; color: #E8E4DF; font-family: 'Space Grotesk', sans-serif; min-height: 100vh">
+<div aria-hidden="true" class="curtain" style="position: fixed; inset: 0; background: #0E0E0E; z-index: 50; display: flex; align-items: center; justify-content: center; pointer-events: none; border-bottom: 1px solid #B46428"><span class="wm" style="font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300; font-size: 40px">Chi sono</span></div>
+<header><dc-import name="Menu" current="chisono" accent="{{accent}}" hint-size="100%,104px"></dc-import></header>
+
+<section style="max-width: 1440px; margin: 0 auto; padding: 48px 56px 96px; box-sizing: border-box; display: flex; flex-wrap: wrap; gap: 48px 80px; align-items: flex-end">
+<div style="flex: 1 1 360px; max-width: 540px; position: relative; aspect-ratio: 4 / 5; background: #161616; overflow: hidden; display: flex; align-items: flex-end; padding: 20px; box-sizing: border-box">
+<span aria-hidden="true" class="lbv" style="position: absolute; top: 0; bottom: 0; left: 0; background: #080808; z-index: 2"></span>
+<span aria-hidden="true" class="lbv lbv-r" style="position: absolute; top: 0; bottom: 0; background: #080808; z-index: 2"></span>
+<span aria-hidden="true" style="position: absolute; top: 18px; left: 18px; width: 30px; height: 30px; border-top: 1px solid #336699; border-left: 1px solid #336699"></span>
+<span aria-hidden="true" style="position: absolute; bottom: 18px; right: 18px; width: 30px; height: 30px; border-bottom: 1px solid #336699; border-right: 1px solid #336699"></span>
+<span style="font-size: 12px; letter-spacing: 0.12em; color: #6E6A64">[ RITRATTO DI KARIM SUL SET ]</span>
+</div>
+<div style="flex: 999 1 520px; display: flex; flex-direction: column; gap: 28px">
+<span class="fade" style="font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: {{accent}}">Direttore della fotografia · Videomaker · Fotografo</span>
+<h1 style="margin: 0; font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300; font-size: clamp(64px, 9vw, 144px); line-height: 0.9"><span style="display: block; overflow: hidden; padding-bottom: 0.06em"><span class="rise" style="display: block">Karim</span></span><span style="display: block; overflow: hidden; padding-bottom: 0.08em; padding-left: 0.5em"><span class="rise d2" style="display: block">Ismail</span></span></h1>
+<p class="fade" style="margin: 0; font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300; font-size: 32px; line-height: 1.3; max-width: 640px">Vengo dalla grafica, ma ho sempre pensato per inquadrature. Oggi la luce è il mio modo di raccontare.</p>
+</div>
+</section>
+
+<section style="border-top: 1px solid #1F1F1F">
+<div style="max-width: 1440px; margin: 0 auto; padding: 96px 56px; box-sizing: border-box; display: flex; flex-wrap: wrap; gap: 48px 96px">
+<h2 class="reveal" style="margin: 0; flex: 1 1 280px; font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300; font-size: 56px; line-height: 1">La storia</h2>
+<div class="reveal" style="flex: 999 1 560px; display: flex; flex-direction: column; gap: 20px; font-size: 17px; line-height: 1.75; color: #C9C4BD; max-width: 760px">
+<p style="margin: 0">Ho cominciato dalla grafica e dalla gestione dei social: anni passati a comporre immagini, a capire cosa ferma lo sguardo. Da lì il passo verso la fotografia e il video è stato naturale.</p>
+<p style="margin: 0">Oggi giro cortometraggi, videoclip ed eventi, e mi sto specializzando in direzione della fotografia all'Accademia Mediterranea del Cinema AMARCORD di Bari. Produkts è il nome sotto cui firmo il mio lavoro, da Altamura.</p>
+<p style="margin: 0; color: #9A948C">[Una frase tua: cosa cerchi in un progetto, con chi ti piace lavorare.]</p>
+</div>
+</div>
+</section>
+
+<section style="border-top: 1px solid #1F1F1F">
+<div style="max-width: 1440px; margin: 0 auto; padding: 96px 56px; box-sizing: border-box; display: flex; flex-wrap: wrap; gap: 48px 96px">
+<h2 class="reveal" style="margin: 0; flex: 1 1 280px; font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300; font-size: 56px; line-height: 1">Percorso</h2>
+<div style="flex: 999 1 560px; position: relative; padding-left: 40px">
+<span aria-hidden="true" class="line" style="position: absolute; left: 6px; top: 8px; bottom: 8px; width: 1px; background: #336699; transform-origin: top"></span>
+<sc-for list="{{steps}}" as="s" hint-placeholder-count="4">
+<div class="reveal" style="position: relative; padding: 0 0 48px">
+<span aria-hidden="true" style="position: absolute; left: -38px; top: 6px; width: 9px; height: 9px; border-radius: 50%; background: {{s.dot}}; border: 1px solid #336699"></span>
+<span style="font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: {{accent}}">{{s.when}}</span>
+<h3 style="margin: 8px 0 8px; font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 400; font-size: 32px">{{s.t}}</h3>
+<p style="margin: 0; font-size: 16px; line-height: 1.6; color: #C9C4BD; max-width: 560px">{{s.d}}</p>
+</div>
+</sc-for>
+</div>
+</div>
+</section>
+
+<section style="border-top: 1px solid #1F1F1F">
+<div style="max-width: 1440px; margin: 0 auto; padding: 96px 56px; box-sizing: border-box">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 16px; margin-bottom: 40px">
+<h2 class="reveal" style="margin: 0; font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300; font-size: 56px; line-height: 1">Kit</h2>
+<span style="font-size: 13px; color: #9A948C">Disponibile per noleggio con operatore</span>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 16px">
+<sc-for list="{{kit}}" as="k" hint-placeholder-count="4">
+<div class="kit reveal" style="border: 1px solid #1F1F1F; padding: 28px; display: flex; flex-direction: column; gap: 14px; min-height: 180px">
+<span style="font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: #9A948C">{{k.cat}}</span>
+<span class="kn" style="font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 30px; line-height: 1.15">{{k.name}}</span>
+<span style="font-size: 14px; color: #C9C4BD; margin-top: auto">{{k.spec}}</span>
+</div>
+</sc-for>
+</div>
+</div>
+</section>
+
+<section style="border-top: 1px solid #1F1F1F">
+<div style="max-width: 1440px; margin: 0 auto; padding: 96px 56px; box-sizing: border-box; display: flex; flex-wrap: wrap; gap: 48px 96px">
+<div style="flex: 1 1 280px; display: flex; flex-direction: column; gap: 20px">
+<h2 class="reveal" style="margin: 0; font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300; font-size: 56px; line-height: 1">Filmografia</h2>
+<a href="#" style="font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; padding: 12px 0; display: inline-flex; gap: 10px">Scarica il CV (PDF) <span aria-hidden="true">↓</span></a>
+</div>
+<div style="flex: 999 1 640px; min-width: 0">
+<sc-for list="{{credits}}" as="c" hint-placeholder-count="10">
+<div class="row reveal" style="display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 0.7fr); gap: 16px; padding: 18px 0; border-bottom: 1px solid #1F1F1F; align-items: baseline">
+<span style="font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 24px">{{c.t}}</span>
+<span style="font-size: 14px; color: #C9C4BD">{{c.role}}</span>
+<span style="font-size: 13px; color: #9A948C; text-align: right">{{c.prod}}</span>
+</div>
+</sc-for>
+</div>
+</div>
+</section>
+
+<section style="border-top: 1px solid #1F1F1F">
+<a href="Contatti.dc.html" style="display: block; max-width: 1440px; margin: 0 auto; padding: 96px 56px; box-sizing: border-box">
+<span style="display: block; font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: #9A948C; margin-bottom: 16px">Hai un progetto?</span>
+<span style="font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300; font-size: clamp(48px, 7vw, 104px); line-height: 1">Lavoriamo insieme <span style="color: {{accent}}">→</span></span>
+</a>
+</section>
+
+<footer style="border-top: 1px solid #1F1F1F">
+<div style="max-width: 1440px; margin: 0 auto; padding: 24px 56px 40px; box-sizing: border-box; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; font-size: 13px; color: #9A948C">
+<span>© 2026 Produkts · Karim Ismail · Altamura (BA)</span>
+<a href="Privacy.dc.html" style="color: #9A948C">Privacy e cookie</a>
+</div>
+</footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#B46428","options":["#B46428","#336699","#E8E4DF"]},"$preview":{"width":1440,"height":3800}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const accent = this.props.accent ?? '#B46428';
+    return {
+      accent: accent,
+      steps: [
+        { when: '[ANNO]', t: 'Grafica e social media', d: 'Composizione, colore, identità visive. La base di tutto quello che è venuto dopo.', dot: '#080808' },
+        { when: '[ANNO]', t: 'Fotografia e video', d: 'Primi servizi, eventi e contenuti per brand. Nasce Produkts.', dot: '#080808' },
+        { when: '2025', t: 'Schizophrenia — Io e Nessun Altro', d: 'Il primo cortometraggio scritto e girato in autonomia.', dot: '#080808' },
+        { when: '2025 — 2026', t: 'AMARCORD, Bari', d: 'Specializzazione in direzione della fotografia e operatore di macchina su più cortometraggi.', dot: '#080808' },
+        { when: '2026', t: 'Dynamis al VerticalMovie Festival', d: 'Prodotto e fotografato da me, selezionato alla Casa del Cinema di Roma: candidatura per la seconda miglior sceneggiatura e Top 3 come miglior cortometraggio nella categoria Open.', dot: accent }
+      ],
+      kit: [
+        { cat: 'Camera', name: 'Panasonic Lumix S5IIX', spec: '6K · V-Log · doppio ISO nativo' },
+        { cat: 'Ottica', name: 'Samyang AF 35–150mm f/2–2.8', spec: 'Attacco L · [altre ottiche]' },
+        { cat: 'Audio', name: 'DJI Mic 2', spec: 'Più microfono shotgun on-camera' },
+        { cat: 'Post-produzione', name: 'DaVinci Resolve Studio', spec: 'Montaggio e color · Lightroom Classic per le foto' }
+      ],
+      credits: [
+        { t: 'Dynamis', role: 'Produttore, D.O.P., montaggio, color, VFX', prod: 'produkts.it' },
+        { t: 'Tra i Piedi', role: 'Direttore della fotografia', prod: 'AMARCORD' },
+        { t: "L'Inventario", role: 'Co-D.O.P.', prod: 'AMARCORD' },
+        { t: 'Schizophrenia — Io e Nessun Altro', role: 'Regia e fotografia', prod: 'Produkts' },
+        { t: 'Sbaglio Dunque Esisto', role: 'Operatore, 1ª camera', prod: 'AMARCORD' },
+        { t: 'La Seduta', role: 'Operatore', prod: 'AMARCORD' },
+        { t: 'Paranoia', role: 'Operatore, 2ª camera', prod: 'AMARCORD' },
+        { t: 'Cuori in Stand-by', role: 'Assistente operatore, 2ª camera', prod: 'AMARCORD' },
+        { t: 'Parfum', role: 'Assistente operatore', prod: 'AMARCORD' },
+        { t: 'La Sedia', role: 'Assistente operatore', prod: 'AMARCORD' },
+        { t: "Spaghetti all'Assassina", role: 'Assistente operatore', prod: 'AMARCORD' },
+        { t: 'Il Tanga e la Cravatta', role: 'Fonico', prod: 'AMARCORD' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>Produkts — Menu</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&amp;family=Space+Grotesk:wght@400;500&amp;display=swap">
+<style>
+html,body{overflow-x:clip;max-width:100%}
+@media (max-width:640px){[style*="px 56px"],[style*="padding: 0 56px"]{padding-left:16px!important;padding-right:16px!important}}
+body{margin:0}
+</style>
+</helmet>
+<div style="font-family: 'Space Grotesk', sans-serif; color: #E8E4DF; position: relative; z-index: 60">
+<div style="max-width: 1440px; margin: 0 auto; padding: 28px 56px; box-sizing: border-box; display: flex; align-items: center; justify-content: space-between; gap: 24px">
+<a href="Main.dc.html" style="color: #E8E4DF; text-decoration: none; font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300; font-size: 30px">produkts<span style="font-style: normal; opacity: 0.5">.it</span></a>
+<div style="display: flex; align-items: center; gap: 32px">
+<button type="button" class="mb" onClick="{{toggle}}" aria-expanded="{{expanded}}" aria-label="Apri il menu" style="height: 48px; padding: 0; background: transparent; border: 0; color: #E8E4DF; display: flex; align-items: center; gap: 14px; cursor: pointer; font-family: 'Space Grotesk', sans-serif; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase">Menu<span aria-hidden="true" style="display: flex; flex-direction: column; align-items: flex-end; gap: 7px"><span class="l1" style="display: block; width: 28px; height: 1px; background: #E8E4DF"></span><span class="l2" style="display: block; width: 18px; height: 1px; background: {{accent}}"></span></span></button>
+</div>
+</div>
+
+<sc-if value="{{show}}" hint-placeholder-val="{{ false }}">
+<div class="{{moCls}}" role="dialog" aria-modal="true" aria-label="Menu" style="position: fixed; inset: 0; z-index: 80; background: #0B0B0B; display: flex; flex-direction: column; overflow-y: auto">
+<div style="width: 100%; max-width: 1440px; margin: 0 auto; padding: 28px 56px; box-sizing: border-box; display: flex; align-items: center; justify-content: space-between; gap: 24px">
+<a href="Main.dc.html" style="color: #E8E4DF; text-decoration: none; font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300; font-size: 30px">produkts<span style="font-style: normal; opacity: 0.5">.it</span></a>
+<button type="button" class="mx" onClick="{{toggle}}" aria-label="Chiudi il menu" style="height: 48px; padding: 0; background: transparent; border: 0; color: #E8E4DF; display: flex; align-items: center; gap: 14px; cursor: pointer; font-family: 'Space Grotesk', sans-serif; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase">Chiudi<span aria-hidden="true" style="position: relative; width: 28px; height: 28px; display: block"><span class="x1" style="position: absolute; left: 0; top: 14px; width: 28px; height: 1px; background: #E8E4DF; transform: rotate(45deg)"></span><span class="x2" style="position: absolute; left: 0; top: 14px; width: 28px; height: 1px; background: {{accent}}; transform: rotate(-45deg)"></span></span></button>
+</div>
+
+<div style="flex: 1; width: 100%; max-width: 1440px; margin: 0 auto; padding: 24px 56px 40px; box-sizing: border-box; display: flex; flex-wrap: wrap; align-items: center; gap: 48px 96px">
+<nav aria-label="Principale" style="flex: 999 1 520px; display: flex; flex-direction: column">
+<sc-for list="{{links}}" as="l" hint-placeholder-count="7">
+<a href="{{l.href}}" class="ml" onMouseEnter="{{l.hover}}" onFocus="{{l.hover}}" style="display: flex; align-items: baseline; gap: 24px; padding: 2px 0; color: #E8E4DF; text-decoration: none; animation-delay: {{l.delay}}">
+<span style="font-size: 12px; color: #6E6A64; letter-spacing: 0.1em; width: 28px; flex: none">{{l.n}}</span>
+<span class="mt" style="font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300; font-size: clamp(44px, 6.2vw, 92px); line-height: 1.06; color: {{l.color}}">{{l.label}}</span>
+<sc-if value="{{l.cur}}" hint-placeholder-val="{{ false }}"><span aria-hidden="true" style="width: 8px; height: 8px; border-radius: 50%; background: {{accent}}; align-self: center; flex: none"></span></sc-if>
+</a>
+</sc-for>
+</nav>
+<div class="mfade" style="flex: 1 1 340px; max-width: 520px; display: flex; flex-direction: column; gap: 16px">
+<div style="position: relative; aspect-ratio: 4 / 5; background: #161616; display: flex; align-items: flex-end; padding: 20px; box-sizing: border-box">
+<span aria-hidden="true" style="position: absolute; top: 16px; left: 16px; width: 28px; height: 28px; border-top: 1px solid #336699; border-left: 1px solid #336699"></span>
+<span aria-hidden="true" style="position: absolute; bottom: 16px; right: 16px; width: 28px; height: 28px; border-bottom: 1px solid #336699; border-right: 1px solid #336699"></span>
+<span class="pv" key="{{prev}}" style="font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: #6E6A64">{{prev}}</span>
+</div>
+<span style="font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: #9A948C">Frame the Future</span>
+</div>
+</div>
+
+<div class="mfade" style="width: 100%; max-width: 1440px; margin: 0 auto; padding: 0 56px 32px; box-sizing: border-box">
+<div style="border-top: 1px solid #1F1F1F; padding-top: 20px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 32px; font-size: 13px; color: #9A948C">
+<div style="display: flex; flex-wrap: wrap; gap: 8px 32px">
+<a href="https://wa.me/393711444875?text=Ciao%20Karim%2C%20ti%20scrivo%20dal%20sito%20produkts.it%3A%20" target="_blank" rel="noopener" style="color: #E8E4DF; text-decoration: none; padding: 8px 0">WhatsApp</a>
+<a href="mailto:info@produkts.it" style="color: #E8E4DF; text-decoration: none; padding: 8px 0">info@produkts.it</a>
+<a href="https://www.instagram.com/produkts.it/" target="_blank" rel="noopener" style="color: #E8E4DF; text-decoration: none; padding: 8px 0">Instagram</a>
+<a href="https://www.youtube.com/@produkts-it" target="_blank" rel="noopener" style="color: #E8E4DF; text-decoration: none; padding: 8px 0">YouTube</a>
+</div>
+<span style="padding: 8px 0">Altamura (BA) · Puglia</span>
+</div>
+</div>
+</div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"current":{"editor":"enum","options":["home","lavori","chisono","recensioni","contatti"],"default":"home"},"accent":{"editor":"color","default":"#B46428"},"$preview":{"width":1440,"height":110}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { open: false, closing: false, hov: null };
+  }
+  componentDidMount() {
+    function pkCursor(){
+      var d=document,w=window;
+      if(!w.matchMedia||!w.matchMedia('(hover: hover) and (pointer: fine)').matches)return null;
+      if(!w.PointerEvent||d.getElementById('pk-cursor'))return null;
+      var still=w.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var st=d.createElement('style');st.id='pk-cursor-css';
+      st.textContent='#pk-cursor{position:fixed;left:0;top:0;width:28px;height:28px;border:1px solid rgba(232,228,223,.75);border-radius:50%;pointer-events:none;z-index:2147483647;opacity:0;transition:opacity .3s ease,border-color .3s,background-color .3s;will-change:transform,width,height;box-sizing:border-box}'
+       +'#pk-cursor.lock{border-color:#D98A4E;background-color:rgba(217,138,78,.06)}#pk-cursor.lens{border-color:rgba(232,228,223,.35)}'
+       +'@media (hover:none),(pointer:coarse){#pk-cursor{display:none!important}}';
+      d.head.appendChild(st);
+      var c=d.createElement('div');c.id='pk-cursor';c.setAttribute('aria-hidden','true');d.body.appendChild(c);
+      var SEL='a,button,select,input,textarea,label,summary,[role="button"]',BSEL='h1,h2,h3,.kicker,.kw,[data-blur],span[style*="text-transform: uppercase"],span[style*="text-transform:uppercase"]';
+      var PAD=7,MIN=46,EASE='cubic-bezier(.2,.7,.2,1)';
+      var mx=-100,my=-100,x=-100,y=-100,W=28,H=28,R=14,lock=null,mode='',raf,visible=false;
+      var blurred=null,blurAnim=null,muted=null;
+      var k=still?1:0.16,ks=still?1:0.2;
+      function blurOn(el){
+        if(blurAnim){blurAnim.cancel();}
+        blurAnim=el.animate([{filter:'blur(0px)',opacity:1},{filter:'blur(2.4px)',opacity:.85}],{duration:220,easing:EASE,fill:'forwards'});
+      }
+      function blurOff(el,instant){
+        if(!el)return;
+        var a=blurAnim;blurAnim=null;
+        if(instant){if(a)a.cancel();return;}
+        var cur=a?getComputedStyle(el).filter:'blur(2.4px)';
+        var out=el.animate([{filter:cur==='none'?'blur(0px)':cur,opacity:getComputedStyle(el).opacity},{filter:'blur(0px)',opacity:1}],{duration:260,easing:EASE});
+        if(a)a.cancel();
+        out.onfinish=function(){out.cancel()};
+      }
+      function setBlur(el,instant){
+        if(el===blurred)return;
+        if(blurred)blurOff(blurred,instant);
+        blurred=el;
+        if(el)blurOn(el);
+      }
+      function hide(){visible=false;c.style.opacity='0';lock=null;setBlur(null,true);}
+      function radiusOf(el,h){var r=parseFloat(getComputedStyle(el).borderTopLeftRadius)||0;return Math.min(r+PAD,h/2)}
+      function move(e){
+        if(e.pointerType!=='mouse'){hide();return;}
+        mx=e.clientX;my=e.clientY;
+        if(!visible){visible=true;x=mx;y=my;c.style.opacity='1';}
+        var t=e.target&&e.target.closest?e.target.closest(SEL):null;
+        var bl=!t&&e.target&&e.target.closest?e.target.closest(BSEL):null;
+        if(muted&&bl!==muted)muted=null;
+        if(bl&&bl===muted)bl=null;
+        lock=t;setBlur(still?null:bl);
+        var m=t?'lock':bl?'lens':'';
+        if(m!==mode){mode=m;c.className=m;}
+      }
+      function down(e){
+        if(e.pointerType!=='mouse'){hide();return;}
+        if(blurred){muted=blurred;setBlur(null,false);if(mode==='lens'){mode='';c.className='';}}
+      }
+      function loop(){
+        var tx,ty,tw,th,tr;
+        if(lock&&lock.isConnected){
+          var r=lock.getBoundingClientRect(),cxe=r.left+r.width/2,cye=r.top+r.height/2;
+          if(r.width+PAD*2>MIN||r.height+PAD*2>MIN){tw=Math.max(r.width+PAD*2,MIN);th=Math.max(r.height+PAD*2,MIN);tr=radiusOf(lock,th);}
+          else{tw=th=MIN;tr=MIN/2;}
+          tx=cxe+(mx-cxe)*0.08;ty=cye+(my-cye)*0.08;
+        }else{tx=mx;ty=my;var s=mode==='lens'?72:28;tw=th=s;tr=s/2;}
+        x+=(tx-x)*k;y+=(ty-y)*k;W+=(tw-W)*ks;H+=(th-H)*ks;R+=(tr-R)*ks;
+        c.style.width=W.toFixed(1)+'px';c.style.height=H.toFixed(1)+'px';c.style.borderRadius=R.toFixed(1)+'px';
+        c.style.transform='translate3d('+(x-W/2).toFixed(2)+'px,'+(y-H/2).toFixed(2)+'px,0)';
+        raf=requestAnimationFrame(loop);
+      }
+      d.addEventListener('pointermove',move,{passive:true});
+      d.addEventListener('pointerdown',down,{passive:true});
+      d.addEventListener('touchstart',hide,{passive:true});
+      d.documentElement.addEventListener('mouseleave',hide);
+      w.addEventListener('blur',hide);
+      raf=requestAnimationFrame(loop);
+      return function(){cancelAnimationFrame(raf);d.removeEventListener('pointermove',move);d.removeEventListener('pointerdown',down);d.removeEventListener('touchstart',hide);d.documentElement.removeEventListener('mouseleave',hide);w.removeEventListener('blur',hide);setBlur(null,true);c.remove();st.remove();};
+    }
+    this.cursorOff = pkCursor();
+  }
+  componentWillUnmount() {
+    clearTimeout(this.t);
+    if (this.cursorOff) this.cursorOff();
+  }
+  renderVals() {
+    const accent = this.props.accent ?? '#B46428';
+    const current = this.props.current ?? 'home';
+    const items = [
+      ['01', 'Home', 'Main.dc.html', 'home', '[ Showreel ]'],
+      ['02', 'Lavori', 'Archivio.dc.html', 'lavori', '[ Fotogramma da un lavoro ]'],
+      ['03', 'Chi sono', 'ChiSono.dc.html', 'chisono', '[ Ritratto sul set ]'],
+      ['04', 'Recensioni', 'Recensioni.dc.html', 'recensioni', '[ Una frase da una recensione ]'],
+      ['05', 'Contatti', 'Contatti.dc.html', 'contatti', '[ Dietro le quinte ]']
+    ];
+    const close = () => {
+      this.setState({ closing: true });
+      clearTimeout(this.t);
+      this.t = setTimeout(() => this.setState({ open: false, closing: false, hov: null }), 600);
+    };
+    const hov = this.state.hov;
+    const curItem = items.find((it) => it[3] === current) || items[0];
+    return {
+      accent: accent,
+      show: this.state.open,
+      expanded: this.state.open ? 'true' : 'false',
+      moCls: this.state.closing ? 'mo closing' : 'mo',
+      toggle: () => (this.state.open ? close() : this.setState({ open: true, closing: false })),
+      prev: hov ? hov[4] : curItem[4],
+      links: items.map((it, i) => ({
+        n: it[0],
+        label: it[1],
+        href: it[2],
+        cur: it[3] === current,
+        color: it[3] === current ? '#E8E4DF' : '#B8B2AA',
+        delay: (0.35 + i * 0.06).toFixed(2) + 's',
+        hover: () => this.setState({ hov: it })
+      }))
+    };
+  }
+}
+</script>
+</body>
+</html>

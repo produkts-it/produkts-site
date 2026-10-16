@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>Produkts — Privacy e cookie</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&amp;family=Space+Grotesk:wght@400;500&amp;display=swap">
+<style>
+html,body{overflow-x:clip;max-width:100%}
+@media (max-width:640px){[style*="px 56px"],[style*="padding: 0 56px"]{padding-left:16px!important;padding-right:16px!important}}
+body{margin:0;background:#080808}
+a{color:#E8E4DF;text-decoration:none}a:hover{color:#D98A4E}
+@keyframes curtain{0%{transform:translateY(0)}100%{transform:translateY(-100%)}}
+@keyframes wm{0%{opacity:0}30%,70%{opacity:1}100%{opacity:0}}
+@keyframes rise{from{transform:translateY(110%)}to{transform:none}}
+@keyframes fade{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+.curtain{animation:curtain .9s cubic-bezier(.8,0,.2,1) .55s both}
+.curtain .wm{animation:wm .9s ease both}
+.rise{animation:rise 1.1s cubic-bezier(.2,.7,.1,1) 1.2s both}
+.fade{animation:fade 1s ease 1.5s both}
+.toc a{transition:padding .4s cubic-bezier(.2,.7,.2,1),color .3s}
+.toc a:hover{padding-left:10px!important}
+@supports (animation-timeline: view()){.reveal{animation:fade linear both;animation-timeline:view();animation-range:entry 0% entry 40%}}
+@keyframes mopen{from{clip-path:circle(0% at calc(100% - 90px) 52px)}to{clip-path:circle(150% at calc(100% - 90px) 52px)}}
+@keyframes mclose{from{clip-path:circle(150% at calc(100% - 90px) 52px)}to{clip-path:circle(0% at calc(100% - 90px) 52px)}}
+@keyframes mlink{from{opacity:0;transform:translateY(60%) skewY(4deg)}to{opacity:1;transform:none}}
+@keyframes pv{from{opacity:0;letter-spacing:.4em}to{opacity:1}}
+.mo{animation:mopen .9s cubic-bezier(.77,0,.18,1) both}
+.mo.closing{animation:mclose .6s cubic-bezier(.77,0,.18,1) both}
+.ml{animation:mlink .8s cubic-bezier(.2,.7,.1,1) both}
+.ml .mt{display:inline-block;transition:transform .5s cubic-bezier(.2,.7,.2,1),color .3s}
+.ml:hover .mt,.ml:focus-visible .mt{transform:translateX(24px);color:#D98A4E!important}
+.mfade{animation:fade .8s ease .7s both}
+.pv{animation:pv .5s ease both}
+.mb .l1,.mb .l2{transition:width .4s cubic-bezier(.2,.7,.2,1)}
+.mb:hover .l1{width:16px!important}.mb:hover .l2{width:28px!important}
+.mx .x1,.mx .x2{transition:transform .5s cubic-bezier(.2,.7,.2,1)}
+.mx:hover .x1{transform:rotate(135deg)!important}.mx:hover .x2{transform:rotate(45deg)!important}
+@media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+</style>
+</helmet>
+<div style="background: #080808; color: #E8E4DF; font-family: 'Space Grotesk', sans-serif; min-height: 100vh">
+<div aria-hidden="true" class="curtain" style="position: fixed; inset: 0; background: #0E0E0E; z-index: 50; display: flex; align-items: center; justify-content: center; pointer-events: none; border-bottom: 1px solid #B46428"><span class="wm" style="font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300; font-size: 40px">Privacy</span></div>
+<header><dc-import name="Menu" current="" accent="{{accent}}" hint-size="100%,104px"></dc-import></header>
+
+<section style="max-width: 1440px; margin: 0 auto; padding: 72px 56px 56px; box-sizing: border-box; display: flex; flex-direction: column; gap: 20px">
+<h1 style="margin: 0; font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300; font-size: clamp(56px, 8vw, 120px); line-height: 0.95; overflow: hidden; padding-bottom: 0.08em"><span class="rise" style="display: block">Privacy e cookie</span></h1>
+<span class="fade" style="font-size: 13px; color: #9A948C">Ultimo aggiornamento: [DATA]</span>
+</section>
+
+<section style="max-width: 1440px; margin: 0 auto; padding: 0 56px 120px; box-sizing: border-box; display: flex; flex-wrap: wrap; gap: 48px 96px; border-top: 1px solid #1F1F1F">
+<nav class="toc fade" aria-label="Indice" style="flex: 1 1 260px; padding-top: 40px; display: flex; flex-direction: column">
+<sc-for list="{{sections}}" as="s" hint-placeholder-count="8">
+<a href="#{{s.id}}" style="padding: 10px 0; font-size: 14px; color: #9A948C; display: flex; gap: 16px"><span style="color: #6E6A64; font-variant-numeric: tabular-nums">{{s.n}}</span>{{s.t}}</a>
+</sc-for>
+</nav>
+<div style="flex: 999 1 600px; min-width: 0; max-width: 760px; padding-top: 40px; display: flex; flex-direction: column; gap: 56px">
+<sc-for list="{{sections}}" as="s" hint-placeholder-count="8">
+<article id="{{s.id}}" class="reveal" style="display: flex; flex-direction: column; gap: 14px">
+<span style="font-size: 12px; letter-spacing: 0.14em; color: {{accent}}">{{s.n}}</span>
+<h2 style="margin: 0; font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 400; font-size: 34px; line-height: 1.15">{{s.t}}</h2>
+<p style="margin: 0; font-size: 16px; line-height: 1.75; color: #C9C4BD; white-space: pre-line">{{s.body}}</p>
+</article>
+</sc-for>
+</div>
+</section>
+
+<footer style="border-top: 1px solid #1F1F1F">
+<div style="max-width: 1440px; margin: 0 auto; padding: 24px 56px 40px; box-sizing: border-box; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; font-size: 13px; color: #9A948C">
+<span>© 2026 Produkts · Karim Ismail · Altamura (BA)</span>
+<a href="#" style="color: #9A948C">Gestisci preferenze cookie</a>
+</div>
+</footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#B46428","options":["#B46428","#336699","#E8E4DF"]},"$preview":{"width":1440,"height":3000}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const accent = this.props.accent ?? '#B46428';
+    const s = (n, id, t, body) => ({ n: n, id: id, t: t, body: body });
+    return {
+      accent: accent,
+      sections: [
+        s('01', 'titolare', 'Titolare del trattamento', 'Karim Ismail, Altamura (BA).\nContatto per la privacy: info@produkts.it.'),
+        s('02', 'dati', 'Quali dati raccolgo', 'Modulo contatti: nome, email o telefono, dettagli del progetto.\nRecensioni: nome, servizio, testo e valutazione.\n[Statistiche di navigazione, se attive.]'),
+        s('03', 'finalita', 'Perché li uso', 'Rispondere alle richieste e pubblicare le recensioni approvate. [Da completare con le basi giuridiche.]'),
+        s('04', 'conservazione', 'Per quanto tempo', '[Indicare i tempi di conservazione per ogni tipo di dato: richieste e recensioni.]'),
+        s('05', 'terzi', 'Servizi esterni', 'Hosting: [nuovo hosting].\nVideo: YouTube.\nContatti: WhatsApp, se scegli di scrivermi lì.\n[Altri servizi, se presenti.]'),
+        s('06', 'cookie', 'Cookie', 'Cookie tecnici necessari al funzionamento del sito.\n[Cookie di statistica e di terze parti, se presenti, attivati solo con il tuo consenso.]'),
+        s('07', 'diritti', 'I tuoi diritti', 'Puoi chiedere accesso, rettifica, cancellazione o limitazione dei tuoi dati scrivendo a info@produkts.it. [Da completare con i riferimenti normativi.]'),
+        s('08', 'modifiche', 'Modifiche', 'Questa pagina può essere aggiornata. La data in alto indica l\'ultima revisione.')
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>
