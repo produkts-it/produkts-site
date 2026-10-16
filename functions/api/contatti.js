@@ -1,5 +1,5 @@
 // POST /api/contatti — salva una richiesta dal modulo Contatti e avvisa Karim su Telegram
-import { json, testo, turnstileOk, corpo, numeroWa, notifica } from '../_lib.js';
+import { json, testo, turnstileOk, corpo, numeroWa, notifica, pulizia } from '../_lib.js';
 
 export async function onRequestPost(context) {
   const { request, env } = context;
@@ -21,6 +21,7 @@ export async function onRequestPost(context) {
   await env.DB.prepare('INSERT INTO contatti (tipo, budget, quando, dove, nome, recapito, messaggio) VALUES (?, ?, ?, ?, ?, ?, ?)')
     .bind(tipo, budget, quando, dove, nome, recapito, messaggio)
     .run();
+  pulizia(context);
   const origine = new URL(request.url).origin;
   notifica(context, [
     { b: 'Nuova richiesta dal sito' },

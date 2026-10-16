@@ -80,6 +80,18 @@ export function notifica(context, righe, pulsanti = []) {
   context.waitUntil(invio);
 }
 
+/**
+ * Tempi di conservazione promessi nella pagina Privacy: richieste di contatto 24 mesi,
+ * recensioni non pubblicate (in attesa o rifiutate) 12 mesi. Gira in sottofondo a ogni invio dai moduli.
+ */
+export function pulizia(context) {
+  const { env } = context;
+  context.waitUntil(env.DB.batch([
+    env.DB.prepare("DELETE FROM contatti WHERE creato < datetime('now', '-24 months')"),
+    env.DB.prepare("DELETE FROM recensioni WHERE stato != 'approvata' AND creato < datetime('now', '-12 months')"),
+  ]).catch(() => {}));
+}
+
 // ---- Pannello /admin: riservato a Karim ----
 
 /** Confronto a tempo costante (non rivela quanti caratteri della password sono giusti). */
