@@ -1,5 +1,7 @@
-"""Builds repo/index.html (standalone page for GitHub Pages) from wip-body.html."""
-body = open('wip-body.html').read()
+"""Builds index.html in the repo root (standalone page for GitHub Pages) from wip-body.html."""
+import os
+HERE = os.path.dirname(os.path.abspath(__file__))
+body = open(os.path.join(HERE, 'wip-body.html'), encoding='utf-8').read()
 head = '''<!doctype html>
 <html lang="it">
 <head>
@@ -17,5 +19,5 @@ head = '''<!doctype html>
 i = body.index('<div class="page">')
 top = body[:i].replace('<meta name="claude:viewport-fit-sides" content="cover">\n', '')
 html = head + top + '</head>\n<body>\n' + body[i:] + '</body>\n</html>\n'
-open('repo/index.html', 'w').write(html)
+open(os.path.join(HERE, '..', '..', 'index.html'), 'w', encoding='utf-8', newline='\n').write(html)
 print('ok', len(html))

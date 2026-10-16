@@ -5,7 +5,12 @@ Sito di Karim Ismail (produkts.it), fotografo, videomaker e D.O.P. ad Altamura (
 ## Stato attuale
 - **Online (root del repo):** pagina "work in progress" (`index.html`) pubblicata con GitHub Pages su produkts.it (file `CNAME`). Ogni push su `main` va online.
 - **Bozza del sito completo (`/bozza/`):** il sito vero si costruisce in `bozza/` ed è visibile su produkts.it/bozza. Non è segreto (il repo è pubblico e chiunque abbia il link lo vede), solo escluso dai motori di ricerca con `<meta name="robots" content="noindex, nofollow">` su ogni pagina. Quando sarà pronto, prenderà il posto della pagina WIP nella root.
-- **Sorgente della pagina WIP:** `_design/wip/wip-body.html` + `_design/wip/build.py` (genera `index.html`). Il cursore custom è anche in `_design/wip/cursor.js`.
+  - Pagine (convertite dai mockup, ora sono loro la fonte da modificare): `index.html` (Home), `dynamis.html`, `lavori.html`, `chi-sono.html`, `recensioni.html`, `contatti.html`, `privacy.html`; spente (non nel menu): `fotografia.html`, `galleria.html`, `area-clienti.html`. Fotogrammi in `bozza/img/fotogrammi/`.
+  - Stile comune in `bozza/assets/site.css`. `bozza/assets/site.js` (intro, cursore, menu, azioni `data-act`) si genera con `python _design/bozza/build.py` da `_design/bozza/site.src.js`: non modificarlo a mano.
+  - I moduli (contatti, recensioni) e i codici galleria per ora non inviano/verificano nulla: mostrano solo lo stato di conferma.
+- **404 pubblica:** `404.html` nella root, autonoma (percorsi assoluti, nessun link alla bozza).
+- Le pagine riservano lo spazio della barra di scorrimento su entrambi i lati (`scrollbar-gutter: stable both-edges`) per restare centrate.
+- **Sorgente della pagina WIP:** `_design/wip/wip-body.html` + `_design/wip/build.py` (genera `index.html`: `python _design/wip/build.py`). Il cursore custom è anche in `_design/wip/cursor.js`.
 - **Progetto del sito completo (non ancora online):** `_design/pagine/*.dc.html`, mockup per pagina (Home=Main, Dynamis=Work, Recensioni, Galleria, Archivio, ChiSono, Contatti, Fotografia, Privacy, NotFound, AreaClienti, componente Menu). Sono file del formato canvas di Claude Design: struttura e testi sono la base per costruire il sito vero in HTML statico. Le cartelle che iniziano con `_` non vengono pubblicate da GitHub Pages.
 - Foto, Area clienti e Galleria per ora restano spente. Galleria clienti: pagine raggiungibili solo tramite link diretto (stile Pixieset).
 
