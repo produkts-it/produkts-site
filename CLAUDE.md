@@ -57,12 +57,13 @@ Sito di Karim Ismail (produkts.it), fotografo, videomaker e D.O.P. ad Altamura (
 - Zero spese aggiuntive: hosting gratuito (GitHub Pages).
 
 ## Cloudflare (in corso di migrazione, ottobre 2026)
-- Account Cloudflare di produkts.studio@gmail.com. Progetto Pages **produkts-site** collegato al repo (build `bash _design/pubblica.sh`, output `dist/`), anteprima su produkts-site.pages.dev. Ogni push su `main` pubblica sia GitHub Pages sia Pages.
+- Account Cloudflare di produkts.studio@gmail.com. Segreti su Pages già impostati da Karim: `TURNSTILE_SECRET`, `ADMIN_PASSWORD`. Progetto Pages **produkts-site** collegato al repo (build `bash _design/pubblica.sh`, output `dist/`), anteprima su produkts-site.pages.dev. Ogni push su `main` pubblica sia GitHub Pages sia Pages.
 - D1 **produkts-moduli** (giurisdizione UE, id in `wrangler.toml`), tabelle in `migrations/`. Turnstile widget "produkts.it moduli" (chiave pubblica in `_design/bozza/site.src.js`; il segreto `TURNSTILE_SECRET` va messo da Karim nelle impostazioni di Pages).
-- Zona produkts.it aggiunta (piano Free), DNS identici a IONOS, record del sito in "solo DNS". Nameserver Cloudflare: clint.ns.cloudflare.com, paislee.ns.cloudflare.com — **non ancora impostati su IONOS**. Dopo l'attivazione: dominio personalizzato produkts.it/www su Pages.
+- Zona produkts.it aggiunta (piano Free), DNS identici a IONOS, record del sito in "solo DNS". Nameserver Cloudflare: clint.ns.cloudflare.com, paislee.ns.cloudflare.com, **impostati su IONOS il 16/10/2026** (DNSSEC era spento; i DNS ora si gestiscono su Cloudflare, non più su IONOS). Prossimo passo, quando la zona risulta attiva: dominio personalizzato produkts.it e www su Pages (sostituisce i record verso GitHub Pages).
 - Pannello /admin: protetto da password (segreto `ADMIN_PASSWORD` nelle impostazioni di Pages, messo da Karim; in locale file `.dev.vars`, escluso da git). Cloudflare Access resta opzionale (variabili ACCESS_TEAM/ACCESS_AUD).
 
 ## Dominio e DNS (non toccare senza motivo)
+- Dal 16/10/2026 i record DNS stanno su **Cloudflare** (zona produkts.it); su IONOS restano solo registrazione e nameserver.
 - produkts.it è registrato su IONOS nel contratto "IONOS Pack Dominio"; il vecchio WordPress Hosting è in disdetta.
 - DNS: A @ → 185.199.108-111.153 (GitHub), CNAME www → produkts-it.github.io.
 - Email su **Zoho**: record MX mx/mx2/mx3.zoho.eu, SPF, DKIM (zmail._domainkey), zb19768698 → zmverify.zoho.eu. Non modificarli mai.
