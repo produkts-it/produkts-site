@@ -3,7 +3,7 @@
 Sito di Karim Ismail (produkts.it), fotografo, videomaker e D.O.P. ad Altamura (BA). Comunicazione sempre in italiano.
 
 ## Stato attuale
-- **Online (root del repo):** pagina "work in progress" (`index.html`) pubblicata con GitHub Pages su produkts.it (file `CNAME`). Ogni push su `main` va online.
+- **Online (root del repo):** pagina "work in progress" (`index.html`) su produkts.it, servita da **Cloudflare Pages** (dal 16/10/2026; prima GitHub Pages, ora non più usato per il dominio). Ogni push su `main` va online in 1-2 minuti.
 - **Bozza del sito completo (`/bozza/`):** il sito vero si costruisce in `bozza/` ed è visibile su produkts.it/bozza. Non è segreto (il repo è pubblico e chiunque abbia il link lo vede), solo escluso dai motori di ricerca con `<meta name="robots" content="noindex, nofollow">` su ogni pagina. Quando sarà pronto, prenderà il posto della pagina WIP nella root.
   - Pagine (convertite dai mockup, ora sono loro la fonte da modificare): `index.html` (Home), `dynamis.html`, `lavori.html`, `chi-sono.html`, `recensioni.html`, `contatti.html`, `privacy.html`; spente (non nel menu): `fotografia.html`, `galleria.html`, `area-clienti.html`. Fotogrammi in `bozza/img/fotogrammi/`.
   - Stile comune in `bozza/assets/site.css`. `bozza/assets/site.js` (intro, cursore, menu, azioni `data-act`) si genera con `python _design/bozza/build.py` da `_design/bozza/site.src.js`: non modificarlo a mano.
@@ -12,10 +12,10 @@ Sito di Karim Ismail (produkts.it), fotografo, videomaker e D.O.P. ad Altamura (
   - Dopo `lavori.py` lanciare sempre `python _design/bozza/build.py`: aggiorna le versioni `?v=` di site.js/site.css in tutte le pagine (evita file vecchi in cache).
   - Video su Vimeo (Korvo, Troppo bella per loro): campo `vimeo` invece di `yt`, copertina da i.vimeocdn.com.
   - Filmografia (Home e Chi sono): **solo cinema** (cortometraggi, lungometraggi, film, docufilm, documentari); niente videoclip, social, corporate. La casa di produzione di Coseco si scrive **kontents.eu**. Il videoclip di Korvo si intitola «Hai perso».
-  - Link interni **senza .html** (`href="chi-sono"`): GitHub Pages li risolve da solo. Anteprima locale con `python _design/serve.py 8081` (fa lo stesso e mostra la 404).
+  - Link interni **senza .html** (`href="chi-sono"`): Cloudflare Pages li risolve da solo (e reindirizza `x.html` → `x`). Anteprima locale con `python _design/serve.py 8081` (fa lo stesso e mostra la 404).
   - Ogni pagina ha nell'intestazione l'orologio con timecode di Altamura (come nella WIP), inserito da site.js; la 404 lo ha inline.
 - **Chi è Karim (per i testi):** diploma Grafica e Comunicazione, I.T.T. Nervi Galilei Altamura (92/100); 2021 nasce gh0st.ph → inizio 2025 produkts.work → da luglio 2025 produkts.it (nuova brand identity in arrivo); da ottobre 2025 AMARCORD, DOP certificato (con Raffaele Mertes, Massimo Giuliani, Tiziana Lattuca, Giuseppe Maldera). Nel Percorso del sito NON vanno: Accademia di Belle Arti di Roma, Università di Bari (Marketing), Dambrosio Wrapping. Prossimi passi: festival, film, produzioni più grandi. Niente sezione "Kit".
-  - I moduli (contatti, recensioni) e i codici galleria per ora non inviano/verificano nulla: mostrano solo lo stato di conferma.
+  - Moduli contatti e recensioni: funzionanti (API in `functions/`, dati in D1, anti-spam Turnstile). Le recensioni compaiono sul sito solo dopo l'approvazione nel pannello /admin. I codici galleria/area clienti invece non verificano ancora nulla.
 - **404 pubblica:** `404.html` nella root, autonoma (percorsi assoluti, nessun link alla bozza).
 - Le pagine riservano lo spazio della barra di scorrimento su entrambi i lati (`scrollbar-gutter: stable both-edges`) per restare centrate.
 - **Sorgente della pagina WIP:** `_design/wip/wip-body.html` + `_design/wip/build.py` (genera `index.html`: `python _design/wip/build.py`). Il cursore custom è anche in `_design/wip/cursor.js`.
@@ -54,16 +54,16 @@ Sito di Karim Ismail (produkts.it), fotografo, videomaker e D.O.P. ad Altamura (
 - Recensioni: alcune in evidenza + "Guarda tutte"; filtri per evento; testi dei clienti mai corretti; nome + iniziale del cognome. Se il servizio è "Altro", chiedere quale.
 - Palette: fondo #080808, testo #E8E4DF, arancio #B46428 / #D98A4E, blu #336699. Font: Cormorant Garamond (titoli) + Space Grotesk.
 - Contatti pubblici: info@produkts.it, karim@produkts.it, WhatsApp +39 371 144 4875, YouTube @produkts-it.
-- Zero spese aggiuntive: hosting gratuito (GitHub Pages).
+- Zero spese aggiuntive: hosting gratuito (Cloudflare Pages, piano Free; niente piani a pagamento né carta per Zero Trust).
 
-## Cloudflare (in corso di migrazione, ottobre 2026)
+## Cloudflare (migrazione completata il 16/10/2026)
 - Account Cloudflare di produkts.studio@gmail.com. Segreti su Pages già impostati da Karim: `TURNSTILE_SECRET`, `ADMIN_PASSWORD`. Progetto Pages **produkts-site** collegato al repo (build `bash _design/pubblica.sh`, output `dist/`), anteprima su produkts-site.pages.dev. Ogni push su `main` pubblica sia GitHub Pages sia Pages.
 - D1 **produkts-moduli** (giurisdizione UE, id in `wrangler.toml`), tabelle in `migrations/`. Turnstile widget "produkts.it moduli" (chiave pubblica in `_design/bozza/site.src.js`; il segreto `TURNSTILE_SECRET` va messo da Karim nelle impostazioni di Pages).
-- Zona produkts.it aggiunta (piano Free), DNS identici a IONOS, record del sito in "solo DNS". Nameserver Cloudflare: clint.ns.cloudflare.com, paislee.ns.cloudflare.com, **impostati su IONOS il 16/10/2026** (DNSSEC era spento; i DNS ora si gestiscono su Cloudflare, non più su IONOS). Prossimo passo, quando la zona risulta attiva: dominio personalizzato produkts.it e www su Pages (sostituisce i record verso GitHub Pages).
+- Zona produkts.it aggiunta (piano Free), DNS identici a IONOS, record del sito in "solo DNS". Nameserver Cloudflare: clint.ns.cloudflare.com, paislee.ns.cloudflare.com, **impostati su IONOS il 16/10/2026** (DNSSEC era spento; i DNS ora si gestiscono su Cloudflare, non più su IONOS). Zona attiva; produkts.it e www.produkts.it sono domini personalizzati del progetto Pages (CNAME → produkts-site.pages.dev, certificato automatico).
 - Pannello /admin: protetto da password (segreto `ADMIN_PASSWORD` nelle impostazioni di Pages, messo da Karim; in locale file `.dev.vars`, escluso da git). Cloudflare Access resta opzionale (variabili ACCESS_TEAM/ACCESS_AUD).
 
 ## Dominio e DNS (non toccare senza motivo)
 - Dal 16/10/2026 i record DNS stanno su **Cloudflare** (zona produkts.it); su IONOS restano solo registrazione e nameserver.
 - produkts.it è registrato su IONOS nel contratto "IONOS Pack Dominio"; il vecchio WordPress Hosting è in disdetta.
-- DNS: A @ → 185.199.108-111.153 (GitHub), CNAME www → produkts-it.github.io.
+- DNS (su Cloudflare): CNAME @ e www → produkts-site.pages.dev (gestiti da Pages).
 - Email su **Zoho**: record MX mx/mx2/mx3.zoho.eu, SPF, DKIM (zmail._domainkey), zb19768698 → zmverify.zoho.eu. Non modificarli mai.
