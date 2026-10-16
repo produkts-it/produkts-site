@@ -29,8 +29,9 @@ function pkCursor(){
    +'@media (hover:none),(pointer:coarse){#pk-cursor{display:none!important}}';
   d.head.appendChild(st);
   var c=d.createElement('div');c.id='pk-cursor';c.setAttribute('aria-hidden','true');d.body.appendChild(c);
+var org=d.createElement('div');org.setAttribute('aria-hidden','true');org.style.cssText='position:fixed;left:0;top:0;width:0;height:0;pointer-events:none;visibility:hidden';d.body.appendChild(org);
   var SEL='a,button,select,input,textarea,label,summary,[role="button"]',BSEL='h1,h2,h3,.kicker,.kw,[data-blur],span[style*="text-transform: uppercase"],span[style*="text-transform:uppercase"]';
-  var PAD=7,MIN=46,EASE='cubic-bezier(.2,.7,.2,1)';
+  var PAD=7,EXT=8,MIN=46,EASE='cubic-bezier(.2,.7,.2,1)';
   var mx=-100,my=-100,x=-100,y=-100,W=28,H=28,R=14,lock=null,mode='',raf,visible=false;
   var blurred=null,blurAnim=null,muted=null;
   var k=still?1:0.16,ks=still?1:0.2;
@@ -74,14 +75,22 @@ function pkCursor(){
   function loop(){
     var tx,ty,tw,th,tr;
     if(lock&&lock.isConnected){
-      var r=lock.getBoundingClientRect(),cxe=r.left+r.width/2,cye=r.top+r.height/2;
-      if(r.width+PAD*2>MIN||r.height+PAD*2>MIN){tw=Math.max(r.width+PAD*2,MIN);th=Math.max(r.height+PAD*2,MIN);tr=radiusOf(lock,th);}
-      else{tw=th=MIN;tr=MIN/2;}
-      tx=cxe;ty=cye;
+      /* Il cerchio avvolge l'elemento con almeno PAD di margine su ogni lato e non entra mai dentro:
+dal lato dove sta il mouse il margine cresce un po' (fino a PAD+EXT), così la forma segue il mouse */
+var r=lock.getBoundingClientRect(),cxe=r.left+r.width/2,cye=r.top+r.height/2;
+var fx=Math.max(-1,Math.min(1,(mx-cxe)/(r.width/2+PAD))),fy=Math.max(-1,Math.min(1,(my-cye)/(r.height/2+PAD)));
+var L=r.left-PAD-Math.max(0,-fx)*EXT,Rt=r.right+PAD+Math.max(0,fx)*EXT,T=r.top-PAD-Math.max(0,-fy)*EXT*.6,B=r.bottom+PAD+Math.max(0,fy)*EXT*.6;
+tw=Rt-L;th=B-T;
+if(tw<MIN){L-=(MIN-tw)/2;tw=MIN}
+if(th<MIN){T-=(MIN-th)/2;th=MIN}
+tr=(tw===MIN&&th===MIN)?MIN/2:radiusOf(lock,th);
+tx=L+tw/2;ty=T+th/2;
     }else{tx=mx;ty=my;var s=mode==='lens'?72:28;tw=th=s;tr=s/2;}
     x+=(tx-x)*k;y+=(ty-y)*k;W+=(tw-W)*ks;H+=(th-H)*ks;R+=(tr-R)*ks;
     c.style.width=W.toFixed(1)+'px';c.style.height=H.toFixed(1)+'px';c.style.borderRadius=R.toFixed(1)+'px';
-    c.style.transform='translate3d('+(x-W/2).toFixed(2)+'px,'+(y-H/2).toFixed(2)+'px,0)';
+    /* Origine reale degli elementi fixed: con scrollbar-gutter su entrambi i lati non coincide con quella del mouse */
+var o=org.getBoundingClientRect();
+c.style.transform='translate3d('+(x-W/2-o.left).toFixed(2)+'px,'+(y-H/2-o.top).toFixed(2)+'px,0)';
     raf=requestAnimationFrame(loop);
   }
   d.addEventListener('pointermove',move,{passive:true});
@@ -90,7 +99,7 @@ function pkCursor(){
   d.documentElement.addEventListener('mouseleave',hide);
   w.addEventListener('blur',hide);
   raf=requestAnimationFrame(loop);
-  return function(){cancelAnimationFrame(raf);d.removeEventListener('pointermove',move);d.removeEventListener('pointerdown',down);d.removeEventListener('touchstart',hide);d.documentElement.removeEventListener('mouseleave',hide);w.removeEventListener('blur',hide);setBlur(null,true);c.remove();st.remove();};
+  return function(){cancelAnimationFrame(raf);d.removeEventListener('pointermove',move);d.removeEventListener('pointerdown',down);d.removeEventListener('touchstart',hide);d.documentElement.removeEventListener('mouseleave',hide);w.removeEventListener('blur',hide);setBlur(null,true);c.remove();org.remove();st.remove();};
 }
 
 /* Menu a schermo intero */
@@ -170,7 +179,8 @@ PK.vt=function(fn){
   if(!d.startViewTransition||still){fn();return}
   h.classList.add('vt-local');
   var v=d.startViewTransition(fn);
-  v.finished.finally(function(){h.classList.remove('vt-local')});
+  v.ready.catch(function(){});v.updateCallbackDone.catch(function(){});
+  var done=function(){h.classList.remove('vt-local')};v.finished.then(done,done);
 };
 function acts(){
   d.addEventListener('click',function(e){

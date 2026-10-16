@@ -97,7 +97,8 @@ PK.vt=function(fn){
   if(!d.startViewTransition||still){fn();return}
   h.classList.add('vt-local');
   var v=d.startViewTransition(fn);
-  v.finished.finally(function(){h.classList.remove('vt-local')});
+  v.ready.catch(function(){});v.updateCallbackDone.catch(function(){});
+  var done=function(){h.classList.remove('vt-local')};v.finished.then(done,done);
 };
 function acts(){
   d.addEventListener('click',function(e){

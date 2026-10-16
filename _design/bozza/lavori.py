@@ -46,10 +46,10 @@ WORKS = [
     dict(slug='coseco', t='Coseco Industrie', sub='50 anni', year='2024', date='18 dicembre 2024',
          yt='mpesKIpv9N8', img=yt_thumb('mpesKIpv9N8'), cats=['Video aziendale'],
          kicker='Video aziendale · 2024',
-         line='Video corporate per i 50 anni di Coseco Industrie, proiettato al cinema durante la celebrazione. Produzione Kontents.',
+         line='Video corporate per i 50 anni di Coseco Industrie, proiettato al cinema durante la celebrazione. Produzione kontents.eu.',
          role='Riprese, montaggio, post-produzione, color, VFX e audio', role_short='Riprese e post-produzione',
-         meta=[('Produzione', 'Kontents'), ('Cliente', 'Coseco Industrie'), ('Uscita', '18 dicembre 2024 · YouTube')],
-         crew=[('Produzione', 'Kontents'), ('Riprese', 'Gianni Ragone, ' + KI), ('Montaggio', 'Gianni Ragone, ' + KI),
+         meta=[('Produzione', 'kontents.eu'), ('Cliente', 'Coseco Industrie'), ('Uscita', '18 dicembre 2024 · YouTube')],
+         crew=[('Produzione', 'kontents.eu'), ('Riprese', 'Gianni Ragone, ' + KI), ('Montaggio', 'Gianni Ragone, ' + KI),
                ('Post-produzione', KI), ('Color', KI), ('VFX', KI), ('Effetti sonori', KI), ('Audio design', KI),
                ('Fonico di presa diretta', KI)]),
     dict(slug='wake-up', t='Wake Up', sub='Bartek Dabrowski · Orchestra', year='2024', date='29 marzo 2024',
@@ -60,6 +60,22 @@ WORKS = [
          meta=[('Artista', 'Bartek Dabrowski'), ('Uscita', '29 marzo 2024 · YouTube')],
          crew=[('Artista', 'Bartek Dabrowski'), ('Direzione della fotografia', KI), ('Riprese', KI), ('Montaggio', KI),
                ('Color', KI), ('VFX', KI)]),
+    dict(slug='korvo', t='Korvo', sub='Videoclip musicale', year='2023', date='giugno 2023',
+         vimeo='888211568', img='https://i.vimeocdn.com/video/1827512944-964bac90703858cc9e174129dd46cb4674a3071036ff2f2ba992aea82ef1e2e4-d_1280', cats=['Videoclip'],
+         kicker='Videoclip musicale · 2023',
+         line="Videoclip per Korvo, curato dall'idea alla consegna: regia, riprese, montaggio e color.",
+         role='Regia, direzione della fotografia, riprese, montaggio e color', role_short='Regia, D.O.P., montaggio e color',
+         meta=[('Artista', 'Korvo'), ('Uscita', 'Giugno 2023 · Vimeo')],
+         crew=[('Artista e musica', 'Korvo'), ('Regia', KI), ('Direzione della fotografia', KI), ('Riprese', KI),
+               ('Montaggio', KI), ('Color', KI)]),
+    dict(slug='troppo-bella-per-loro', t='Troppo bella per loro', sub='Docufilm in dialetto altamurano', year='2022', date='marzo 2022',
+         vimeo='888136670', img='https://i.vimeocdn.com/video/1827511993-0288a826b6a4dc1d324bb6c9738bd7aaea47b4e3dfbdd5ce144f1d0b21b95b31-d_1280',
+         cats=['Cortometraggio', 'Opera personale'], kicker='Docufilm · opera personale · 2022',
+         line="Un docufilm in dialetto altamurano sul rapporto di amore e odio tra l'uomo e la natura.",
+         role='Regia, riprese e montaggio, con Fabrizio Marinelli', role_short='Regia, riprese e montaggio',
+         meta=[('Produzione', 'Produkts'), ('Lingua', 'Dialetto altamurano'), ('Uscita', 'Marzo 2022 · Vimeo')],
+         cast=[('Protagonista', 'Paolo Cappiello', None)],
+         crew=[('Video', KI + ', Fabrizio Marinelli'), ('Montaggio', KI + ', Fabrizio Marinelli'), ('Produzione', 'Produkts')]),
 ]
 CAT_LABELS = [('Tutti', 'Tutti'), ('Cortometraggio', 'Cortometraggi'), ('Videoclip', 'Videoclip'),
               ('Video aziendale', 'Video aziendali'), ('Opera personale', 'Opere personali')]
@@ -71,9 +87,11 @@ FILMOGRAFIA = [
     ('Tra i Piedi', 'Direttore della fotografia', 'AMARCORD', None),
     ("L'Inventario", 'Co-D.O.P.', 'AMARCORD', None),
     ('Schizophrenia — Io e Nessun Altro', 'Regia e fotografia', 'Produkts', 'schizophrenia.html'),
-    ('Romance Anónimo — Bartek Dabrowski', 'D.O.P., montaggio, color', 'Videoclip', 'romance-anonimo.html'),
-    ('Coseco Industrie — 50 anni', 'Riprese e post-produzione', 'Kontents', 'coseco.html'),
-    ('Wake Up — Bartek Dabrowski', 'D.O.P., montaggio, color', 'Videoclip', 'wake-up.html'),
+    ('Romance Anónimo', 'D.O.P., montaggio, color', 'Bartek Dabrowski', 'romance-anonimo.html'),
+    ('Coseco Industrie — 50 anni', 'Riprese e post-produzione', 'kontents.eu', 'coseco.html'),
+    ('Wake Up', 'D.O.P., montaggio, color', 'Bartek Dabrowski', 'wake-up.html'),
+    ('Korvo', 'Regia, D.O.P., montaggio, color', 'Korvo', 'korvo.html'),
+    ('Troppo bella per loro', 'Regia, riprese e montaggio', 'Produkts', 'troppo-bella-per-loro.html'),
     ('Sbaglio Dunque Esisto', 'Operatore, 1ª camera', 'AMARCORD', None),
     ('La Seduta', 'Operatore', 'AMARCORD', None),
     ('Paranoia', 'Operatore, 2ª camera', 'AMARCORD', None),
@@ -146,7 +164,7 @@ def cast_row(k, v, also):
 
 
 def page(w):
-    url = 'https://www.youtube.com/watch?v=' + w['yt']
+    url, plat = ('https://vimeo.com/' + w['vimeo'], 'Vimeo') if w.get('vimeo') else ('https://www.youtube.com/watch?v=' + w['yt'], 'YouTube')
     title = w['t'] + (' — ' + w['sub'] if w.get('sub') else '')
     head = HEAD.replace('<title>Dynamis — produkts.it</title>', '<title>%s — produkts.it</title>' % e(title))
     metas = [('Il mio ruolo', w['role'])] + w['meta']
@@ -162,7 +180,7 @@ def page(w):
 <h1 style="margin: 0; font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300; font-size: clamp(56px, 9vw, 144px); line-height: 0.9; overflow: hidden; padding-bottom: 0.2em; margin-bottom: -0.12em; overflow-wrap: anywhere"><span class="rise" style="display: block">%(t)s</span></h1>
 %(sub)s</div>
 <a href="%(url)s" target="_blank" rel="noopener" class="pill fade d3" style="height: 52px; padding: 0 26px 0 20px; border-radius: 26px; border: 1px solid rgba(232,228,223,0.6); color: #E8E4DF; display: inline-flex; align-items: center; gap: 12px; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; white-space: nowrap">
-<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5l11 7-11 7V5z"></path></svg>Guarda su YouTube <span aria-hidden="true">↗</span></a>
+<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5l11 7-11 7V5z"></path></svg>Guarda su %(plat)s <span aria-hidden="true">↗</span></a>
 </div>
 <div style="position: relative; width: 100%%; aspect-ratio: 16 / 9; background: #161616; overflow: hidden">
 <img class="kb" src="%(img)s" alt="Fotogramma di %(t)s" style="position: absolute; inset: 0; width: 100%%; height: 100%%; object-fit: cover">
@@ -171,7 +189,7 @@ def page(w):
 <span aria-hidden="true" class="lb lb-b" style="position: absolute; left: 0; right: 0; background: #080808; z-index: 2"></span>
 <span aria-hidden="true" style="position: absolute; top: 24px; left: 24px; width: 36px; height: 36px; border-top: 1px solid #336699; border-left: 1px solid #336699"></span>
 <span aria-hidden="true" style="position: absolute; bottom: 24px; right: 24px; width: 36px; height: 36px; border-bottom: 1px solid #336699; border-right: 1px solid #336699"></span>
-<a href="%(url)s" target="_blank" rel="noopener" aria-label="Guarda %(t)s su YouTube (si apre in una nuova scheda)" style="position: absolute; inset: 0; z-index: 1"></a>
+<a href="%(url)s" target="_blank" rel="noopener" aria-label="Guarda %(t)s su %(plat)s (si apre in una nuova scheda)" style="position: absolute; inset: 0; z-index: 1"></a>
 </div>
 </section>
 
@@ -196,7 +214,7 @@ def page(w):
 </div>
 </div>
 </section>
-''' % dict(kick=KICK, kicker=e(w['kicker']), t=e(w['t']), url=url, img=w['img'], line=e(w['line']),
+''' % dict(kick=KICK, kicker=e(w['kicker']), t=e(w['t']), url=url, plat=plat, img=w['img'], line=e(w['line']),
            sub=('<p class="fade d2" style="margin: 0; font-family: \'Cormorant Garamond\', serif; font-style: italic; font-weight: 300; font-size: clamp(24px, 3vw, 36px); line-height: 1.2; color: #C9C4BD">%s</p>\n' % e(w['sub'])) if w.get('sub') else '',
            meta=''.join(meta_item(k, v) for k, v in metas), cast=cast, crewlabel='Troupe' if w.get('cast') else 'Crediti',
            crew=''.join(crew_row(k, v) for k, v in w['crew']))
