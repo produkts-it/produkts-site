@@ -39,7 +39,31 @@ export function nomePubblico(nome) {
   return parti[0] + ' ' + parti[parti.length - 1][0].toUpperCase() + '.';
 }
 
-// ---- Cloudflare Access: la pagina /admin e le sue API sono riservate a Karim ----
+// ---- Pannello /admin: riservato a Karim ----
+
+/** Confronto a tempo costante (non rivela quanti caratteri della password sono giusti). */
+async function uguali(a, b) {
+  const h = async (s) => new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s)));
+  const [x, y] = await Promise.all([h(a), h(b)]);
+  let diff = 0;
+  for (let i = 0; i < x.length; i++) diff |= x[i] ^ y[i];
+  return diff === 0;
+}
+
+/**
+ * Chi può usare le API del pannello: chi passa da Cloudflare Access (se configurato)
+ * oppure chi invia la password del pannello (segreto ADMIN_PASSWORD nelle impostazioni di Pages).
+ */
+export async function autorizzato(request, env) {
+  if (await utenteAccess(request, env)) return true;
+  const pw = request.headers.get('x-admin-password');
+  if (!env.ADMIN_PASSWORD || !pw) return false;
+  if (await uguali(pw, env.ADMIN_PASSWORD)) return true;
+  await new Promise((r) => setTimeout(r, 800)); // rallenta i tentativi a caso
+  return false;
+}
+
+// ---- Cloudflare Access (opzionale) ----
 const b64url = (s) => Uint8Array.from(atob(s.replace(/-/g, '+').replace(/_/g, '/') + '==='.slice((s.length + 3) % 4)), (c) => c.charCodeAt(0));
 let chiavi = null, chiaviScadenza = 0;
 

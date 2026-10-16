@@ -1,12 +1,12 @@
-// API riservate della pagina /admin (protette da Cloudflare Access e verificate anche qui)
+// API riservate della pagina /admin (password del pannello o Cloudflare Access)
 //   GET  /api/admin/contatti            elenco richieste
 //   POST /api/admin/contatti/:id        { letto: true|false }
 //   GET  /api/admin/recensioni          tutte le recensioni
 //   POST /api/admin/recensioni/:id      { stato: 'approvata'|'rifiutata'|'attesa', in_evidenza: true|false }
-import { json, corpo, utenteAccess } from '../../_lib.js';
+import { json, corpo, autorizzato } from '../../_lib.js';
 
 export async function onRequest({ request, env, params }) {
-  if (!(await utenteAccess(request, env))) return json({ errore: 'Accesso negato.' }, 401);
+  if (!(await autorizzato(request, env))) return json({ errore: 'Accesso negato.' }, 401);
   const [cosa, id] = params.percorso || [];
   const n = Number(id);
 
