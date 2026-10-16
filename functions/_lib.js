@@ -39,6 +39,36 @@ export function nomePubblico(nome) {
   return parti[0] + ' ' + parti[parti.length - 1][0].toUpperCase() + '.';
 }
 
+/** Numero per WhatsApp: solo cifre, prefisso 39 se manca (wa.me/<numero>). */
+export function numeroWa(tel) {
+  let n = tel.replace(/[^\d+]/g, '');
+  if (n.startsWith('+')) return n.slice(1);
+  if (n.startsWith('00')) return n.slice(2);
+  return '39' + n;
+}
+
+const esc = (s) => String(s).replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[c]);
+
+/**
+ * Notifica a Karim su Telegram (segreti TELEGRAM_TOKEN e TELEGRAM_CHAT_ID nelle impostazioni di Pages).
+ * Senza segreti non fa nulla; un errore di Telegram non blocca mai il modulo.
+ * righe: testo già pronto (viene messo in sicurezza qui; null = riga saltata, '' = riga vuota); pulsanti: [{ text, url }].
+ */
+export function notifica(context, righe, pulsanti = []) {
+  const { env } = context;
+  if (!env.TELEGRAM_TOKEN || !env.TELEGRAM_CHAT_ID) return;
+  const text = righe.filter((r) => r != null).map((r) => (r.b ? `<b>${esc(r.b)}</b>` : esc(r))).join('\n').slice(0, 4000);
+  const invio = fetch(`https://api.telegram.org/bot${env.TELEGRAM_TOKEN}/sendMessage`, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({
+      chat_id: env.TELEGRAM_CHAT_ID, text, parse_mode: 'HTML', disable_web_page_preview: true,
+      reply_markup: pulsanti.length ? { inline_keyboard: [pulsanti] } : undefined,
+    }),
+  }).catch(() => {});
+  context.waitUntil(invio);
+}
+
 // ---- Pannello /admin: riservato a Karim ----
 
 /** Confronto a tempo costante (non rivela quanti caratteri della password sono giusti). */

@@ -1,6 +1,6 @@
 // GET /api/recensioni — recensioni approvate (nome pubblico: nome + iniziale del cognome)
 // POST /api/recensioni — nuova recensione, resta in attesa fino all'approvazione
-import { json, testo, turnstileOk, corpo, nomePubblico } from '../_lib.js';
+import { json, testo, turnstileOk, corpo, nomePubblico, notifica } from '../_lib.js';
 
 const SERVIZI = ['18 anni', 'Compleanno', 'Comunione', 'Battesimo', 'Evento', 'Shooting band o copertina', 'Fotografia sportiva', 'Altro'];
 // Filtri della pagina Recensioni
@@ -16,7 +16,8 @@ export async function onRequestGet({ env }) {
   })));
 }
 
-export async function onRequestPost({ request, env }) {
+export async function onRequestPost(context) {
+  const { request, env } = context;
   const d = await corpo(request);
   if (!d) return json({ errore: 'Richiesta non valida.' }, 400);
   if (d.sito) return json({ ok: true }); // campo trappola per i bot
@@ -37,5 +38,11 @@ export async function onRequestPost({ request, env }) {
   }
   await env.DB.prepare('INSERT INTO recensioni (nome, servizio, voto, testo) VALUES (?, ?, ?, ?)')
     .bind(nome, servizio, Math.round(voto), testoRec).run();
+  notifica(context, [
+    { b: 'Nuova recensione da approvare' },
+    `${nome} · ${servizio} · ${'★'.repeat(Math.round(voto))}`,
+    '',
+    testoRec.length > 600 ? testoRec.slice(0, 600) + '…' : testoRec,
+  ], [{ text: 'Apri il pannello', url: `${new URL(request.url).origin}/admin/#recensioni` }]);
   return json({ ok: true });
 }
