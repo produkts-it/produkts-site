@@ -175,6 +175,12 @@ html.vt-local::view-transition-old(*),html.vt-local::view-transition-new(*){heig
 .pk-hdr .mb{margin-left:24px}
 @media (max-width:640px){.pk-clock{order:3;flex-basis:100%;margin:-8px 0 0;font-size:11px;letter-spacing:.12em}.pk-hdr .mb{margin-left:auto}}
 
+/* Moduli: campo trappola per i bot (invisibile) e messaggio di errore */
+.pk-hp{position:absolute!important;left:-9999px!important;width:1px;height:1px;opacity:0}
+.pk-err{margin:0;color:#D98A4E;font-size:14px;line-height:1.5}
+.pk-ts:empty{display:none}
+button[data-act="send"][aria-busy="true"]{opacity:.6;cursor:progress}
+
 /* Menu */
 @keyframes mopen{from{clip-path:circle(0% at calc(100% - 90px) 52px)}to{clip-path:circle(150% at calc(100% - 90px) 52px)}}
 @keyframes mclose{from{clip-path:circle(150% at calc(100% - 90px) 52px)}to{clip-path:circle(0% at calc(100% - 90px) 52px)}}

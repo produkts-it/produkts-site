@@ -1,0 +1,16 @@
+# Cloudflare Pages: sito statico (dist/, creato da _design/pubblica.sh) + API in functions/ + database D1
+name = "produkts-site"
+pages_build_output_dir = "dist"
+compatibility_date = "2026-10-01"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "produkts-moduli"
+database_id = "DA_COMPILARE"
+migrations_dir = "migrations"
+
+[vars]
+# Cloudflare Access per /admin: nome del team Zero Trust e "Application Audience (AUD) tag" dell'applicazione
+ACCESS_TEAM = "DA_COMPILARE"
+ACCESS_AUD = "DA_COMPILARE"
+# TURNSTILE_SECRET è un segreto: si imposta nel pannello di Pages (Impostazioni > Variabili e segreti), non qui

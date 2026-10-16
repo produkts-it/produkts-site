@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Pannello — produkts.it</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,300;1,400&family=Space+Grotesk:wght@400;500&display=swap">
+<style>
+/* Pagina riservata (Cloudflare Access): richieste dal modulo Contatti e moderazione delle recensioni */
+:root{--bg:#080808;--line:#1F1F1F;--fg:#E8E4DF;--muted:#9A948C;--ember:#B46428;--steel:#336699}
+html{scrollbar-gutter:stable}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:'Space Grotesk',sans-serif;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1100px;margin:0 auto;padding:32px 16px 80px}
+h1{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:300;font-size:48px;margin:0 0 8px}
+h2{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:400;font-size:32px;margin:48px 0 16px}
+.tabs{display:flex;gap:24px;border-bottom:1px solid var(--line);margin-top:24px}
+.tabs button{background:none;border:0;border-bottom:1px solid transparent;color:var(--muted);padding:12px 0;font:inherit;font-size:13px;letter-spacing:.14em;text-transform:uppercase;cursor:pointer}
+.tabs button[aria-pressed=true]{color:var(--fg);border-bottom-color:var(--ember)}
+.item{border:1px solid var(--line);padding:20px;margin-top:16px;display:flex;flex-direction:column;gap:10px}
+.item.nuovo{border-color:var(--steel)}
+.meta{display:flex;flex-wrap:wrap;gap:6px 20px;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.meta b{color:var(--ember);font-weight:500}
+.testo{white-space:pre-wrap;line-height:1.6;color:#C9C4BD;overflow-wrap:anywhere}
+.az{display:flex;flex-wrap:wrap;gap:8px}
+.az button{height:40px;padding:0 16px;border:1px solid #3A3A3A;background:transparent;color:var(--fg);font:inherit;font-size:12px;letter-spacing:.12em;text-transform:uppercase;cursor:pointer}
+.az button.on{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.vuoto,.err{color:var(--muted);margin-top:24px}
+.err{color:#D98A4E}
+a{color:var(--fg)}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>Pannello</h1>
+<p style="margin:0;color:var(--muted)">Richieste dal sito e recensioni da approvare. Le recensioni compaiono sul sito solo dopo "Approva".</p>
+<div class="tabs" role="group" aria-label="Sezione">
+<button type="button" data-tab="recensioni" aria-pressed="true">Recensioni</button>
+<button type="button" data-tab="contatti" aria-pressed="false">Contatti</button>
+</div>
+<div id="lista"></div>
+</div>
+<script>
+(function(){
+var lista=document.getElementById('lista'),tab='recensioni';
+function e(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function data(s){var d=new Date(s.replace(' ','T')+'Z');return d.toLocaleString('it-IT',{timeZone:'Europe/Rome',dateStyle:'medium',timeStyle:'short'})}
+async function api(path,body){
+  var r=await fetch('/api/admin/'+path,body?{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(body)}:{});
+  if(!r.ok)throw new Error(r.status===401?'Accesso non autorizzato.':'Errore '+r.status);
+  return r.json();
+}
+async function carica(){
+  lista.innerHTML='<p class="vuoto">Caricamento…</p>';
+  try{
+    var rows=await api(tab);
+    if(!rows.length){lista.innerHTML='<p class="vuoto">Ancora niente qui.</p>';return}
+    lista.innerHTML=rows.map(tab==='recensioni'?rec:con).join('');
+  }catch(err){lista.innerHTML='<p class="err">'+e(err.message)+'</p>'}
+}
+function rec(r){
+  return '<div class="item'+(r.stato==='attesa'?' nuovo':'')+'"><div class="meta"><b>'+e(r.stato)+'</b><span>'+e(data(r.creato))+'</span><span>'+'★'.repeat(r.voto)+'</span><span>'+e(r.servizio)+'</span></div>'
+   +'<div style="font-size:18px">'+e(r.nome)+'</div><div class="testo">'+e(r.testo)+'</div>'
+   +'<div class="az"><button type="button" data-rec="'+r.id+'" data-stato="approvata"'+(r.stato==='approvata'?' class="on"':'')+'>Approva</button>'
+   +'<button type="button" data-rec="'+r.id+'" data-stato="rifiutata"'+(r.stato==='rifiutata'?' class="on"':'')+'>Rifiuta</button>'
+   +'<button type="button" data-rec="'+r.id+'" data-evid="'+(r.in_evidenza?0:1)+'"'+(r.in_evidenza?' class="on"':'')+'>In evidenza</button></div></div>';
+}
+function con(c){
+  var rec=/@/.test(c.recapito)?'<a href="mailto:'+e(c.recapito)+'">'+e(c.recapito)+'</a>':'<a href="tel:'+e(c.recapito.replace(/\s/g,''))+'">'+e(c.recapito)+'</a>';
+  return '<div class="item'+(c.letto?'':' nuovo')+'"><div class="meta"><b>'+(c.letto?'letto':'nuovo')+'</b><span>'+e(data(c.creato))+'</span>'
+   +(c.tipo?'<span>'+e(c.tipo)+'</span>':'')+(c.budget?'<span>'+e(c.budget)+'</span>':'')+(c.quando?'<span>'+e(c.quando)+'</span>':'')+(c.dove?'<span>'+e(c.dove)+'</span>':'')+'</div>'
+   +'<div style="font-size:18px">'+e(c.nome)+' · '+rec+'</div><div class="testo">'+e(c.messaggio)+'</div>'
+   +'<div class="az"><button type="button" data-con="'+c.id+'" data-letto="'+(c.letto?0:1)+'">'+(c.letto?'Segna come nuovo':'Segna come letto')+'</button></div></div>';
+}
+document.addEventListener('click',async function(ev){
+  var b=ev.target.closest('button');if(!b)return;
+  if(b.dataset.tab){tab=b.dataset.tab;document.querySelectorAll('[data-tab]').forEach(function(t){t.setAttribute('aria-pressed',t===b)});carica();return}
+  try{
+    if(b.dataset.rec)await api('recensioni/'+b.dataset.rec,b.dataset.stato?{stato:b.dataset.stato}:{in_evidenza:b.dataset.evid==='1'});
+    else if(b.dataset.con)await api('contatti/'+b.dataset.con,{letto:b.dataset.letto==='1'});
+    else return;
+    carica();
+  }catch(err){alert(err.message)}
+});
+carica();
+})();
+</script>
+</body>
+</html>

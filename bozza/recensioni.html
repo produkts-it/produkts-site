@@ -13,7 +13,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&amp;family=Space+Grotesk:wght@400;500&amp;display=swap">
-<link rel="stylesheet" href="assets/site.css?v=28c9077c">
+<link rel="stylesheet" href="assets/site.css?v=dbf6eaac">
 <script>try{(function(){var n=(performance.getEntriesByType&&performance.getEntriesByType('navigation')[0]||{}).type,r=document.referrer,same=false;try{same=!!r&&new URL(r).origin===location.origin}catch(e){}
 var show=n==='reload'||(n!=='back_forward'&&!same);if(show&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('intro')})()}catch(e){}</script>
 </head>
@@ -34,8 +34,8 @@ var show=n==='reload'||(n!=='back_forward'&&!same);if(show&&!matchMedia('(prefer
 </div>
 <div class="fade" style="display: flex; flex-wrap: wrap; gap: 24px 40px; align-items: flex-end">
 <div style="display: flex; flex-direction: column; gap: 6px">
-<span style="font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300; font-size: 72px; line-height: 1">5,0</span>
-<span style="font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; color: #9A948C">Media su 20 recensioni</span>
+<span style="font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300; font-size: 72px; line-height: 1" id="rv-media">5,0</span>
+<span style="font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; color: #9A948C">Media su <span id="rv-num">20</span> recensioni</span>
 </div>
 <a href="#scrivi" style="padding: 16px 28px; background: #E8E4DF; color: #080808; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase">Lascia una recensione</a>
 </div>
@@ -57,7 +57,7 @@ var show=n==='reload'||(n!=='back_forward'&&!same);if(show&&!matchMedia('(prefer
 </div>
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr)); gap: 24px">
 
-<article class="card reveal" data-cat="Comunioni" style="view-transition-name: rv-lucianas; border: 1px solid #1F1F1F; padding: 36px; display: flex; flex-direction: column; gap: 24px; justify-content: space-between">
+<article data-featured class="card reveal" data-cat="Comunioni" style="view-transition-name: rv-lucianas; border: 1px solid #1F1F1F; padding: 36px; display: flex; flex-direction: column; gap: 24px; justify-content: space-between">
 <div style="display: flex; flex-direction: column; gap: 20px">
 <span role="img" aria-label="5 stelle su 5" style="color: #B46428; letter-spacing: 0.2em; font-size: 15px">★★★★★</span>
 <p style="margin: 0; font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300; font-size: 26px; line-height: 1.35">Tutto perfetto. Ho apprezzato moltissimo la professionalità e l&#x27;accuratezza con cui è stato svolto il lavoro, ma soprattutto le qualità umane: un ragazzo puntuale, educato e molto gentile. Ottimo servizio</p>
@@ -68,7 +68,7 @@ var show=n==='reload'||(n!=='back_forward'&&!same);if(show&&!matchMedia('(prefer
 </div>
 </article>
 
-<article class="card reveal" data-cat="Compleanni" style="view-transition-name: rv-mariap; border: 1px solid #1F1F1F; padding: 36px; display: flex; flex-direction: column; gap: 24px; justify-content: space-between">
+<article data-featured class="card reveal" data-cat="Compleanni" style="view-transition-name: rv-mariap; border: 1px solid #1F1F1F; padding: 36px; display: flex; flex-direction: column; gap: 24px; justify-content: space-between">
 <div style="display: flex; flex-direction: column; gap: 20px">
 <span role="img" aria-label="5 stelle su 5" style="color: #B46428; letter-spacing: 0.2em; font-size: 15px">★★★★★</span>
 <p style="margin: 0; font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300; font-size: 26px; line-height: 1.35">Bellissima esperienza mi a messo davvero a mio agio ero molto emozionata e un impacciata. Ma Karim mi a dimostrato davvero fiducia e determinazione davanti alla sua macchina fotografica! Lo consiglio perché il suo lavoro e le sue foto sono davvero bellissime Sono rimasta davvero molto felice e soddisfatta</p>
@@ -79,7 +79,7 @@ var show=n==='reload'||(n!=='back_forward'&&!same);if(show&&!matchMedia('(prefer
 </div>
 </article>
 
-<article class="card reveal" data-cat="18 anni" style="view-transition-name: rv-michelecen; border: 1px solid #1F1F1F; padding: 36px; display: flex; flex-direction: column; gap: 24px; justify-content: space-between">
+<article data-featured class="card reveal" data-cat="18 anni" style="view-transition-name: rv-michelecen; border: 1px solid #1F1F1F; padding: 36px; display: flex; flex-direction: column; gap: 24px; justify-content: space-between">
 <div style="display: flex; flex-direction: column; gap: 20px">
 <span role="img" aria-label="5 stelle su 5" style="color: #B46428; letter-spacing: 0.2em; font-size: 15px">★★★★★</span>
 <p style="margin: 0; font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300; font-size: 26px; line-height: 1.35">L&#x27;esperienza è stata interessante, il risultato finale è stato inaspettato. Fin&#x27;ora non avevo mai visto un fotografo fare un vero e proprio sito, ben organizzato e facile da gestire, con le mie foto.</p>
@@ -90,7 +90,7 @@ var show=n==='reload'||(n!=='back_forward'&&!same);if(show&&!matchMedia('(prefer
 </div>
 </article>
 
-<article class="card reveal" data-cat="18 anni" style="view-transition-name: rv-marcoc; border: 1px solid #1F1F1F; padding: 36px; display: flex; flex-direction: column; gap: 24px; justify-content: space-between">
+<article data-featured class="card reveal" data-cat="18 anni" style="view-transition-name: rv-marcoc; border: 1px solid #1F1F1F; padding: 36px; display: flex; flex-direction: column; gap: 24px; justify-content: space-between">
 <div style="display: flex; flex-direction: column; gap: 20px">
 <span role="img" aria-label="5 stelle su 5" style="color: #B46428; letter-spacing: 0.2em; font-size: 15px">★★★★★</span>
 <p style="margin: 0; font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300; font-size: 26px; line-height: 1.35">Appena arrivato ti fa sentire subito a tuo agio, molto bravo e soprattutto professionale!</p>
@@ -101,7 +101,7 @@ var show=n==='reload'||(n!=='back_forward'&&!same);if(show&&!matchMedia('(prefer
 </div>
 </article>
 
-<article class="card reveal" data-cat="Battesimi" style="view-transition-name: rv-chiarac; border: 1px solid #1F1F1F; padding: 36px; display: flex; flex-direction: column; gap: 24px; justify-content: space-between">
+<article data-featured class="card reveal" data-cat="Battesimi" style="view-transition-name: rv-chiarac; border: 1px solid #1F1F1F; padding: 36px; display: flex; flex-direction: column; gap: 24px; justify-content: space-between">
 <div style="display: flex; flex-direction: column; gap: 20px">
 <span role="img" aria-label="5 stelle su 5" style="color: #B46428; letter-spacing: 0.2em; font-size: 15px">★★★★★</span>
 <p style="margin: 0; font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300; font-size: 26px; line-height: 1.35">Ho contattato Karim per un servizio fotografico per il battesimo del mio piccolo .. è stato super puntuale ma soprattutto bravo . Le foto sono al dir poco spettacolari.. lo consiglio vivamente</p>
@@ -112,7 +112,7 @@ var show=n==='reload'||(n!=='back_forward'&&!same);if(show&&!matchMedia('(prefer
 </div>
 </article>
 
-<article class="card reveal" data-cat="" style="view-transition-name: rv-libertasaltamura; border: 1px solid #1F1F1F; padding: 36px; display: flex; flex-direction: column; gap: 24px; justify-content: space-between">
+<article data-featured class="card reveal" data-cat="" style="view-transition-name: rv-libertasaltamura; border: 1px solid #1F1F1F; padding: 36px; display: flex; flex-direction: column; gap: 24px; justify-content: space-between">
 <div style="display: flex; flex-direction: column; gap: 20px">
 <span role="img" aria-label="5 stelle su 5" style="color: #B46428; letter-spacing: 0.2em; font-size: 15px">★★★★★</span>
 <p style="margin: 0; font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300; font-size: 26px; line-height: 1.35">Il nostro fotografo di basket è stato straordinario, con competenza e passione senza pari nella fotografia sportiva, catturando momenti indimenticabili in ogni partita.</p>
@@ -354,6 +354,9 @@ var show=n==='reload'||(n!=='back_forward'&&!same);if(show&&!matchMedia('(prefer
 <input id="rv-ok" type="checkbox" style="width: 20px; height: 20px; margin: 2px 0 0; accent-color: #B46428; flex: none">
 <label for="rv-ok" style="font-size: 14px; line-height: 1.5; color: #C9C4BD">Acconsento alla pubblicazione della recensione con il mio nome e ho letto l'informativa privacy.</label>
 </div>
+<input class="pk-hp" name="sito" tabindex="-1" autocomplete="off" aria-hidden="true">
+<div class="pk-ts"></div>
+<p class="pk-err" role="alert" hidden></p>
 <button type="button" data-act="send" style="align-self: flex-start; height: 52px; padding: 0 32px; background: #E8E4DF; color: #080808; border: 0; font-family: 'Space Grotesk', sans-serif; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; cursor: pointer">Invia recensione</button>
 </form>
 </div>
@@ -368,10 +371,13 @@ var show=n==='reload'||(n!=='back_forward'&&!same);if(show&&!matchMedia('(prefer
 </div>
 </footer>
 </div>
-<script src="assets/site.js?v=d192d6a9"></script>
+<script src="assets/site.js?v=87b0d18a"></script>
 <script>
 (function(){
-var d=document,cards=[].slice.call(d.querySelectorAll('article[data-cat]')),LIMIT=6,cat='Tutte',all=false;
+var d=document,grid=d.querySelector('article[data-cat]').parentNode,LIMIT=6,cat='Tutte',all=false,voto=5;
+var cards=[].slice.call(grid.querySelectorAll('article[data-cat]'));
+var form=d.querySelector('[data-if="notSent"] form'),err=form.querySelector('.pk-err'),btn=form.querySelector('[data-act="send"]'),ts=form.querySelector('.pk-ts');
+var token=PK.turnstile(ts);
 function show(name,on){d.querySelector('[data-if="'+name+'"]').hidden=!on}
 /* Prima le recensioni in evidenza, poi le altre; oltre le prime 6 serve "Guarda tutte" */
 function apply(){
@@ -385,15 +391,49 @@ function apply(){
 }
 PK.acts.filter=function(c){if(c===cat)return;PK.vt(function(){cat=c;all=false;apply()})};
 PK.acts.toggleAll=function(){PK.vt(function(){all=!all;apply()})};
+/* Recensioni approvate dal pannello /admin: si aggiungono a quelle già nella pagina.
+   In evidenza in cima; le altre subito dopo quelle in evidenza, dalla più recente. */
+fetch('/api/recensioni').then(function(r){return r.ok?r.json():[]}).then(function(list){
+  if(!Array.isArray(list)||!list.length)return;
+  var tpl=cards[0],firstPlain=cards.filter(function(c){return !c.hasAttribute('data-featured')})[0]||null,somma=cards.length*5;
+  var top=grid.firstChild;
+  list.forEach(function(r){
+    var a=tpl.cloneNode(true);a.setAttribute('data-cat',r.categoria||'');a.style.viewTransitionName='rv-db'+r.id;a.hidden=false;
+    var st=a.querySelector('[role="img"]');st.textContent='★'.repeat(r.voto)+'☆'.repeat(5-r.voto);st.setAttribute('aria-label',r.voto+' stelle su 5');
+    a.querySelector('p').textContent=r.testo;
+    var sp=a.querySelectorAll('span');sp[sp.length-2].textContent=r.nome;sp[sp.length-1].textContent=r.servizio;
+    /* l'elenco arriva già ordinato (in evidenza, poi dalla più recente): inserendo prima dello stesso punto l'ordine resta quello */
+    if(r.in_evidenza){a.setAttribute('data-featured','');grid.insertBefore(a,top)}else{a.removeAttribute('data-featured');grid.insertBefore(a,firstPlain)}
+    somma+=r.voto;
+  });
+  cards=[].slice.call(grid.querySelectorAll('article[data-cat]'));
+  d.getElementById('rv-num').textContent=cards.length;
+  d.getElementById('rv-media').textContent=(Math.round(somma/cards.length*10)/10).toFixed(1).replace('.',',');
+  apply();
+}).catch(function(){});
 /* Valutazione a stelle */
-function stars(n){d.querySelectorAll('[data-act^="star:"]').forEach(function(b,i){var on=i<n;
+function stars(n){voto=n;d.querySelectorAll('[data-act^="star:"]').forEach(function(b,i){var on=i<n;
   b.setAttribute('aria-pressed',on);b.style.color=on?'#B46428':'#5A5A5A';b.querySelector('svg').setAttribute('fill',on?'currentColor':'none')})}
 PK.acts.star=function(n){stars(+n)};
 /* Servizio "Altro": chiedo quale */
 PK.acts.service=function(v){var on=v==='Altro';show('isOther',on);d.getElementById('rv-altro').required=on};
-/* Bozza: il modulo non invia ancora nulla, mostra solo la conferma */
-PK.acts.send=function(){show('notSent',false);show('sent',true)};
-PK.acts.reset=function(){show('sent',false);show('notSent',true);stars(5)};
+function v(id){return d.getElementById(id).value.trim()}
+function errore(m){err.textContent=m;err.hidden=!m}
+/* Invio a /api/recensioni: resta in attesa finché non la approvi nel pannello /admin */
+PK.acts.send=function(){
+  if(btn.getAttribute('aria-busy')==='true')return;
+  var servizio=d.getElementById('rv-tipo').value;
+  if(!v('rv-nome')||!v('rv-testo'))return errore('Scrivi il tuo nome e la tua esperienza.');
+  if(servizio==='Altro'&&!v('rv-altro'))return errore('Scrivi quale servizio.');
+  if(!d.getElementById('rv-ok').checked)return errore('Serve il consenso alla pubblicazione.');
+  errore('');btn.setAttribute('aria-busy','true');
+  PK.invia('/api/recensioni',{nome:v('rv-nome'),servizio:servizio,altro:v('rv-altro'),voto:voto,testo:v('rv-testo'),consenso:true,
+    sito:form.querySelector('.pk-hp').value,turnstile:token()}).then(function(r){
+    btn.removeAttribute('aria-busy');
+    if(r.ok){form.reset();PK.vt(function(){show('notSent',false);show('sent',true)})}else{errore(r.errore);PK.turnstileReset(ts)}
+  });
+};
+PK.acts.reset=function(){show('sent',false);show('notSent',true);show('isOther',false);stars(5);PK.turnstileReset(ts)};
 apply();
 })();
 </script>

@@ -199,7 +199,7 @@ var PK=w.PK=w.PK||{acts:{}};
 PK.still=still;
 /* Cambio di stato animato con View Transition, senza muovere tutta la pagina */
 PK.vt=function(fn){
-  if(!d.startViewTransition||still){fn();return}
+  if(!d.startViewTransition||still||d.visibilityState==='hidden'){fn();return}
   h.classList.add('vt-local');
   var v=d.startViewTransition(fn);
   v.ready.catch(function(){});v.updateCallbackDone.catch(function(){});
@@ -216,6 +216,29 @@ function acts(){
     var f=PK.acts[el.getAttribute('data-act-change')];if(f)f(el.value,el,e);
   });
 }
+
+/* Moduli (Contatti, Recensioni): invio alle API di Cloudflare Pages con anti-spam Turnstile */
+/* Chiave pubblica del widget Turnstile (pannello Cloudflare > Turnstile). Vuota = nessun widget (anteprima locale). */
+PK.TURNSTILE_KEY='';
+var tsLoad=null;
+PK.turnstile=function(box){
+  if(!PK.TURNSTILE_KEY||!box)return function(){return ''};
+  var id=null;
+  tsLoad=tsLoad||new Promise(function(ok){w.pkTsReady=ok;var s=d.createElement('script');
+    s.src='https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=pkTsReady';s.async=true;d.head.appendChild(s)});
+  tsLoad.then(function(){id=w.turnstile.render(box,{sitekey:PK.TURNSTILE_KEY,theme:'dark',language:'it'})});
+  return function(){return id!==null&&w.turnstile?w.turnstile.getResponse(id)||'':''};
+};
+PK.turnstileReset=function(box){if(w.turnstile&&box&&box.firstChild)try{w.turnstile.reset(box.firstChild)}catch(e){}};
+/* POST JSON; restituisce {ok:true} oppure {errore:'...'} con un messaggio da mostrare */
+PK.invia=function(url,dati){
+  return fetch(url,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(dati)})
+    .then(function(r){return r.json().catch(function(){return {}}).then(function(j){
+      if(r.ok&&j.ok)return {ok:true};
+      if(r.status===404||r.status===405)return {errore:'Il modulo non è ancora attivo. Scrivimi su WhatsApp o a info@produkts.it.'};
+      return {errore:j.errore||'Qualcosa non ha funzionato, riprova tra poco.'}})})
+    .catch(function(){return {errore:'Connessione non riuscita, riprova tra poco.'}});
+};
 
 /* Carosello dei fotogrammi */
 PK.acts.carPrev=function(a,el){var t=el.closest('section').querySelector('.car-track');t.scrollBy({left:-t.clientWidth-16,behavior:still?'auto':'smooth'})};
