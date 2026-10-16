@@ -3,7 +3,12 @@
 //   POST /api/admin/contatti/:id        { letto: true|false }
 //   GET  /api/admin/recensioni          tutte le recensioni
 //   POST /api/admin/recensioni/:id      { stato: 'approvata'|'rifiutata'|'attesa', in_evidenza: true|false }
+//   GET  /api/admin/push/chiave         chiave pubblica VAPID per "Attiva notifiche"
+//   POST /api/admin/push/iscrivi        PushSubscription del dispositivo
+//   POST /api/admin/push/disiscrivi     { endpoint }
+//   POST /api/admin/push/prova          manda una notifica di prova a tutti i dispositivi
 import { json, corpo, autorizzato } from '../../_lib.js';
+import { chiavePubblica, iscrivi, disiscrivi, inviaPush } from '../../_push.js';
 
 export async function onRequest({ request, env, params }) {
   if (!(await autorizzato(request, env))) return json({ errore: 'Accesso negato.' }, 401);
@@ -29,6 +34,21 @@ export async function onRequest({ request, env, params }) {
     if (d.stato) await env.DB.prepare('UPDATE recensioni SET stato = ? WHERE id = ?').bind(d.stato, n).run();
     if (typeof d.in_evidenza === 'boolean') await env.DB.prepare('UPDATE recensioni SET in_evidenza = ? WHERE id = ?').bind(d.in_evidenza ? 1 : 0, n).run();
     return json({ ok: true });
+  }
+  if (cosa === 'push') {
+    if (request.method === 'GET' && id === 'chiave') return json({ chiave: await chiavePubblica(env) });
+    if (request.method === 'POST' && id === 'iscrivi') {
+      return (await iscrivi(env, await corpo(request))) ? json({ ok: true }) : json({ errore: 'Iscrizione non valida.' }, 400);
+    }
+    if (request.method === 'POST' && id === 'disiscrivi') {
+      const d = (await corpo(request)) || {};
+      await disiscrivi(env, d.endpoint);
+      return json({ ok: true });
+    }
+    if (request.method === 'POST' && id === 'prova') {
+      const esiti = await inviaPush(env, { titolo: 'Notifiche attive', testo: 'Da ora ti avviso qui di nuove richieste e recensioni.', url: '/admin/' });
+      return json({ ok: esiti.some((e) => e.stato >= 200 && e.stato < 300), esiti });
+    }
   }
   return json({ errore: 'Non trovato.' }, 404);
 }

@@ -34,6 +34,8 @@ h2{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:400;font
 .az button{height:40px;padding:0 16px;border:1px solid #3A3A3A;background:transparent;color:var(--fg);font:inherit;font-size:12px;letter-spacing:.12em;text-transform:uppercase;cursor:pointer}
 .az a.wa{display:inline-flex;align-items:center;height:40px;padding:0 16px;background:var(--fg);color:var(--bg);font-size:12px;letter-spacing:.12em;text-transform:uppercase;text-decoration:none}
 .az button.on{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.push{margin-top:24px;padding:16px 20px;border:1px solid var(--line);display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;justify-content:space-between;color:var(--muted);font-size:14px;line-height:1.5}
+.push.on{border-color:var(--steel)}
 .vuoto,.err{color:var(--muted);margin-top:24px}
 .err{color:#D98A4E}
 a{color:var(--fg)}
@@ -49,6 +51,10 @@ a{color:var(--fg)}
 <div class="wrap">
 <h1>Pannello</h1>
 <p style="margin:0;color:var(--muted)">Richieste dal sito e recensioni da approvare. Le recensioni compaiono sul sito solo dopo "Approva".</p>
+<div class="push" id="push" hidden>
+<span id="push-stato">Ricevi una notifica su questo dispositivo quando arriva una richiesta o una recensione.</span>
+<span class="az"><button type="button" id="push-on">Attiva notifiche</button><button type="button" id="push-prova" hidden>Prova</button></span>
+</div>
 <div class="tabs" role="group" aria-label="Sezione">
 <button type="button" data-tab="recensioni" aria-pressed="true">Recensioni</button>
 <button type="button" data-tab="contatti" aria-pressed="false">Contatti</button>
@@ -80,9 +86,41 @@ async function api(path,body){
   var r=await fetch('/api/admin/'+path,body?{method:'POST',headers:h,body:JSON.stringify(body)}:{headers:h});
   if(r.status===401){login.hidden=false;esci.hidden=true;document.getElementById('pw').focus();var err=new Error(pw()?'Password errata.':'Inserisci la password del pannello.');err.login=true;throw err}
   if(!r.ok)throw new Error('Errore '+r.status);
-  esci.hidden=!pw();
+  esci.hidden=!pw();mostraPush();
   return r.json();
 }
+/* Notifiche push su questo dispositivo (admin/sw.js + functions/_push.js). Su iPhone funzionano solo dal pannello aperto dall'icona sulla Home. */
+var push=document.getElementById('push'),pStato=document.getElementById('push-stato'),pOn=document.getElementById('push-on'),pProva=document.getElementById('push-prova');
+var pushOk='serviceWorker' in navigator&&'PushManager' in window&&'Notification' in window,reg=null;
+if(pushOk)navigator.serviceWorker.register('/admin/sw.js',{scope:'/admin/'}).then(function(r){reg=r;statoPush()}).catch(function(){});
+function chiaveBytes(s){s=s.replace(/-/g,'+').replace(/_/g,'/');var b=atob(s+'==='.slice((s.length+3)%4)),a=new Uint8Array(b.length);for(var i=0;i<b.length;i++)a[i]=b.charCodeAt(i);return a}
+function mostraPush(){
+  if(!push.hidden)return;push.hidden=false;
+  if(!pushOk){pOn.hidden=true;pStato.textContent=/iPhone|iPad/.test(navigator.userAgent)?'Per le notifiche apri il pannello dall’icona sulla schermata Home (Condividi → Aggiungi a schermata Home).':'Questo browser non supporta le notifiche.'}
+}
+async function statoPush(){
+  if(!reg)return;var sub=await reg.pushManager.getSubscription(),on=!!sub&&Notification.permission==='granted';
+  push.classList.toggle('on',on);pProva.hidden=!on;pOn.textContent=on?'Disattiva':'Attiva notifiche';
+  pStato.textContent=on?'Notifiche attive su questo dispositivo.':Notification.permission==='denied'?'Notifiche bloccate: riattivale dalle impostazioni del telefono per questo sito o app, poi ricarica.':'Ricevi una notifica su questo dispositivo quando arriva una richiesta o una recensione.';
+}
+pOn.addEventListener('click',async function(){
+  try{
+    var sub=reg&&await reg.pushManager.getSubscription();
+    if(sub&&Notification.permission==='granted'){await api('push/disiscrivi',{endpoint:sub.endpoint});await sub.unsubscribe();return statoPush()}
+    var perm=await Notification.requestPermission();
+    if(perm!=='granted')return statoPush();
+    reg=reg||await navigator.serviceWorker.ready;
+    var k=await api('push/chiave'),opz={userVisibleOnly:true,applicationServerKey:chiaveBytes(k.chiave)};
+    try{sub=await reg.pushManager.subscribe(opz)}catch(e){var vecchia=await reg.pushManager.getSubscription();if(!vecchia)throw e;await vecchia.unsubscribe();sub=await reg.pushManager.subscribe(opz)}
+    await api('push/iscrivi',sub.toJSON());
+    await statoPush();prova();
+  }catch(err){pStato.textContent='Non sono riuscito ad attivare le notifiche: '+err.message}
+});
+async function prova(){
+  try{var r=await api('push/prova',{});pStato.textContent=r.ok?'Notifica di prova inviata: dovrebbe arrivarti tra pochi secondi.':'La notifica di prova non è partita ('+(r.esiti.map(function(x){return x.servizio+' '+x.stato}).join(', ')||'nessun dispositivo')+').'}
+  catch(err){pStato.textContent=err.message}
+}
+pProva.addEventListener('click',prova);
 async function carica(){
   lista.innerHTML='<p class="vuoto">Caricamento…</p>';
   try{

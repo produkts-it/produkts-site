@@ -1,4 +1,5 @@
 // Funzioni comuni delle API di produkts.it (Cloudflare Pages Functions)
+import { inviaPush } from './_push.js';
 
 export function json(data, status = 200) {
   return new Response(JSON.stringify(data), {
@@ -50,14 +51,24 @@ export function numeroWa(tel) {
 const esc = (s) => String(s).replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[c]);
 
 /**
- * Notifica a Karim su Telegram (segreti TELEGRAM_TOKEN e TELEGRAM_CHAT_ID nelle impostazioni di Pages).
- * Senza segreti non fa nulla; un errore di Telegram non blocca mai il modulo.
- * righe: testo già pronto (viene messo in sicurezza qui; null = riga saltata, '' = riga vuota); pulsanti: [{ text, url }].
+ * Avvisa Karim di una nuova richiesta o recensione:
+ * - notifica push sui dispositivi dove ha premuto "Attiva notifiche" nel pannello (functions/_push.js);
+ * - messaggio Telegram, se ci sono i segreti TELEGRAM_TOKEN e TELEGRAM_CHAT_ID nelle impostazioni di Pages.
+ * Un errore delle notifiche non blocca mai il modulo.
+ * righe: la prima { b: titolo }, poi testo già pronto (messo in sicurezza qui; null = riga saltata, '' = riga vuota);
+ * pulsanti: [{ text, url }] — quello del pannello diventa il link della notifica push.
  */
 export function notifica(context, righe, pulsanti = []) {
   const { env } = context;
+  righe = righe.filter((r) => r != null);
+  const pannello = pulsanti.find((p) => p.url.includes('/admin/'));
+  context.waitUntil(inviaPush(env, {
+    titolo: righe[0] && righe[0].b ? righe[0].b : 'produkts.it',
+    testo: righe.slice(1).filter((r) => typeof r === 'string' && r).join('\n').slice(0, 300),
+    url: pannello ? new URL(pannello.url).pathname + new URL(pannello.url).hash : '/admin/',
+  }).catch(() => {}));
   if (!env.TELEGRAM_TOKEN || !env.TELEGRAM_CHAT_ID) return;
-  const text = righe.filter((r) => r != null).map((r) => (r.b ? `<b>${esc(r.b)}</b>` : esc(r))).join('\n').slice(0, 4000);
+  const text = righe.map((r) => (r.b ? `<b>${esc(r.b)}</b>` : esc(r))).join('\n').slice(0, 4000);
   const invio = fetch(`https://api.telegram.org/bot${env.TELEGRAM_TOKEN}/sendMessage`, {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
