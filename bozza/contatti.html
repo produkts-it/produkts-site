@@ -13,7 +13,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&amp;family=Space+Grotesk:wght@400;500&amp;display=swap">
-<link rel="stylesheet" href="assets/site.css?v=dbf6eaac">
+<link rel="stylesheet" href="assets/site.css?v=5ca1929c">
 <script>try{(function(){var n=(performance.getEntriesByType&&performance.getEntriesByType('navigation')[0]||{}).type,r=document.referrer,same=false;try{same=!!r&&new URL(r).origin===location.origin}catch(e){}
 var show=n==='reload'||(n!=='back_forward'&&!same);if(show&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('intro')})()}catch(e){}</script>
 </head>
@@ -77,7 +77,7 @@ var show=n==='reload'||(n!=='back_forward'&&!same);if(show&&!matchMedia('(prefer
 </div>
 <div style="display: flex; flex-direction: column; gap: 8px">
 <label for="c-luogo" style="font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: #9A948C">03 · Dove</label>
-<input id="c-luogo" class="field" type="text" placeholder="Città o location" style="height: 52px; background: #080808; border: 1px solid #3A3A3A; color: #E8E4DF; padding: 0 16px; font-family: 'Space Grotesk', sans-serif; font-size: 15px; box-sizing: border-box">
+<input id="c-luogo" class="field" type="text" placeholder="Comune, città o location" style="height: 52px; background: #080808; border: 1px solid #3A3A3A; color: #E8E4DF; padding: 0 16px; font-family: 'Space Grotesk', sans-serif; font-size: 15px; box-sizing: border-box">
 </div>
 </div>
 <fieldset class="st" style="border: 0; margin: 0; padding: 0; animation-delay: 0.8s">
@@ -132,11 +132,12 @@ var show=n==='reload'||(n!=='back_forward'&&!same);if(show&&!matchMedia('(prefer
 </div>
 </footer>
 </div>
-<script src="assets/site.js?v=97dfc7e4"></script>
+<script src="assets/site.js?v=f08ac075"></script>
 <script>
 (function(){
 var d=document,form=d.querySelector('[data-if="notSent"] form'),err=form.querySelector('.pk-err'),btn=form.querySelector('[data-act="send"]'),ts=form.querySelector('.pk-ts');
 var token=PK.turnstile(ts);
+PK.luoghi(d.getElementById('c-luogo'));PK.calendario(d.getElementById('c-data'));
 function show(name,on){d.querySelector('[data-if="'+name+'"]').hidden=!on}
 function style(b,on){b.setAttribute('aria-pressed',on);b.classList.toggle('on',on);
   b.style.background=on?'#E8E4DF':'transparent';b.style.color=on?'#080808':'#E8E4DF';b.style.borderColor=on?'#E8E4DF':'#3A3A3A'}
@@ -152,13 +153,13 @@ PK.acts.send=function(){
   if(!v('c-nome')||!v('c-mail')||!v('c-msg'))return errore('Scrivi nome, email o telefono e la tua idea.');
   if(!d.getElementById('c-ok').checked)return errore("Spunta la casella dell'informativa privacy.");
   errore('');btn.setAttribute('aria-busy','true');
-  PK.invia('/api/contatti',{tipo:scelta('type'),budget:scelta('budget'),quando:v('c-data'),dove:v('c-luogo'),nome:v('c-nome'),recapito:v('c-mail'),
+  PK.invia('/api/contatti',{tipo:scelta('type'),budget:scelta('budget'),quando:d.getElementById('c-data').dataset.iso||'',dove:v('c-luogo'),nome:v('c-nome'),recapito:v('c-mail'),
     messaggio:v('c-msg'),privacy:true,sito:form.querySelector('.pk-hp').value,turnstile:token()}).then(function(r){
     btn.removeAttribute('aria-busy');
-    if(r.ok){form.reset();PK.vt(function(){show('notSent',false);show('sent',true)})}else{errore(r.errore);PK.turnstileReset(ts)}
+    if(r.ok){form.reset();if(PK.calendario.azzera)PK.calendario.azzera();PK.vt(function(){show('notSent',false);show('sent',true)})}else{errore(r.errore);PK.turnstileReset(ts)}
   });
 };
-PK.acts.reset=function(){d.querySelectorAll('[data-act^="chip:"]').forEach(function(b){style(b,false)});PK.turnstileReset(ts);show('sent',false);show('notSent',true)};
+PK.acts.reset=function(){if(PK.calendario.azzera)PK.calendario.azzera();d.querySelectorAll('[data-act^="chip:"]').forEach(function(b){style(b,false)});PK.turnstileReset(ts);show('sent',false);show('notSent',true)};
 })();
 </script>
 </body>

@@ -181,6 +181,36 @@ html.vt-local::view-transition-old(*),html.vt-local::view-transition-new(*){heig
 .pk-ts:empty{display:none}
 button[data-act="send"][aria-busy="true"]{opacity:.6;cursor:progress}
 
+/* Contatti: suggerimenti per "Dove" e calendario per "Quando" (si aprono sotto il campo) */
+@keyframes pkpop{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+.pk-ac{position:relative}
+/* il blocco che contiene una tendina aperta sta sopra ai blocchi che seguono (le animazioni di entrata creano livelli separati) */
+.st:has(.pk-ac),.pk-ac{position:relative;z-index:5}
+.st:has(.pk-ac [aria-expanded="true"]){z-index:6}
+.pk-ac:has([aria-expanded="true"]){z-index:7}
+.pk-ac-list,.pk-cal{position:absolute;left:0;right:0;top:calc(100% + 6px);z-index:30;margin:0;background:#0E0E0E;border:1px solid #3A3A3A;box-shadow:0 18px 40px rgba(0,0,0,.55);animation:pkpop .22s cubic-bezier(.2,.7,.2,1) both}
+.pk-ac-list{list-style:none;padding:6px 0;max-height:300px;overflow-y:auto}
+.pk-ac-list li{display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding:12px 16px;font-size:15px;color:#E8E4DF;cursor:pointer;transition:background .2s,color .2s}
+.pk-ac-list li:hover,.pk-ac-list li[aria-selected="true"]{background:#1A1A1A;color:#D98A4E}
+.pk-ac-p{font-size:12px;letter-spacing:.12em;color:#9A948C}
+.pk-cal{max-width:360px;padding:16px;box-sizing:border-box}
+.pk-cal-top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px}
+.pk-cal-mese{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:24px;text-transform:capitalize}
+.pk-cal-nav{width:40px;height:40px;border-radius:50%;border:1px solid #2A2A2A;background:transparent;color:#E8E4DF;font-size:20px;line-height:1;cursor:pointer;transition:border-color .3s,color .3s}
+.pk-cal-nav:hover:not(:disabled){border-color:#D98A4E;color:#D98A4E}
+.pk-cal-nav:disabled{opacity:.25;cursor:default}
+.pk-cal-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:2px}
+.pk-cal-g{text-align:center;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#6E6A64;padding:6px 0}
+.pk-cal-d{aspect-ratio:1;min-width:0;border:1px solid transparent;border-radius:50%;background:transparent;color:#E8E4DF;font:inherit;font-size:14px;cursor:pointer;transition:background .2s,color .2s,border-color .2s}
+.pk-cal-d:hover:not(:disabled),.pk-cal-d:focus-visible{border-color:#D98A4E;color:#D98A4E;outline:none}
+.pk-cal-d.oggi{border-color:#336699}
+.pk-cal-d.on{background:#B46428;border-color:#B46428;color:#080808}
+.pk-cal-d:disabled{color:#3A3A3A;cursor:default}
+.pk-cal-foot{margin-top:12px;border-top:1px solid #1F1F1F;padding-top:10px}
+.pk-cal-x{background:none;border:0;padding:8px 0;color:#9A948C;font:inherit;font-size:12px;letter-spacing:.14em;text-transform:uppercase;cursor:pointer}
+.pk-cal-x:hover{color:#D98A4E}
+input[readonly].field{cursor:pointer}
+
 /* Menu */
 @keyframes mopen{from{clip-path:circle(0% at calc(100% - 90px) 52px)}to{clip-path:circle(150% at calc(100% - 90px) 52px)}}
 @keyframes mclose{from{clip-path:circle(150% at calc(100% - 90px) 52px)}to{clip-path:circle(0% at calc(100% - 90px) 52px)}}

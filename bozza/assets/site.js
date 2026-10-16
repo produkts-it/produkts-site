@@ -240,6 +240,117 @@ PK.invia=function(url,dati){
     .catch(function(){return {errore:'Connessione non riuscita, riprova tra poco.'}});
 };
 
+/* Campo "Dove": suggerimenti dai comuni italiani (elenco ISTAT in assets/comuni.json, caricato al primo uso).
+   Si può sempre scrivere altro (una location, una città estera). */
+var VICINI={BA:1,BT:1,MT:1,TA:1,BR:1,LE:1,FG:1};
+function norm(s){return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/['’`\-]/g,' ').replace(/\s+/g,' ').trim()}
+PK.luoghi=function(input){
+  if(!input)return;
+  var box=input.parentNode,lista=null,dati=null,carica=null,sel=-1,trovati=[],uid='pk-luoghi-'+Math.random().toString(36).slice(2,7);
+  box.classList.add('pk-ac');
+  var ul=d.createElement('ul');ul.className='pk-ac-list';ul.id=uid;ul.setAttribute('role','listbox');ul.hidden=true;box.appendChild(ul);
+  input.setAttribute('role','combobox');input.setAttribute('aria-autocomplete','list');input.setAttribute('aria-expanded','false');
+  input.setAttribute('aria-controls',uid);input.setAttribute('autocomplete','off');
+  function prendi(){
+    carica=carica||fetch('assets/comuni.json').then(function(r){return r.json()}).then(function(j){
+      dati=j.map(function(c){return {n:c[0],p:c[1],cap:c[2],k:norm(c[0])}});}).catch(function(){dati=[]});
+    return carica;
+  }
+  function chiudi(){ul.hidden=true;input.setAttribute('aria-expanded','false');input.removeAttribute('aria-activedescendant');sel=-1}
+  function scegli(i){var c=trovati[i];if(!c)return;input.value=c.n+' ('+c.p+')';chiudi()}
+  function evidenzia(i){
+    sel=i;[].forEach.call(ul.children,function(li,j){li.setAttribute('aria-selected',j===i)});
+    if(i>=0){input.setAttribute('aria-activedescendant',uid+'-'+i);ul.children[i].scrollIntoView({block:'nearest'})}
+  }
+  function cerca(){
+    var q=norm(input.value);
+    if(q.length<2||!dati){chiudi();return}
+    /* prima chi inizia con il testo, poi chi ha una parola che inizia così, poi chi lo contiene; a parità: Puglia e Matera, capoluoghi, ordine alfabetico */
+    var res=[];
+    for(var i=0;i<dati.length;i++){var c=dati[i],t=c.k.indexOf(q);if(t<0)continue;
+      var liv=t===0?0:(c.k.charAt(t-1)===' '?1:2);res.push({c:c,s:liv*10+(VICINI[c.p]?0:2)+(c.cap?0:1)})}
+    res.sort(function(a,b){return a.s-b.s||a.c.n.localeCompare(b.c.n,'it')});
+    trovati=res.slice(0,7).map(function(r){return r.c});
+    if(!trovati.length){chiudi();return}
+    ul.innerHTML='';
+    trovati.forEach(function(c,i){
+      var li=d.createElement('li');li.id=uid+'-'+i;li.setAttribute('role','option');li.setAttribute('aria-selected','false');
+      var nome=d.createElement('span');nome.textContent=c.n;var pr=d.createElement('span');pr.className='pk-ac-p';pr.textContent=c.p;
+      li.appendChild(nome);li.appendChild(pr);
+      li.addEventListener('mousedown',function(e){e.preventDefault();scegli(i)});
+      ul.appendChild(li);
+    });
+    ul.hidden=false;input.setAttribute('aria-expanded','true');evidenzia(-1);
+  }
+  input.addEventListener('focus',function(){prendi().then(cerca)});
+  input.addEventListener('input',function(){prendi().then(cerca)});
+  input.addEventListener('blur',function(){setTimeout(chiudi,120)});
+  input.addEventListener('keydown',function(e){
+    if(ul.hidden)return;
+    if(e.key==='ArrowDown'){e.preventDefault();evidenzia(Math.min(sel+1,trovati.length-1))}
+    else if(e.key==='ArrowUp'){e.preventDefault();evidenzia(Math.max(sel-1,-1))}
+    else if(e.key==='Enter'&&sel>=0){e.preventDefault();scegli(sel)}
+    else if(e.key==='Escape'){chiudi()}
+  });
+};
+
+/* Campo "Quando": calendario nello stile del sito al posto di quello del sistema.
+   Il valore (AAAA-MM-GG) sta in input.dataset.iso; nel campo si legge la data in italiano. */
+var MESI=['gennaio','febbraio','marzo','aprile','maggio','giugno','luglio','agosto','settembre','ottobre','novembre','dicembre'];
+var GIORNI=['lun','mar','mer','gio','ven','sab','dom'];
+function iso(dt){return dt.getFullYear()+'-'+('0'+(dt.getMonth()+1)).slice(-2)+'-'+('0'+dt.getDate()).slice(-2)}
+PK.calendario=function(input){
+  if(!input)return;
+  var box=input.parentNode,oggi=new Date();oggi.setHours(0,0,0,0);
+  var vista=new Date(oggi.getFullYear(),oggi.getMonth(),1),fuoco=new Date(oggi),aperto=false;
+  input.type='text';input.readOnly=true;input.setAttribute('inputmode','none');input.placeholder='Scegli una data';
+  input.setAttribute('aria-haspopup','dialog');input.setAttribute('aria-expanded','false');
+  box.classList.add('pk-ac');
+  var pop=d.createElement('div');pop.className='pk-cal';pop.setAttribute('role','dialog');pop.setAttribute('aria-label','Scegli una data');pop.hidden=true;
+  box.appendChild(pop);
+  function mostra(){
+    var y=vista.getFullYear(),m=vista.getMonth(),primo=(new Date(y,m,1).getDay()+6)%7,tot=new Date(y,m+1,0).getDate();
+    var prima=new Date(y,m,1)<=new Date(oggi.getFullYear(),oggi.getMonth(),1);
+    var h='<div class="pk-cal-top"><button type="button" class="pk-cal-nav" data-m="-1" aria-label="Mese precedente"'+(prima?' disabled':'')+'>‹</button>'
+      +'<span class="pk-cal-mese" aria-live="polite">'+MESI[m]+' '+y+'</span><button type="button" class="pk-cal-nav" data-m="1" aria-label="Mese successivo">›</button></div>'
+      +'<div class="pk-cal-grid" role="grid">'+GIORNI.map(function(g){return '<span class="pk-cal-g" aria-hidden="true">'+g+'</span>'}).join('');
+    for(var i=0;i<primo;i++)h+='<span></span>';
+    for(var g=1;g<=tot;g++){
+      var dt=new Date(y,m,g),k=iso(dt),passato=dt<oggi;
+      h+='<button type="button" class="pk-cal-d'+(k===input.dataset.iso?' on':'')+(k===iso(oggi)?' oggi':'')+'" data-d="'+k+'"'
+        +(passato?' disabled':'')+' tabindex="'+(k===iso(fuoco)?0:-1)+'" aria-label="'+g+' '+MESI[m]+' '+y+'">'+g+'</button>';
+    }
+    h+='</div><div class="pk-cal-foot"><button type="button" class="pk-cal-x">Non lo so ancora</button></div>';
+    pop.innerHTML=h;
+  }
+  function apri(){if(aperto)return;aperto=true;if(input.dataset.iso){var p=input.dataset.iso.split('-');fuoco=new Date(+p[0],p[1]-1,+p[2]);vista=new Date(fuoco.getFullYear(),fuoco.getMonth(),1)}
+    mostra();pop.hidden=false;input.setAttribute('aria-expanded','true');var b=pop.querySelector('[tabindex="0"]');if(b&&!b.disabled)b.focus()}
+  function chiudi(torna){if(!aperto)return;aperto=false;pop.hidden=true;input.setAttribute('aria-expanded','false');if(torna)input.focus()}
+  function imposta(k){
+    if(!k){delete input.dataset.iso;input.value='';chiudi(true);return}
+    var p=k.split('-'),dt=new Date(+p[0],p[1]-1,+p[2]);
+    input.dataset.iso=k;input.value=dt.toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long',year:'numeric'});chiudi(true);
+  }
+  function sposta(n){fuoco=new Date(fuoco.getFullYear(),fuoco.getMonth(),fuoco.getDate()+n);if(fuoco<oggi)fuoco=new Date(oggi);
+    vista=new Date(fuoco.getFullYear(),fuoco.getMonth(),1);mostra();var b=pop.querySelector('[data-d="'+iso(fuoco)+'"]');if(b)b.focus()}
+  input.addEventListener('click',function(){aperto?chiudi():apri()});
+  input.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '||e.key==='ArrowDown'){e.preventDefault();apri()}});
+  pop.addEventListener('click',function(e){
+    var b=e.target.closest('button');if(!b||b.disabled)return;
+    if(b.dataset.m){vista=new Date(vista.getFullYear(),vista.getMonth()+(+b.dataset.m),1);fuoco=new Date(vista);if(fuoco<oggi)fuoco=new Date(oggi);mostra()}
+    else if(b.dataset.d)imposta(b.dataset.d);
+    else if(b.classList.contains('pk-cal-x'))imposta('');
+  });
+  pop.addEventListener('keydown',function(e){
+    var mosse={ArrowLeft:-1,ArrowRight:1,ArrowUp:-7,ArrowDown:7};
+    if(mosse[e.key]&&e.target.dataset.d){e.preventDefault();sposta(mosse[e.key])}
+    else if(e.key==='PageUp'||e.key==='PageDown'){e.preventDefault();fuoco=new Date(fuoco.getFullYear(),fuoco.getMonth()+(e.key==='PageUp'?-1:1),1);sposta(0)}
+    else if(e.key==='Escape'){e.preventDefault();chiudi(true)}
+  });
+  d.addEventListener('mousedown',function(e){if(aperto&&!box.contains(e.target))chiudi()});
+  PK.calendario.azzera=function(){delete input.dataset.iso;input.value=''};
+};
+
 /* Carosello dei fotogrammi */
 PK.acts.carPrev=function(a,el){var t=el.closest('section').querySelector('.car-track');t.scrollBy({left:-t.clientWidth-16,behavior:still?'auto':'smooth'})};
 PK.acts.carNext=function(a,el){var t=el.closest('section').querySelector('.car-track');t.scrollBy({left:t.clientWidth+16,behavior:still?'auto':'smooth'})};
