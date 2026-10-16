@@ -129,31 +129,19 @@ function clockIn(hd){
    senza frame resta la scritta segnaposto. */
 var ITEMS=[
   ['01','Home','./','home','[ Showreel ]',{img:'img/menu/home.jpg',alt:'Locandina di Dynamis'}],
-  ['02','Lavori','lavori','lavori','[ Fotogramma da un lavoro ]',{img:'img/menu/lavori.jpg',alt:'Un fotogramma di Dynamis'}],
+  ['02','Lavori','lavori','lavori','[ Fotogramma da un lavoro ]',{img:'img/menu/lavori.webp',alt:'Karim sul red carpet del VerticalMovie alla Casa del Cinema di Roma'}],
   ['03','Chi sono','chi-sono','chisono','[ Ritratto sul set ]',{video:'img/menu/chi-sono.mp4',img:'img/menu/chi-sono.jpg',alt:'Karim alla camera sul set'}],
-  ['04','Recensioni','recensioni','recensioni','[ Una frase da una recensione ]',{frase:true}],
+  ['04','Recensioni','recensioni','recensioni','[ Una frase da una recensione ]',{frase:'Scatti straordinari che catturano emozioni uniche. Consigliato!',nome:'Pietro G.'}],
   ['05','Contatti','contatti','contatti','[ Dietro le quinte ]',{img:'img/menu/contatti.jpg',alt:'Karim dentro un armadio sul set di Dynamis'}]
 ];
-/* Frase per il frame Recensioni: dalla recensione approvata in evidenza (o la prima), la prima frase, al massimo ~160 caratteri */
-var frase=null;
-function caricaFrase(){
-  if(frase!==null)return;frase=false;
-  fetch('/api/recensioni').then(function(r){return r.ok?r.json():[]}).then(function(rs){
-    var r=rs.filter(function(x){return x.in_evidenza})[0]||rs.filter(function(x){return x.voto>=5})[0]||rs[0];if(!r)return;
-    var t=String(r.testo).replace(/\s+/g,' ').trim(),m=t.match(/^.{20,160}?[.!?…](\s|$)/);
-    t=m?m[0].trim():(t.length>160?t.slice(0,157).replace(/\s+\S*$/,'')+'…':t);
-    frase={testo:t,nome:r.nome};
-    var pv=d.querySelector('.mo .pvf[data-frase]');if(pv)pv.replaceWith(frameEl(ITEMS[3]));
-  }).catch(function(){});
-}
 function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
 function frameEl(it){
   var f=it[5],el=d.createElement('div');el.className='pvf';
-  if(f&&f.frase&&frase){el.innerHTML='<blockquote><p>«'+esc(frase.testo)+'»</p><footer>'+esc(frase.nome)+'</footer></blockquote>'}
+  if(f&&f.frase){el.innerHTML='<blockquote><p>«'+esc(f.frase)+'»</p><footer>'+esc(f.nome)+'</footer></blockquote>'}
   else if(f&&f.video&&!still){el.innerHTML='<video muted loop playsinline autoplay preload="auto" poster="'+f.img+'" aria-label="'+esc(f.alt)+'"><source src="'+f.video+'" type="video/mp4"></video>';
     var v=el.firstChild;v.muted=true;var p=v.play&&v.play();if(p&&p.catch)p.catch(function(){})}
   else if(f&&f.img){el.innerHTML='<img src="'+f.img+'" alt="'+esc(f.alt)+'">'}
-  else{el.style.cssText='display: flex; align-items: flex-end; padding: 20px';el.innerHTML='<span style="font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: #6E6A64">'+esc(it[4])+'</span>';if(f&&f.frase)el.setAttribute('data-frase','')}
+  else{el.style.cssText='display: flex; align-items: flex-end; padding: 20px';el.innerHTML='<span style="font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: #6E6A64">'+esc(it[4])+'</span>'}
   return el;
 }
 var LOGO='<a href="./" style="color: #E8E4DF; text-decoration: none; font-family: \'Cormorant Garamond\', serif; font-style: italic; font-weight: 300; font-size: 30px">produkts<span style="font-style: normal; opacity: 0.5">.it</span></a>';
@@ -199,7 +187,6 @@ function menu(){
     d.body.appendChild(mo);
     h.classList.add('menu-open');
     btn.setAttribute('aria-expanded','true');
-    caricaFrase();
     /* Precarica le immagini dei frame, così passando sulle voci compaiono subito */
     ITEMS.forEach(function(it){if(it[5]&&it[5].img)(new Image()).src=it[5].img});
     var pv=mo.querySelector('.pvf'),shown=null;
