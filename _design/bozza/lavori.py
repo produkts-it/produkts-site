@@ -114,6 +114,27 @@ FILMOGRAFIA = [
 ]
 HOME_FILMO = 10
 
+# Corti di AMARCORD (Accademia Mediterranea del Cinema), 2026: schede che portano a Vimeo, senza pagina propria.
+# Niente sinossi (no spoiler): solo genere, sceneggiatura e una riga di atmosfera. 'ruolo' vuoto = da chiedere a Karim.
+AMARCORD = [
+    dict(t='Paranoia', gen='Dramma psicologico', scrive='Miriana Mastronardi', ruolo='Operatore, 2ª camera', min=7,
+         vimeo='1220653465/634fa7dd97', line='Un campus, un sospetto, una voce che non smette di suggerire.'),
+    dict(t='Sbaglio dunque esisto', gen='Dramma psicologico', scrive='Mariachiara Monaco', ruolo='Operatore, 1ª camera', min=6,
+         vimeo='1220653421/520923c76a', line='Una terapia sperimentale, una stanza chiusa e un viaggio dentro i ricordi.'),
+    dict(t='Parfum', gen='Commedia romantica', scrive='Noemi Lorusso', ruolo='Assistente operatore', min=6,
+         vimeo='1220653459/be50961eb1', line='Un primo appuntamento tra gli scaffali di una libreria, una paura da nascondere e troppi campioncini di profumo.'),
+    dict(t='La sedia', gen='Dramma psicologico', scrive='Noemi Lorusso', ruolo='Assistente operatore', min=6,
+         vimeo='1205077119/8e1ac4d587', line='Una ragazza che non regge il contatto, una sedia davanti a lei e tutto quello che non ha mai detto.'),
+    dict(t='Verità e distorsione', gen='Commedia', scrive='Mariachiara Monaco', ruolo='', min=7,
+         vimeo='1205096912/9477749d7c', line='Notte fonda in un appartamento di studenti: un coinquilino è sicuro che qualcuno sia entrato.'),
+    dict(t='La seduta', es=True, ruolo='Operatore', min=8, vimeo='1198757832/ba4f3c4cf7'),
+    dict(t="L'inventario", es=True, ruolo='Co-D.O.P.', min=5, vimeo='1205074164/052af8153b'),
+    dict(t='Il tanga e la cravatta', es=True, ruolo='Fonico', min=5, vimeo='1205098451/48cd24e2f4'),
+    dict(t='Troppo per poco', es=True, ruolo='', min=6, vimeo='1195193265/0f7b18a157'),
+]
+# Filmografia: i titoli con un corto su Vimeo diventano link
+VIMEO_FILMO = {a['t'].lower(): 'https://vimeo.com/' + a['vimeo'] for a in AMARCORD}
+
 e = lambda s: html.escape(s, quote=True)
 
 
@@ -289,8 +310,38 @@ def home_card(w, i):
        e(w.get('home_kind') or w['kicker'].rsplit(' · ', 1)[0]), e(w.get('home_role') or w['role_short']))
 
 
+def amarcord_card(a, i):
+    kick = ' · '.join(x for x in ['Esercitazione' if a.get('es') else a['gen'], '%d min' % a['min']] if x)
+    line = ('<p style="margin: 0; font-family: \'Cormorant Garamond\', serif; font-style: italic; font-weight: 300; font-size: 22px; line-height: 1.35; color: #C9C4BD">%s</p>\n' % e(a['line'])) if a.get('line') else ''
+    scrive = ('<span style="font-size: 13px; color: #9A948C">Scritto da %s</span>\n' % e(a['scrive'])) if a.get('scrive') else ''
+    ruolo = ('<span style="color: %s">%s</span>' % (ACC, e(a['ruolo']))) if a['ruolo'] else '<span></span>'
+    return '''<a href="https://vimeo.com/%s" target="_blank" rel="noopener" class="work reveal" aria-label="%s, guarda su Vimeo (si apre in una nuova scheda)" style="position: relative; display: flex; flex-direction: column; justify-content: space-between; gap: 28px; padding: 28px; border: 1px solid #1F1F1F; min-height: 260px; box-sizing: border-box">
+<span aria-hidden="true" class="br br-tl" style="position: absolute; top: 12px; left: 12px; width: 16px; height: 16px; border-top: 1px solid #336699; border-left: 1px solid #336699"></span>
+<span aria-hidden="true" class="br br-br" style="position: absolute; bottom: 12px; right: 12px; width: 16px; height: 16px; border-bottom: 1px solid #336699; border-right: 1px solid #336699"></span>
+<div style="display: flex; flex-direction: column; gap: 14px">
+<span style="font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: #9A948C">%s</span>
+<h3 style="margin: 0; font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 400; font-size: 36px; line-height: 1.05">%s</h3>
+%s%s</div>
+<div style="display: flex; justify-content: space-between; align-items: baseline; gap: 16px; border-top: 1px solid #1F1F1F; padding-top: 14px; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase">
+%s<span style="white-space: nowrap; color: #E8E4DF">Vimeo <span aria-hidden="true" class="arr" style="color: #B46428">↗</span></span>
+</div>
+</a>
+''' % (a['vimeo'], e(a['t']), e(kick), e(a['t']), line, scrive, ruolo)
+
+
+def amarcord_section():
+    def gruppo(titolo, items):
+        return ('<div style="display: flex; flex-direction: column; gap: 20px">\n<h3 class="reveal" style="margin: 0; font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: %s">%s</h3>\n'
+                '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%%, 320px), 1fr)); gap: 24px">\n%s</div>\n</div>\n') % (ACC, e(titolo), ''.join(amarcord_card(a, i) for i, a in enumerate(items)))
+    return (gruppo('Cortometraggi 2026', [a for a in AMARCORD if not a.get('es')])
+            + gruppo('Esercitazioni 2026', [a for a in AMARCORD if a.get('es')]))
+
+
 def filmo_row(t, role, prod, href, cls, cols, fs, pad):
     title = '<span style="font-family: \'Cormorant Garamond\', serif; font-style: italic; font-size: %dpx">%s</span>' % (fs, e(t))
+    ext = VIMEO_FILMO.get(t.lower()) if not href else None
+    if ext:
+        title = '<a href="%s" target="_blank" rel="noopener" style="font-family: \'Cormorant Garamond\', serif; font-style: italic; font-size: %dpx">%s <span aria-hidden="true" style="color: #B46428">↗</span></a>' % (ext, fs, e(t))
     if href:
         title = '<a href="%s" style="font-family: \'Cormorant Garamond\', serif; font-style: italic; font-size: %dpx">%s <span aria-hidden="true" style="color: #B46428">→</span></a>' % (href, fs, e(t))
     return ('<div class="%s" style="display: grid; grid-template-columns: %s; gap: 16px; padding: %s 0; border-bottom: 1px solid #1F1F1F; align-items: baseline">\n'
@@ -303,6 +354,7 @@ for w in WORKS:
         print('ok', w['slug'] + '.html')
 put('lavori.html', 'lavori:tabs', ''.join(tab(c, l) for c, l in CAT_LABELS if c == 'Tutti' or any(c in w['cats'] for w in WORKS)))
 put('lavori.html', 'lavori:griglia', ''.join(card(w, i) for i, w in enumerate(WORKS)))
+put('lavori.html', 'lavori:amarcord', amarcord_section())
 s = open(os.path.join(OUT, 'lavori.html'), encoding='utf-8').read()
 s = re.sub(r'<span data-count>\d+</span>', '<span data-count>%d</span>' % len(WORKS), s)
 save(os.path.join(OUT, 'lavori.html'), s)

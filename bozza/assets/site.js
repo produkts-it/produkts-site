@@ -129,7 +129,7 @@ function clockIn(hd){
    senza frame resta la scritta segnaposto. */
 var ITEMS=[
   ['01','Home','./','home','[ Showreel ]',{img:'img/menu/home.jpg',alt:'Locandina di Dynamis'}],
-  ['02','Lavori','lavori','lavori','[ Fotogramma da un lavoro ]',{img:'img/menu/lavori.webp',alt:'Karim sul red carpet del VerticalMovie alla Casa del Cinema di Roma'}],
+  ['02','Lavori','lavori','lavori','[ Fotogramma da un lavoro ]',{img:'img/menu/lavori.jpg',alt:'Un fotogramma di Dynamis: una ragazza dai capelli rossi'}],
   ['03','Chi sono','chi-sono','chisono','[ Ritratto sul set ]',{video:'img/menu/chi-sono.mp4',img:'img/menu/chi-sono.jpg',alt:'Karim alla camera sul set'}],
   ['04','Recensioni','recensioni','recensioni','[ Una frase da una recensione ]',{frase:'Scatti straordinari che catturano emozioni uniche. Consigliato!',nome:'Pietro G.'}],
   ['05','Contatti','contatti','contatti','[ Dietro le quinte ]',{img:'img/menu/contatti.jpg',alt:'Karim dentro un armadio sul set di Dynamis'}]
@@ -375,4 +375,6 @@ pkCursor();
 clock();
 menu();
 acts();
+/* Video in loop delle pagine (muti, dietro le quinte): fermi sul poster per chi riduce le animazioni */
+d.querySelectorAll('video.pk-loop').forEach(function(v){v.muted=true;if(still){v.removeAttribute('autoplay');v.pause()}else{var p=v.play();if(p&&p.catch)p.catch(function(){})}});
 })();
