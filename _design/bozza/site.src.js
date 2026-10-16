@@ -137,7 +137,7 @@ function acts(){
 
 /* Moduli (Contatti, Recensioni): invio alle API di Cloudflare Pages con anti-spam Turnstile */
 /* Chiave pubblica del widget Turnstile (pannello Cloudflare > Turnstile). Vuota = nessun widget (anteprima locale). */
-PK.TURNSTILE_KEY='';
+PK.TURNSTILE_KEY='0x4AAAAAAFYX7kR7bEUJ9EOy';
 var tsLoad=null;
 PK.turnstile=function(box){
   if(!PK.TURNSTILE_KEY||!box)return function(){return ''};

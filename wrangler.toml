@@ -6,7 +6,7 @@ compatibility_date = "2026-10-01"
 [[d1_databases]]
 binding = "DB"
 database_name = "produkts-moduli"
-database_id = "DA_COMPILARE"
+database_id = "d3760ff3-a2be-42dc-85b2-3725c446bcd4"
 migrations_dir = "migrations"
 
 [vars]
