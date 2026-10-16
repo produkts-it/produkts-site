@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!-- Bozza del sito completo: raggiungibile da chi ha il link, esclusa dai motori di ricerca -->
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#080808">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<link rel="icon" type="image/png" href="../favicon.png">
+<title>produkts.it — bozza</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Space+Grotesk:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#080808; --line:#1F1F1F;
+  --fg:#E8E4DF; --muted:#9A948C;
+  --steel:#336699; --ember:#B46428; --ember-hi:#D98A4E;
+  --display:'Cormorant Garamond', 'Cormorant', Garamond, 'Times New Roman', serif;
+  --ui:'Space Grotesk', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  color-scheme:dark;
+}
+html,body{min-height:100%;overflow-x:clip;max-width:100%}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--ui);-webkit-font-smoothing:antialiased}
+::selection{color:var(--ember);background:transparent}
+.kicker::selection,.accent::selection{color:var(--steel);background:transparent}
+a{color:var(--fg);text-decoration:none}
+a:hover{color:var(--ember-hi)}
+a:focus-visible{outline:1px solid var(--ember-hi);outline-offset:4px}
+
+.page{box-sizing:border-box;max-width:880px;margin:0 auto;padding:clamp(48px,12vh,120px) max(16px,env(safe-area-inset-left,0px)) 64px}
+.kicker{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--ember)}
+h1{font-family:var(--display);font-weight:300;font-size:clamp(40px,9vw,80px);line-height:1;margin:16px 0 20px}
+h1 .accent{font-style:italic;color:var(--ember-hi)}
+p{color:var(--muted);max-width:52ch;line-height:1.6;margin:0 0 48px}
+ul{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+li{display:flex;justify-content:space-between;gap:16px;align-items:baseline;padding:16px 0;border-bottom:1px solid var(--line)}
+li span:first-child{font-family:var(--display);font-size:clamp(22px,4vw,28px)}
+li span:last-child{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+.back{display:inline-block;margin-top:48px;font-size:14px}
+
+/* Entrata morbida degli elementi */
+.reveal{opacity:0;transform:translateY(12px);animation:reveal .8s cubic-bezier(.2,.7,.2,1) forwards}
+@keyframes reveal{to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.reveal{animation:none;opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<main class="page">
+  <div class="kicker reveal">Bozza · non pubblica</div>
+  <h1 class="reveal" style="animation-delay:.08s">Il sito, <span class="accent">in costruzione</span></h1>
+  <p class="reveal" style="animation-delay:.16s">Qui compaiono le pagine del nuovo produkts.it man mano che vengono costruite.</p>
+  <ul class="reveal" style="animation-delay:.24s">
+    <li><span>Home</span><span>in arrivo</span></li>
+    <li><span>Dynamis</span><span>in arrivo</span></li>
+    <li><span>Recensioni</span><span>in arrivo</span></li>
+    <li><span>Archivio</span><span>in arrivo</span></li>
+    <li><span>Chi sono</span><span>in arrivo</span></li>
+    <li><span>Contatti</span><span>in arrivo</span></li>
+    <li><span>Privacy</span><span>in arrivo</span></li>
+  </ul>
+  <a class="back reveal" style="animation-delay:.32s" href="../">← produkts.it</a>
+</main>
+</body>
+</html>
