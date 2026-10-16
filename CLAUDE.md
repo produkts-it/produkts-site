@@ -55,6 +55,8 @@ Sito di Karim Ismail (produkts.it), fotografo, videomaker e D.O.P. ad Altamura (
   - /_blob/3f6ec5721323414d070935f1f2ca448a → fotogrammi/dynamis-16.jpg
 
 ## Regole decise con Karim (rispettarle sempre)
+- Il nome si scrive sempre **produkts.it** (mai "Produkts"): filmografie, produzioni, footer, testi.
+- Credits: quando una persona compare in più lavori (anche nei corti AMARCORD, i cui credits Karim manda man mano), accanto al nome va il rimando "Anche in …" con link, come Gianni Lorusso tra Schizophrenia e Dynamis (`cast_row`/`also` in lavori.py).
 - Tutto animato: ogni transizione e movimento di pagina, sempre (rispettando prefers-reduced-motion).
 - Intro del logo: solo all'ingresso sul sito e alla ricarica, mai nella navigazione interna o col tasto indietro. Uscita morbida (logo sfuma, sipario sale).
 - Cursore custom: cerchietto con leggero ritardo; aggancio (lock-on) a link e pulsanti prendendone la forma con ~7px di padding; sfocatura animata breve su titoli e parole chiave; mai visibile su touch; nessuna sfocatura alla pressione.

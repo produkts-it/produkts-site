@@ -42,7 +42,7 @@ WORKS = [
          line='Un cortometraggio introspettivo sul silenzio, sul tempo e sul confine sottile tra dentro e fuori. Una notte sospesa, tra realtà e percezione.',
          role='Regia, produzione, sceneggiatura, fotografia, montaggio e sound design',
          role_short='Regia, fotografia e montaggio',
-         meta=[('Produzione', 'Produkts'), ('Interprete', 'Gianni Lorusso'), ('Uscita', '10 maggio 2025 · YouTube')],
+         meta=[('Produzione', 'produkts.it'), ('Interprete', 'Gianni Lorusso'), ('Uscita', '10 maggio 2025 · YouTube')],
          cast=[('Unico interprete', 'Gianni Lorusso', ('dynamis', 'Anche in Dynamis, nel ruolo di Mattia'))],
          crew=[('Regia', KI), ('Produzione', KI), ('Sceneggiatura', KI + ', Donatella Loviglio'),
                ('Direzione della fotografia', KI), ('Operatore', KI), ('Montaggio', KI), ('Sound design', KI),
@@ -87,9 +87,9 @@ WORKS = [
          cats=['Cortometraggio', 'Opera personale'], kicker='Docufilm · opera personale · 2022',
          line="Un docufilm in dialetto altamurano sul rapporto di amore e odio tra l'uomo e la natura.",
          role='Regia, riprese e montaggio, con Fabrizio Marinelli', role_short='Regia, riprese e montaggio',
-         meta=[('Produzione', 'Produkts'), ('Lingua', 'Dialetto altamurano'), ('Uscita', 'Marzo 2022 · Vimeo')],
+         meta=[('Produzione', 'produkts.it'), ('Lingua', 'Dialetto altamurano'), ('Uscita', 'Marzo 2022 · Vimeo')],
          cast=[('Protagonista', 'Paolo Cappiello', None)],
-         crew=[('Video', KI + ', Fabrizio Marinelli'), ('Montaggio', KI + ', Fabrizio Marinelli'), ('Produzione', 'Produkts')]),
+         crew=[('Video', KI + ', Fabrizio Marinelli'), ('Montaggio', KI + ', Fabrizio Marinelli'), ('Produzione', 'produkts.it')]),
 ]
 CAT_LABELS = [('Tutti', 'Tutti'), ('Cortometraggio', 'Cortometraggi'), ('Videoclip', 'Videoclip'),
               ('Video aziendale', 'Video aziendali'), ('Opera personale', 'Opere personali')]
@@ -101,8 +101,8 @@ FILMOGRAFIA = [
     ('Dynamis', 'Produttore, D.O.P., montaggio, color, VFX', 'produkts.it', 'dynamis'),
     ('Tra i Piedi', 'Direttore della fotografia', 'AMARCORD', None),
     ("L'Inventario", 'Co-D.O.P.', 'AMARCORD', None),
-    ('Schizophrenia — Io e Nessun Altro', 'Regia e fotografia', 'Produkts', 'schizophrenia'),
-    ('Troppo bella per loro', 'Docufilm · regia, riprese e montaggio', 'Produkts', 'troppo-bella-per-loro'),
+    ('Schizophrenia — Io e Nessun Altro', 'Regia e fotografia', 'produkts.it', 'schizophrenia'),
+    ('Troppo bella per loro', 'Docufilm · regia, riprese e montaggio', 'produkts.it', 'troppo-bella-per-loro'),
     ('Sbaglio Dunque Esisto', 'Operatore, 1ª camera', 'AMARCORD', None),
     ('La Seduta', 'Operatore', 'AMARCORD', None),
     ('Paranoia', 'Operatore, 2ª camera', 'AMARCORD', None),
@@ -160,7 +160,7 @@ FOOT = '''
 
 <footer style="border-top: 1px solid #1F1F1F">
 <div style="max-width: 1440px; margin: 0 auto; padding: 24px 56px 40px; box-sizing: border-box; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; font-size: 13px; color: #9A948C">
-<span>© 2026 Produkts · Karim Ismail · Altamura (BA)</span>
+<span>© 2026 produkts.it · Karim Ismail · Altamura (BA)</span>
 <a href="privacy" style="color: #9A948C">Privacy e cookie</a>
 </div>
 </footer>
