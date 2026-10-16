@@ -50,7 +50,7 @@ var ITEMS=[
   ['02','Lavori','lavori','lavori','[ Fotogramma da un lavoro ]',{img:'img/menu/lavori.jpg',alt:'Un fotogramma di Dynamis'}],
   ['03','Chi sono','chi-sono','chisono','[ Ritratto sul set ]',{video:'img/menu/chi-sono.mp4',img:'img/menu/chi-sono.jpg',alt:'Karim alla camera sul set'}],
   ['04','Recensioni','recensioni','recensioni','[ Una frase da una recensione ]',{frase:true}],
-  ['05','Contatti','contatti','contatti','[ Dietro le quinte ]',null]
+  ['05','Contatti','contatti','contatti','[ Dietro le quinte ]',{img:'img/menu/contatti.jpg',alt:'Karim dentro un armadio sul set di Dynamis'}]
 ];
 /* Frase per il frame Recensioni: dalla recensione approvata in evidenza (o la prima), la prima frase, al massimo ~160 caratteri */
 var frase=null;
