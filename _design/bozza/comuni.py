@@ -1,4 +1,4 @@
-"""Crea bozza/assets/comuni.json (suggerimenti del campo "Dove" in Contatti) dall'elenco ufficiale ISTAT dei comuni.
+"""Crea assets/comuni.json (suggerimenti del campo "Dove" in Contatti) dall'elenco ufficiale ISTAT dei comuni.
 Fonte: https://www.istat.it/storage/codici-unita-amministrative/Elenco-comuni-italiani.csv
 Uso: python _design/bozza/comuni.py percorso/Elenco-comuni-italiani.csv
 Formato: [[nome, sigla provincia, 1 se capoluogo], ...]
@@ -14,6 +14,6 @@ for r in rows[1:]:
         continue
     out.append([r[6].strip(), r[14].strip(), 1 if r[13].strip() == '1' else 0])
 out.sort(key=lambda x: x[0].lower())
-dest = os.path.join(HERE, '..', '..', 'bozza', 'assets', 'comuni.json')
+dest = os.path.join(HERE, '..', '..', 'assets', 'comuni.json')
 open(dest, 'w', encoding='utf-8', newline='\n').write(json.dumps(out, ensure_ascii=False, separators=(',', ':')))
 print('ok', len(out), 'comuni')

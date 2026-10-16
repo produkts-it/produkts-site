@@ -5,7 +5,7 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 rm -rf dist
 mkdir -p dist
-cp index.html 404.html _headers dist/
-cp -r bozza brand admin dist/
+cp ./*.html _headers _redirects robots.txt sitemap.xml dist/
+cp -r assets img brand admin dist/
 cp ./*.png ./*.jpg ./*.svg dist/
 echo "dist pronto: $(find dist -type f | wc -l) file"

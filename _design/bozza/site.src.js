@@ -1,4 +1,4 @@
-/* produkts.it — script comune della bozza. Generato da _design/bozza/build.py (non modificare bozza/assets/site.js a mano). */
+/* produkts.it — script comune del sito. Generato da _design/bozza/build.py (non modificare assets/site.js a mano). */
 (function(){
 var d=document,w=window,h=d.documentElement;
 var still=w.matchMedia&&w.matchMedia('(prefers-reduced-motion: reduce)').matches;

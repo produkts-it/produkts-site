@@ -1,6 +1,6 @@
-"""Lavori della bozza: un unico elenco da cui si generano
-- le pagine dei lavori semplici (bozza/<slug>.html; Dynamis ha una pagina fatta a mano e qui non viene rigenerata),
-- la griglia e i filtri di bozza/lavori.html,
+"""Lavori del sito: un unico elenco da cui si generano
+- le pagine dei lavori semplici (<slug>.html nella root; Dynamis ha una pagina fatta a mano e qui non viene rigenerata),
+- la griglia e i filtri di lavori.html,
 - i "Lavori scelti" della Home e le filmografie di Home e Chi sono (tra i commenti <!-- nome --> ... <!-- /nome -->).
 Uso: python _design/bozza/lavori.py
 Regola: per i cortometraggi niente sinossi (no spoiler), solo una riga di atmosfera.
@@ -22,7 +22,7 @@ def save(path, text):
 
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-OUT = os.path.join(HERE, '..', '..', 'bozza')
+OUT = os.path.join(HERE, '..', '..')
 ACC = '#B46428'
 KI = 'Karim Ismail'
 
@@ -33,7 +33,7 @@ def yt_thumb(vid, size='maxresdefault'):
 
 # Dal più recente. 'cats' decide i filtri di Lavori; 'page': False = pagina fatta a mano.
 WORKS = [
-    dict(slug='dynamis', page=False, t='Dynamis', year='2026', img='../dynamis.jpg', pos='50% 35%',
+    dict(slug='dynamis', page=False, t='Dynamis', year='2026', img='dynamis.jpg', pos='50% 35%',
          cats=['Cortometraggio', 'Opera personale'], role_short='Produttore e D.O.P. · VerticalMovie 2026',
          home_kind='Corto verticale · VerticalMovie 2026', home_role='Produzione e fotografia'),
     dict(slug='schizophrenia', t='Schizophrenia', sub='Io e Nessun Altro', year='2025', date='10 maggio 2025',

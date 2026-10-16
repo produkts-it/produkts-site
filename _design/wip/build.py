@@ -1,4 +1,5 @@
-"""Builds index.html in the repo root (standalone page for GitHub Pages) from wip-body.html."""
+"""Archivio: rigenera _design/wip/index.html (la vecchia pagina "work in progress", non più online) da wip-body.html.
+Il logo dell'intro del sito (build.py) viene preso da qui."""
 import os
 HERE = os.path.dirname(os.path.abspath(__file__))
 body = open(os.path.join(HERE, 'wip-body.html'), encoding='utf-8').read()
@@ -19,5 +20,5 @@ head = '''<!doctype html>
 i = body.index('<div class="page">')
 top = body[:i].replace('<meta name="claude:viewport-fit-sides" content="cover">\n', '')
 html = head + top + '</head>\n<body>\n' + body[i:] + '</body>\n</html>\n'
-open(os.path.join(HERE, '..', '..', 'index.html'), 'w', encoding='utf-8', newline='\n').write(html)
+open(os.path.join(HERE, 'index.html'), 'w', encoding='utf-8', newline='\n').write(html)
 print('ok', len(html))

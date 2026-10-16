@@ -1,0 +1,4 @@
+# Redirect di Cloudflare Pages. Dal lancio (ottobre 2026) il sito non è più in /bozza: i vecchi link portano alla pagina giusta.
+/bozza /  301
+/bozza/ /  301
+/bozza/* /:splat  301
