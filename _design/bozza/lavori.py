@@ -7,6 +7,20 @@ Regola: per i cortometraggi niente sinossi (no spoiler), solo una riga di atmosf
 """
 import html, os, re
 
+def save(path, text):
+    """Scrive il file; su Windows a volte la scrittura fallisce per un attimo (antivirus/indicizzazione): riprova."""
+    import time
+    for i in range(5):
+        try:
+            with open(path, 'w', encoding='utf-8', newline='\n') as f:
+                f.write(text)
+            return
+        except OSError:
+            if i == 4:
+                raise
+            time.sleep(0.3)
+
+
 HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(HERE, '..', '..', 'bozza')
 ACC = '#B46428'
@@ -29,7 +43,7 @@ WORKS = [
          role='Regia, produzione, sceneggiatura, fotografia, montaggio e sound design',
          role_short='Regia, fotografia e montaggio',
          meta=[('Produzione', 'Produkts'), ('Interprete', 'Gianni Lorusso'), ('Uscita', '10 maggio 2025 · YouTube')],
-         cast=[('Unico interprete', 'Gianni Lorusso', ('dynamis.html', 'Anche in Dynamis, nel ruolo di Mattia'))],
+         cast=[('Unico interprete', 'Gianni Lorusso', ('dynamis', 'Anche in Dynamis, nel ruolo di Mattia'))],
          crew=[('Regia', KI), ('Produzione', KI), ('Sceneggiatura', KI + ', Donatella Loviglio'),
                ('Direzione della fotografia', KI), ('Operatore', KI), ('Montaggio', KI), ('Sound design', KI),
                ('Fonico di doppiaggio', KI), ('Costumi', 'Gianni Lorusso, Donatella Loviglio'), ('Assistente', 'Gianni Lorusso'),
@@ -84,11 +98,11 @@ HOME_WORKS = ['dynamis', 'schizophrenia', 'coseco', 'wake-up']
 # Filmografia: solo cinema (cortometraggi, lungometraggi, film, docufilm, documentari). Niente videoclip, social, corporate.
 # Titolo, ruolo, produzione, pagina (se c'è)
 FILMOGRAFIA = [
-    ('Dynamis', 'Produttore, D.O.P., montaggio, color, VFX', 'produkts.it', 'dynamis.html'),
+    ('Dynamis', 'Produttore, D.O.P., montaggio, color, VFX', 'produkts.it', 'dynamis'),
     ('Tra i Piedi', 'Direttore della fotografia', 'AMARCORD', None),
     ("L'Inventario", 'Co-D.O.P.', 'AMARCORD', None),
-    ('Schizophrenia — Io e Nessun Altro', 'Regia e fotografia', 'Produkts', 'schizophrenia.html'),
-    ('Troppo bella per loro', 'Docufilm · regia, riprese e montaggio', 'Produkts', 'troppo-bella-per-loro.html'),
+    ('Schizophrenia — Io e Nessun Altro', 'Regia e fotografia', 'Produkts', 'schizophrenia'),
+    ('Troppo bella per loro', 'Docufilm · regia, riprese e montaggio', 'Produkts', 'troppo-bella-per-loro'),
     ('Sbaglio Dunque Esisto', 'Operatore, 1ª camera', 'AMARCORD', None),
     ('La Seduta', 'Operatore', 'AMARCORD', None),
     ('Paranoia', 'Operatore, 2ª camera', 'AMARCORD', None),
@@ -113,7 +127,7 @@ HEAD = open(os.path.join(OUT, 'dynamis.html'), encoding='utf-8').read()
 HEAD = HEAD[:HEAD.index('<section')]  # head + header della pagina Dynamis, uguali per tutti i lavori
 
 FOOT = '''
-<a href="contatti.html" class="next" style="display: block; border-top: 1px solid #1F1F1F">
+<a href="contatti" class="next" style="display: block; border-top: 1px solid #1F1F1F">
 <div style="max-width: 1440px; margin: 0 auto; padding: 72px 56px 96px; box-sizing: border-box; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 24px">
 <div style="display: flex; flex-direction: column; gap: 12px">
 <span style="font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: #9A948C">Hai un progetto?</span>
@@ -126,7 +140,7 @@ FOOT = '''
 <footer style="border-top: 1px solid #1F1F1F">
 <div style="max-width: 1440px; margin: 0 auto; padding: 24px 56px 40px; box-sizing: border-box; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; font-size: 13px; color: #9A948C">
 <span>© 2026 Produkts · Karim Ismail · Altamura (BA)</span>
-<a href="privacy.html" style="color: #9A948C">Privacy e cookie</a>
+<a href="privacy" style="color: #9A948C">Privacy e cookie</a>
 </div>
 </footer>
 </div>
@@ -170,7 +184,7 @@ def page(w):
         cast = ('<div>\n<span style="display: block; %s; padding-bottom: 12px">Cast</span>\n%s</div>\n'
                 % (KICK, ''.join(cast_row(*c) for c in w['cast'])))
     body = '''<section style="max-width: 1440px; margin: 0 auto; padding: 24px 56px 72px; box-sizing: border-box">
-<a href="lavori.html" style="font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; color: #9A948C; padding: 12px 0; display: inline-block; margin-bottom: 24px">← Tutti i lavori</a>
+<a href="lavori" style="font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; color: #9A948C; padding: 12px 0; display: inline-block; margin-bottom: 24px">← Tutti i lavori</a>
 <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 24px 64px; margin-bottom: 40px">
 <div style="display: flex; flex-direction: column; gap: 20px; min-width: 0">
 <span class="fade" style="%(kick)s">%(kicker)s</span>
@@ -215,7 +229,7 @@ def page(w):
            sub=('<p class="fade d2" style="margin: 0; font-family: \'Cormorant Garamond\', serif; font-style: italic; font-weight: 300; font-size: clamp(24px, 3vw, 36px); line-height: 1.2; color: #C9C4BD">%s</p>\n' % e(w['sub'])) if w.get('sub') else '',
            meta=''.join(meta_item(k, v) for k, v in metas), cast=cast, crewlabel='Troupe' if w.get('cast') else 'Crediti',
            crew=''.join(crew_row(k, v) for k, v in w['crew']))
-    open(os.path.join(OUT, w['slug'] + '.html'), 'w', encoding='utf-8', newline='\n').write(head + body + FOOT)
+    save(os.path.join(OUT, w['slug'] + '.html'), head + body + FOOT)
 
 
 def put(fname, name, content):
@@ -223,12 +237,12 @@ def put(fname, name, content):
     s = open(p, encoding='utf-8').read()
     s, n = re.subn(r'(<!-- %s -->)(.*?)(<!-- /%s -->)' % (name, name), lambda m: m.group(1) + '\n' + content + m.group(3), s, flags=re.S)
     assert n == 1, (fname, name)
-    open(p, 'w', encoding='utf-8', newline='\n').write(s)
+    save(p, s)
 
 
 def card(w, i):
     kind = ' · '.join(w['cats'])
-    return '''<a href="%s.html" class="work stag" data-cats="%s" style="view-transition-name: w%d; display: flex; flex-direction: column; gap: 16px; animation-delay: %.2fs">
+    return '''<a href="%s" class="work stag" data-cats="%s" style="view-transition-name: w%d; display: flex; flex-direction: column; gap: 16px; animation-delay: %.2fs">
 <div class="frame" style="position: relative; aspect-ratio: 2.39 / 1; background: #161616; display: flex; align-items: center; justify-content: center; overflow: hidden">
 <img src="%s" alt="" loading="lazy" style="position: absolute; inset: 0; width: 100%%; height: 100%%; object-fit: cover; object-position: %s">
 <span aria-hidden="true" class="br br-tl" style="position: absolute; top: 12px; left: 12px; width: 16px; height: 16px; border-top: 1px solid #336699; border-left: 1px solid #336699"></span>
@@ -254,7 +268,7 @@ def tab(c, label):
 
 
 def home_card(w, i):
-    return '''<a href="%s.html" class="work reveal" style="display: flex; flex-direction: column; gap: 20px">
+    return '''<a href="%s" class="work reveal" style="display: flex; flex-direction: column; gap: 20px">
 <div class="frame" style="position: relative; aspect-ratio: 2.39 / 1; background: #161616; display: flex; align-items: center; justify-content: center; overflow: hidden">
 <img src="%s" alt="" loading="lazy" style="position: absolute; inset: 0; width: 100%%; height: 100%%; object-fit: cover; object-position: %s">
 <span aria-hidden="true" class="br br-tl" style="position: absolute; top: 14px; left: 14px; width: 18px; height: 18px; border-top: 1px solid #336699; border-left: 1px solid #336699"></span>
@@ -291,7 +305,7 @@ put('lavori.html', 'lavori:tabs', ''.join(tab(c, l) for c, l in CAT_LABELS if c 
 put('lavori.html', 'lavori:griglia', ''.join(card(w, i) for i, w in enumerate(WORKS)))
 s = open(os.path.join(OUT, 'lavori.html'), encoding='utf-8').read()
 s = re.sub(r'<span data-count>\d+</span>', '<span data-count>%d</span>' % len(WORKS), s)
-open(os.path.join(OUT, 'lavori.html'), 'w', encoding='utf-8', newline='\n').write(s)
+save(os.path.join(OUT, 'lavori.html'), s)
 bys = {w['slug']: w for w in WORKS}
 put('index.html', 'home:lavori', ''.join(home_card(bys[s], i) for i, s in enumerate(HOME_WORKS)))
 put('index.html', 'home:filmografia', ''.join(filmo_row(*f, 'reveal', 'minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 0.8fr)', 26, '20px') for f in FILMOGRAFIA[:HOME_FILMO]))

@@ -128,10 +128,10 @@ function clockIn(hd){
 /* Menu a schermo intero */
 var ITEMS=[
   ['01','Home','./','home','[ Showreel ]'],
-  ['02','Lavori','lavori.html','lavori','[ Fotogramma da un lavoro ]'],
-  ['03','Chi sono','chi-sono.html','chisono','[ Ritratto sul set ]'],
-  ['04','Recensioni','recensioni.html','recensioni','[ Una frase da una recensione ]'],
-  ['05','Contatti','contatti.html','contatti','[ Dietro le quinte ]']
+  ['02','Lavori','lavori','lavori','[ Fotogramma da un lavoro ]'],
+  ['03','Chi sono','chi-sono','chisono','[ Ritratto sul set ]'],
+  ['04','Recensioni','recensioni','recensioni','[ Una frase da una recensione ]'],
+  ['05','Contatti','contatti','contatti','[ Dietro le quinte ]']
 ];
 var LOGO='<a href="./" style="color: #E8E4DF; text-decoration: none; font-family: \'Cormorant Garamond\', serif; font-style: italic; font-weight: 300; font-size: 30px">produkts<span style="font-style: normal; opacity: 0.5">.it</span></a>';
 function menu(){
