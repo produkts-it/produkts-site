@@ -56,6 +56,12 @@ Sito di Karim Ismail (produkts.it), fotografo, videomaker e D.O.P. ad Altamura (
 - Contatti pubblici: info@produkts.it, karim@produkts.it, WhatsApp +39 371 144 4875, YouTube @produkts-it.
 - Zero spese aggiuntive: hosting gratuito (GitHub Pages).
 
+## Cloudflare (in corso di migrazione, ottobre 2026)
+- Account Cloudflare di produkts.studio@gmail.com. Progetto Pages **produkts-site** collegato al repo (build `bash _design/pubblica.sh`, output `dist/`), anteprima su produkts-site.pages.dev. Ogni push su `main` pubblica sia GitHub Pages sia Pages.
+- D1 **produkts-moduli** (giurisdizione UE, id in `wrangler.toml`), tabelle in `migrations/`. Turnstile widget "produkts.it moduli" (chiave pubblica in `_design/bozza/site.src.js`; il segreto `TURNSTILE_SECRET` va messo da Karim nelle impostazioni di Pages).
+- Zona produkts.it aggiunta (piano Free), DNS identici a IONOS, record del sito in "solo DNS". Nameserver Cloudflare: clint.ns.cloudflare.com, paislee.ns.cloudflare.com — **non ancora impostati su IONOS**. Dopo l'attivazione: dominio personalizzato produkts.it/www su Pages.
+- Pannello /admin: protezione ancora da decidere (Zero Trust Free chiede termini e carta).
+
 ## Dominio e DNS (non toccare senza motivo)
 - produkts.it è registrato su IONOS nel contratto "IONOS Pack Dominio"; il vecchio WordPress Hosting è in disdetta.
 - DNS: A @ → 185.199.108-111.153 (GitHub), CNAME www → produkts-it.github.io.
