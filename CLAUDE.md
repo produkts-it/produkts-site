@@ -1,5 +1,7 @@
 # produkts.it — nota di passaggio per Claude Code
 
+Riferimenti per Karim (link e guida): Google Drive, cartella "produkts.it — backup", documento "produkts.it — guida e collegamenti".
+
 Sito di Karim Ismail (produkts.it), fotografo, videomaker e D.O.P. ad Altamura (BA). Comunicazione sempre in italiano.
 
 ## Stato attuale
@@ -20,7 +22,7 @@ Sito di Karim Ismail (produkts.it), fotografo, videomaker e D.O.P. ad Altamura (
 - **404 pubblica:** `404.html` nella root, autonoma (percorsi assoluti, nessun link alla bozza).
 - Le pagine riservano lo spazio della barra di scorrimento su entrambi i lati (`scrollbar-gutter: stable both-edges`) per restare centrate.
 - **Sorgente della pagina WIP:** `_design/wip/wip-body.html` + `_design/wip/build.py` (genera `index.html`: `python _design/wip/build.py`). Il cursore custom è anche in `_design/wip/cursor.js`.
-- **Progetto del sito completo (non ancora online):** `_design/pagine/*.dc.html`, mockup per pagina (Home=Main, Dynamis=Work, Recensioni, Galleria, Archivio, ChiSono, Contatti, Fotografia, Privacy, NotFound, AreaClienti, componente Menu). Sono file del formato canvas di Claude Design: struttura e testi sono la base per costruire il sito vero in HTML statico. Le cartelle che iniziano con `_` non vengono pubblicate da GitHub Pages.
+- **Progetto del sito completo (non ancora online):** `_design/pagine/*.dc.html`, mockup per pagina (Home=Main, Dynamis=Work, Recensioni, Galleria, Archivio, ChiSono, Contatti, Fotografia, Privacy, NotFound, AreaClienti, componente Menu). Sono file del formato canvas di Claude Design: struttura e testi sono la base per costruire il sito vero in HTML statico. Vengono pubblicati solo i file copiati in `dist/` da `_design/pubblica.sh` (niente `_design/`, `functions/` va a parte, niente CLAUDE.md).
 - Foto, Area clienti e Galleria per ora restano spente. Galleria clienti: pagine raggiungibili solo tramite link diretto (stile Pixieset).
 
 ## Immagini
@@ -58,8 +60,8 @@ Sito di Karim Ismail (produkts.it), fotografo, videomaker e D.O.P. ad Altamura (
 - Zero spese aggiuntive: hosting gratuito (Cloudflare Pages, piano Free; niente piani a pagamento né carta per Zero Trust).
 
 ## Cloudflare (migrazione completata il 16/10/2026)
-- Account Cloudflare di produkts.studio@gmail.com. Segreti su Pages già impostati da Karim: `TURNSTILE_SECRET`, `ADMIN_PASSWORD`. Progetto Pages **produkts-site** collegato al repo (build `bash _design/pubblica.sh`, output `dist/`), anteprima su produkts-site.pages.dev. Ogni push su `main` pubblica sia GitHub Pages sia Pages.
-- D1 **produkts-moduli** (giurisdizione UE, id in `wrangler.toml`), tabelle in `migrations/`. Turnstile widget "produkts.it moduli" (chiave pubblica in `_design/bozza/site.src.js`; il segreto `TURNSTILE_SECRET` va messo da Karim nelle impostazioni di Pages).
+- Account Cloudflare di produkts.studio@gmail.com. Segreti su Pages già impostati da Karim: `TURNSTILE_SECRET`, `ADMIN_PASSWORD`. Progetto Pages **produkts-site** collegato al repo (build `bash _design/pubblica.sh`, output `dist/`), anteprima su produkts-site.pages.dev. Ogni push su `main` pubblica su Pages (GitHub Pages è ancora attivo sul repo ma non serve più: il dominio punta a Pages).
+- D1 **produkts-moduli** (giurisdizione UE, id in `wrangler.toml`), tabelle in `migrations/`. Turnstile widget "produkts.it moduli" (chiave pubblica in `_design/bozza/site.src.js`; segreto `TURNSTILE_SECRET` nelle impostazioni di Pages).
 - Zona produkts.it aggiunta (piano Free), DNS identici a IONOS, record del sito in "solo DNS". Nameserver Cloudflare: clint.ns.cloudflare.com, paislee.ns.cloudflare.com, **impostati su IONOS il 16/10/2026** (DNSSEC era spento; i DNS ora si gestiscono su Cloudflare, non più su IONOS). Zona attiva; produkts.it e www.produkts.it sono domini personalizzati del progetto Pages (CNAME → produkts-site.pages.dev, certificato automatico).
 - Pannello /admin: protetto da password (segreto `ADMIN_PASSWORD` nelle impostazioni di Pages, messo da Karim; in locale file `.dev.vars`, escluso da git). Cloudflare Access resta opzionale (variabili ACCESS_TEAM/ACCESS_AUD).
 
