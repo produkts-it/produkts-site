@@ -28,31 +28,31 @@ var show=n==='reload'||(n!=='back_forward'&&!same);if(show&&!matchMedia('(prefer
 </header>
 
 <section style="max-width: 1440px; margin: 0 auto; padding: 72px 56px 40px; box-sizing: border-box; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 24px 64px">
-<h1 style="margin: 0; font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300; font-size: clamp(64px, 10vw, 160px); line-height: 0.9; overflow: hidden; padding-bottom: 0.08em"><span class="rise" style="display: block">Lavori</span></h1>
+<h1 style="margin: 0; font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300; font-size: clamp(64px, 10vw, 160px); line-height: 0.9; overflow: hidden; padding-bottom: 0.2em; margin-bottom: -0.12em"><span class="rise" style="display: block">Lavori</span></h1>
 <p class="fade" style="margin: 0; flex: 0 1 400px; font-size: 17px; line-height: 1.6; color: #C9C4BD">Cortometraggi, videoclip ed eventi. Per ogni lavoro: il mio ruolo, il set, le scelte di luce.</p>
 </section>
 
 <section style="max-width: 1440px; margin: 0 auto; padding: 0 56px; box-sizing: border-box">
 <div class="fade" style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px; border-bottom: 1px solid #1F1F1F; padding-bottom: 16px">
 <div style="display: flex; flex-wrap: wrap; gap: 4px 28px">
-
-<button type="button" data-act="cat:Tutti" aria-pressed="true" style="background: transparent; border: 0; border-bottom: 1px solid #B46428; color: #E8E4DF; padding: 12px 0; font-family: 'Space Grotesk', sans-serif; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; cursor: pointer">Tutti <sup style="font-size: 10px; color: #6E6A64">1</sup></button>
-
-<button type="button" data-act="cat:Cortometraggio" aria-pressed="false" style="background: transparent; border: 0; border-bottom: 1px solid transparent; color: #9A948C; padding: 12px 0; font-family: 'Space Grotesk', sans-serif; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; cursor: pointer">Cortometraggi <sup style="font-size: 10px; color: #6E6A64">1</sup></button>
-
-<button type="button" data-act="cat:Opera personale" aria-pressed="false" style="background: transparent; border: 0; border-bottom: 1px solid transparent; color: #9A948C; padding: 12px 0; font-family: 'Space Grotesk', sans-serif; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; cursor: pointer">Opere personali <sup style="font-size: 10px; color: #6E6A64">1</sup></button>
-
+<!-- lavori:tabs -->
+<button type="button" data-act="cat:Tutti" aria-pressed="true" style="background: transparent; border: 0; border-bottom: 1px solid #B46428; color: #E8E4DF; padding: 12px 0; font-family: 'Space Grotesk', sans-serif; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; cursor: pointer">Tutti <sup style="font-size: 10px; color: #6E6A64">5</sup></button>
+<button type="button" data-act="cat:Cortometraggio" aria-pressed="false" style="background: transparent; border: 0; border-bottom: 1px solid transparent; color: #9A948C; padding: 12px 0; font-family: 'Space Grotesk', sans-serif; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; cursor: pointer">Cortometraggi <sup style="font-size: 10px; color: #6E6A64">2</sup></button>
+<button type="button" data-act="cat:Videoclip" aria-pressed="false" style="background: transparent; border: 0; border-bottom: 1px solid transparent; color: #9A948C; padding: 12px 0; font-family: 'Space Grotesk', sans-serif; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; cursor: pointer">Videoclip <sup style="font-size: 10px; color: #6E6A64">2</sup></button>
+<button type="button" data-act="cat:Video aziendale" aria-pressed="false" style="background: transparent; border: 0; border-bottom: 1px solid transparent; color: #9A948C; padding: 12px 0; font-family: 'Space Grotesk', sans-serif; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; cursor: pointer">Video aziendali <sup style="font-size: 10px; color: #6E6A64">1</sup></button>
+<button type="button" data-act="cat:Opera personale" aria-pressed="false" style="background: transparent; border: 0; border-bottom: 1px solid transparent; color: #9A948C; padding: 12px 0; font-family: 'Space Grotesk', sans-serif; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; cursor: pointer">Opere personali <sup style="font-size: 10px; color: #6E6A64">2</sup></button>
+<!-- /lavori:tabs -->
 </div>
-<span style="font-size: 13px; color: #9A948C; font-variant-numeric: tabular-nums"><span data-count>1</span> lavori</span>
+<span style="font-size: 13px; color: #9A948C; font-variant-numeric: tabular-nums"><span data-count>5</span> lavori</span>
 </div>
 </section>
 
 <section aria-label="Elenco lavori" style="max-width: 1440px; margin: 0 auto; padding: 48px 56px 120px; box-sizing: border-box">
 <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 400px), 1fr)); gap: 56px 32px">
-
+<!-- lavori:griglia -->
 <a href="dynamis.html" class="work stag" data-cats="Cortometraggio|Opera personale" style="view-transition-name: w0; display: flex; flex-direction: column; gap: 16px; animation-delay: 0.40s">
 <div class="frame" style="position: relative; aspect-ratio: 2.39 / 1; background: #161616; display: flex; align-items: center; justify-content: center; overflow: hidden">
-<img src="../dynamis.jpg" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 35%">
+<img src="../dynamis.jpg" alt="" loading="lazy" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 35%">
 <span aria-hidden="true" class="br br-tl" style="position: absolute; top: 12px; left: 12px; width: 16px; height: 16px; border-top: 1px solid #336699; border-left: 1px solid #336699"></span>
 <span aria-hidden="true" class="br br-br" style="position: absolute; bottom: 12px; right: 12px; width: 16px; height: 16px; border-bottom: 1px solid #336699; border-right: 1px solid #336699"></span>
 </div>
@@ -64,7 +64,63 @@ var show=n==='reload'||(n!=='back_forward'&&!same);if(show&&!matchMedia('(prefer
 <span style="color: #B46428">Cortometraggio · Opera personale</span><span>Produttore e D.O.P. · VerticalMovie 2026</span>
 </div>
 </a>
-
+<a href="schizophrenia.html" class="work stag" data-cats="Cortometraggio|Opera personale" style="view-transition-name: w1; display: flex; flex-direction: column; gap: 16px; animation-delay: 0.48s">
+<div class="frame" style="position: relative; aspect-ratio: 2.39 / 1; background: #161616; display: flex; align-items: center; justify-content: center; overflow: hidden">
+<img src="https://i.ytimg.com/vi/yAJK1VXfAm0/maxresdefault.jpg" alt="" loading="lazy" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%">
+<span aria-hidden="true" class="br br-tl" style="position: absolute; top: 12px; left: 12px; width: 16px; height: 16px; border-top: 1px solid #336699; border-left: 1px solid #336699"></span>
+<span aria-hidden="true" class="br br-br" style="position: absolute; bottom: 12px; right: 12px; width: 16px; height: 16px; border-bottom: 1px solid #336699; border-right: 1px solid #336699"></span>
+</div>
+<div style="display: flex; justify-content: space-between; align-items: baseline; gap: 16px">
+<h2 style="margin: 0; font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 400; font-size: 28px; line-height: 1.15">Schizophrenia — Io e Nessun Altro <span aria-hidden="true" class="arr" style="color: #B46428">→</span></h2>
+<span style="font-size: 13px; color: #9A948C; white-space: nowrap">2025</span>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 4px 20px; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: #9A948C">
+<span style="color: #B46428">Cortometraggio · Opera personale</span><span>Regia, fotografia e montaggio</span>
+</div>
+</a>
+<a href="romance-anonimo.html" class="work stag" data-cats="Videoclip" style="view-transition-name: w2; display: flex; flex-direction: column; gap: 16px; animation-delay: 0.56s">
+<div class="frame" style="position: relative; aspect-ratio: 2.39 / 1; background: #161616; display: flex; align-items: center; justify-content: center; overflow: hidden">
+<img src="https://i.ytimg.com/vi/z0G1CfqjHxI/sddefault.jpg" alt="" loading="lazy" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%">
+<span aria-hidden="true" class="br br-tl" style="position: absolute; top: 12px; left: 12px; width: 16px; height: 16px; border-top: 1px solid #336699; border-left: 1px solid #336699"></span>
+<span aria-hidden="true" class="br br-br" style="position: absolute; bottom: 12px; right: 12px; width: 16px; height: 16px; border-bottom: 1px solid #336699; border-right: 1px solid #336699"></span>
+</div>
+<div style="display: flex; justify-content: space-between; align-items: baseline; gap: 16px">
+<h2 style="margin: 0; font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 400; font-size: 28px; line-height: 1.15">Romance Anónimo — Bartek Dabrowski <span aria-hidden="true" class="arr" style="color: #B46428">→</span></h2>
+<span style="font-size: 13px; color: #9A948C; white-space: nowrap">2025</span>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 4px 20px; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: #9A948C">
+<span style="color: #B46428">Videoclip</span><span>D.O.P., montaggio e color</span>
+</div>
+</a>
+<a href="coseco.html" class="work stag" data-cats="Video aziendale" style="view-transition-name: w3; display: flex; flex-direction: column; gap: 16px; animation-delay: 0.64s">
+<div class="frame" style="position: relative; aspect-ratio: 2.39 / 1; background: #161616; display: flex; align-items: center; justify-content: center; overflow: hidden">
+<img src="https://i.ytimg.com/vi/mpesKIpv9N8/maxresdefault.jpg" alt="" loading="lazy" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%">
+<span aria-hidden="true" class="br br-tl" style="position: absolute; top: 12px; left: 12px; width: 16px; height: 16px; border-top: 1px solid #336699; border-left: 1px solid #336699"></span>
+<span aria-hidden="true" class="br br-br" style="position: absolute; bottom: 12px; right: 12px; width: 16px; height: 16px; border-bottom: 1px solid #336699; border-right: 1px solid #336699"></span>
+</div>
+<div style="display: flex; justify-content: space-between; align-items: baseline; gap: 16px">
+<h2 style="margin: 0; font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 400; font-size: 28px; line-height: 1.15">Coseco Industrie — 50 anni <span aria-hidden="true" class="arr" style="color: #B46428">→</span></h2>
+<span style="font-size: 13px; color: #9A948C; white-space: nowrap">2024</span>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 4px 20px; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: #9A948C">
+<span style="color: #B46428">Video aziendale</span><span>Riprese e post-produzione</span>
+</div>
+</a>
+<a href="wake-up.html" class="work stag" data-cats="Videoclip" style="view-transition-name: w4; display: flex; flex-direction: column; gap: 16px; animation-delay: 0.72s">
+<div class="frame" style="position: relative; aspect-ratio: 2.39 / 1; background: #161616; display: flex; align-items: center; justify-content: center; overflow: hidden">
+<img src="https://i.ytimg.com/vi/MZFk-CNkgGY/maxresdefault.jpg" alt="" loading="lazy" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%">
+<span aria-hidden="true" class="br br-tl" style="position: absolute; top: 12px; left: 12px; width: 16px; height: 16px; border-top: 1px solid #336699; border-left: 1px solid #336699"></span>
+<span aria-hidden="true" class="br br-br" style="position: absolute; bottom: 12px; right: 12px; width: 16px; height: 16px; border-bottom: 1px solid #336699; border-right: 1px solid #336699"></span>
+</div>
+<div style="display: flex; justify-content: space-between; align-items: baseline; gap: 16px">
+<h2 style="margin: 0; font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 400; font-size: 28px; line-height: 1.15">Wake Up — Bartek Dabrowski · Orchestra <span aria-hidden="true" class="arr" style="color: #B46428">→</span></h2>
+<span style="font-size: 13px; color: #9A948C; white-space: nowrap">2024</span>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 4px 20px; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: #9A948C">
+<span style="color: #B46428">Videoclip</span><span>D.O.P., montaggio e color</span>
+</div>
+</a>
+<!-- /lavori:griglia -->
 </div>
 </section>
 

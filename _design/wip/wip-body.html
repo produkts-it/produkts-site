@@ -280,7 +280,7 @@ function pkCursor(){
       var r=lock.getBoundingClientRect(),cxe=r.left+r.width/2,cye=r.top+r.height/2;
       if(r.width+PAD*2>MIN||r.height+PAD*2>MIN){tw=Math.max(r.width+PAD*2,MIN);th=Math.max(r.height+PAD*2,MIN);tr=radiusOf(lock,th);}
       else{tw=th=MIN;tr=MIN/2;}
-      tx=cxe+(mx-cxe)*0.08;ty=cye+(my-cye)*0.08;
+      tx=cxe;ty=cye;
     }else{tx=mx;ty=my;var s=mode==='lens'?72:28;tw=th=s;tr=s/2;}
     x+=(tx-x)*k;y+=(ty-y)*k;W+=(tw-W)*ks;H+=(th-H)*ks;R+=(tr-R)*ks;
     c.style.width=W.toFixed(1)+'px';c.style.height=H.toFixed(1)+'px';c.style.borderRadius=R.toFixed(1)+'px';
