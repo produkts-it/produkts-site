@@ -223,6 +223,13 @@ input[readonly].field{cursor:pointer}
 .ml:hover .mt,.ml:focus-visible .mt{transform:translateX(24px);color:#D98A4E!important}
 .mfade{animation:fade .8s ease .7s both}
 .pv{animation:pv .5s ease both}
+/* Frame del menu: immagine, video o frase di una recensione; entra "mettendosi a fuoco" */
+@keyframes pvf{from{opacity:0;filter:blur(14px);transform:scale(1.04)}to{opacity:1;filter:none;transform:none}}
+.pvf{position:absolute;inset:0;overflow:hidden;animation:pvf .6s cubic-bezier(.3,.6,.2,1) both}
+.pvf img,.pvf video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.pvf blockquote{position:absolute;inset:0;margin:0;padding:56px 40px;display:flex;flex-direction:column;justify-content:center;gap:20px;box-sizing:border-box}
+.pvf blockquote p{margin:0;font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:300;font-size:clamp(24px,2.4vw,34px);line-height:1.25;color:#E8E4DF;text-wrap:balance}
+.pvf blockquote footer{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#9A948C}
 .mb .l1,.mb .l2{transition:width .4s cubic-bezier(.2,.7,.2,1)}
 .mb:hover .l1{width:16px!important}.mb:hover .l2{width:28px!important}
 .mx .x1,.mx .x2{transition:transform .5s cubic-bezier(.2,.7,.2,1)}

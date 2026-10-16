@@ -125,14 +125,37 @@ function clockIn(hd){
   tick();setInterval(tick,still?1000:1000/24);
 }
 
-/* Menu a schermo intero */
+/* Menu a schermo intero. Ultimo campo: il frame a destra (img, video con poster, frase da una recensione);
+   senza frame resta la scritta segnaposto. */
 var ITEMS=[
-  ['01','Home','./','home','[ Showreel ]'],
-  ['02','Lavori','lavori','lavori','[ Fotogramma da un lavoro ]'],
-  ['03','Chi sono','chi-sono','chisono','[ Ritratto sul set ]'],
-  ['04','Recensioni','recensioni','recensioni','[ Una frase da una recensione ]'],
-  ['05','Contatti','contatti','contatti','[ Dietro le quinte ]']
+  ['01','Home','./','home','[ Showreel ]',{img:'img/menu/home.jpg',alt:'Locandina di Dynamis'}],
+  ['02','Lavori','lavori','lavori','[ Fotogramma da un lavoro ]',{img:'img/menu/lavori.jpg',alt:'Un fotogramma di Dynamis'}],
+  ['03','Chi sono','chi-sono','chisono','[ Ritratto sul set ]',{video:'img/menu/chi-sono.mp4',img:'img/menu/chi-sono.jpg',alt:'Karim alla camera sul set'}],
+  ['04','Recensioni','recensioni','recensioni','[ Una frase da una recensione ]',{frase:true}],
+  ['05','Contatti','contatti','contatti','[ Dietro le quinte ]',null]
 ];
+/* Frase per il frame Recensioni: dalla recensione approvata in evidenza (o la prima), la prima frase, al massimo ~160 caratteri */
+var frase=null;
+function caricaFrase(){
+  if(frase!==null)return;frase=false;
+  fetch('/api/recensioni').then(function(r){return r.ok?r.json():[]}).then(function(rs){
+    var r=rs.filter(function(x){return x.in_evidenza})[0]||rs.filter(function(x){return x.voto>=5})[0]||rs[0];if(!r)return;
+    var t=String(r.testo).replace(/\s+/g,' ').trim(),m=t.match(/^.{20,160}?[.!?…](\s|$)/);
+    t=m?m[0].trim():(t.length>160?t.slice(0,157).replace(/\s+\S*$/,'')+'…':t);
+    frase={testo:t,nome:r.nome};
+    var pv=d.querySelector('.mo .pvf[data-frase]');if(pv)pv.replaceWith(frameEl(ITEMS[3]));
+  }).catch(function(){});
+}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function frameEl(it){
+  var f=it[5],el=d.createElement('div');el.className='pvf';
+  if(f&&f.frase&&frase){el.innerHTML='<blockquote><p>«'+esc(frase.testo)+'»</p><footer>'+esc(frase.nome)+'</footer></blockquote>'}
+  else if(f&&f.video&&!still){el.innerHTML='<video muted loop playsinline autoplay preload="auto" poster="'+f.img+'" aria-label="'+esc(f.alt)+'"><source src="'+f.video+'" type="video/mp4"></video>';
+    var v=el.firstChild;v.muted=true;var p=v.play&&v.play();if(p&&p.catch)p.catch(function(){})}
+  else if(f&&f.img){el.innerHTML='<img src="'+f.img+'" alt="'+esc(f.alt)+'">'}
+  else{el.style.cssText='display: flex; align-items: flex-end; padding: 20px';el.innerHTML='<span style="font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: #6E6A64">'+esc(it[4])+'</span>';if(f&&f.frase)el.setAttribute('data-frase','')}
+  return el;
+}
 var LOGO='<a href="./" style="color: #E8E4DF; text-decoration: none; font-family: \'Cormorant Garamond\', serif; font-style: italic; font-weight: 300; font-size: 30px">produkts<span style="font-style: normal; opacity: 0.5">.it</span></a>';
 function menu(){
   var btn=d.querySelector('.mb');if(!btn)return;
@@ -160,10 +183,10 @@ function menu(){
       +'<div style="flex: 1; width: 100%; max-width: 1440px; margin: 0 auto; padding: 24px 56px 40px; box-sizing: border-box; display: flex; flex-wrap: wrap; align-items: center; gap: 48px 96px">'
       +'<nav aria-label="Principale" style="flex: 999 1 520px; display: flex; flex-direction: column">'+links()+'</nav>'
       +'<div class="mfade" style="flex: 1 1 340px; max-width: 520px; display: flex; flex-direction: column; gap: 16px">'
-      +'<div style="position: relative; aspect-ratio: 4 / 5; background: #161616; display: flex; align-items: flex-end; padding: 20px; box-sizing: border-box">'
-      +'<span aria-hidden="true" style="position: absolute; top: 16px; left: 16px; width: 28px; height: 28px; border-top: 1px solid #336699; border-left: 1px solid #336699"></span>'
-      +'<span aria-hidden="true" style="position: absolute; bottom: 16px; right: 16px; width: 28px; height: 28px; border-bottom: 1px solid #336699; border-right: 1px solid #336699"></span>'
-      +'<span class="pv" style="font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: #6E6A64">'+curItem[4]+'</span></div>'
+      +'<div class="pvbox" style="position: relative; aspect-ratio: 4 / 5; background: #161616; overflow: hidden">'
+      +'<span class="pvf"></span>'
+      +'<span aria-hidden="true" style="position: absolute; z-index: 1; top: 16px; left: 16px; width: 28px; height: 28px; border-top: 1px solid #336699; border-left: 1px solid #336699"></span>'
+      +'<span aria-hidden="true" style="position: absolute; z-index: 1; bottom: 16px; right: 16px; width: 28px; height: 28px; border-bottom: 1px solid #336699; border-right: 1px solid #336699"></span></div>'
       +'<span style="font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: #9A948C">Frame the Future</span></div></div>'
       +'<div class="mfade" style="width: 100%; max-width: 1440px; margin: 0 auto; padding: 0 56px 32px; box-sizing: border-box">'
       +'<div style="border-top: 1px solid #1F1F1F; padding-top: 20px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 32px; font-size: 13px; color: #9A948C">'
@@ -176,10 +199,15 @@ function menu(){
     d.body.appendChild(mo);
     h.classList.add('menu-open');
     btn.setAttribute('aria-expanded','true');
-    var pv=mo.querySelector('.pv');
-    mo.querySelectorAll('.ml').forEach(function(a){
-      function show(){var nv=pv.cloneNode(false);nv.textContent=a.getAttribute('data-pv');pv.replaceWith(nv);pv=nv}
-      a.addEventListener('mouseenter',show);a.addEventListener('focus',show);
+    caricaFrase();
+    /* Precarica le immagini dei frame, così passando sulle voci compaiono subito */
+    ITEMS.forEach(function(it){if(it[5]&&it[5].img)(new Image()).src=it[5].img});
+    var pv=mo.querySelector('.pvf'),shown=null;
+    function show(it){if(it===shown)return;shown=it;var nv=frameEl(it);pv.replaceWith(nv);pv=nv}
+    show(curItem);
+    mo.querySelectorAll('.ml').forEach(function(a,i){
+      function on(){show(ITEMS[i])}
+      a.addEventListener('mouseenter',on);a.addEventListener('focus',on);
     });
     mo.querySelector('.mx').addEventListener('click',close);
     mo.querySelector('.mx').focus();
