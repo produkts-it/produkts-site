@@ -23,6 +23,7 @@ export async function onRequestGet(context) {
   const cosa = (params.percorso || [])[0] || '';
   const g = await trova(env, url.searchParams.get('c'));
   if (!g) return json({ errore: 'Codice non valido. Controlla il messaggio che ti ho mandato o scrivimi.' }, 404);
+  if (url.searchParams.get('verifica')) return json({ ok: true }); // dalla pagina Area clienti: solo controllo del codice
   const l = aruba.link(g.link);
   if (!l) return json({ errore: 'Galleria non disponibile.' }, 500);
 

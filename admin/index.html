@@ -37,6 +37,14 @@ h2{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:400;font
 .push{margin-top:24px;padding:16px 20px;border:1px solid var(--line);display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;justify-content:space-between;color:var(--muted);font-size:14px;line-height:1.5}
 .push.on{border-color:var(--steel)}
 .push[hidden]{display:none}
+.gcampi{display:flex;flex-wrap:wrap;gap:12px}
+.gcampi label{display:flex;flex-direction:column;gap:6px;flex:1 1 200px;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.gcampi input{height:44px;background:var(--bg);border:1px solid #3A3A3A;color:var(--fg);padding:0 12px;font:inherit;font-size:15px;letter-spacing:normal;text-transform:none;min-width:0}
+.gcampi input:focus{outline:none;border-color:var(--ember)}
+.gesito{margin:0;font-size:14px;line-height:1.5}.gesito.ok{color:#9BC59D}.gesito.err{color:#D98A4E}
+.gcod{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 16px}.gcod span{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.gcod b{font-size:22px;letter-spacing:.18em;font-weight:500}.gcod a{color:var(--muted);font-size:13px;overflow-wrap:anywhere}
+.item.spenta{opacity:.55}
 .vuoto,.err{color:var(--muted);margin-top:24px}
 .err{color:#D98A4E}
 a{color:var(--fg)}
@@ -51,7 +59,7 @@ a{color:var(--fg)}
 <body>
 <div class="wrap">
 <h1>Pannello</h1>
-<p style="margin:0;color:var(--muted)">Richieste dal sito e recensioni da approvare. Le recensioni compaiono sul sito solo dopo "Approva".</p>
+<p style="margin:0;color:var(--muted)">Richieste dal sito, recensioni da approvare e gallerie dei clienti. Le recensioni compaiono sul sito solo dopo "Approva".</p>
 <div class="push" id="push" hidden>
 <span id="push-stato">Ricevi una notifica su questo dispositivo quando arriva una richiesta o una recensione.</span>
 <span class="az"><button type="button" id="push-on">Attiva notifiche</button><button type="button" id="push-prova" hidden>Prova</button></span>
@@ -59,6 +67,7 @@ a{color:var(--fg)}
 <div class="tabs" role="group" aria-label="Sezione">
 <button type="button" data-tab="recensioni" aria-pressed="true">Recensioni</button>
 <button type="button" data-tab="contatti" aria-pressed="false">Contatti</button>
+<button type="button" data-tab="gallerie" aria-pressed="false">Gallerie</button>
 <button type="button" id="esci" style="margin-left:auto" hidden>Esci</button>
 </div>
 <form class="login" id="login" hidden>
@@ -76,7 +85,7 @@ function pw(){try{return localStorage.getItem('pk-admin')||''}catch(e){return ''
 login.addEventListener('submit',function(ev){ev.preventDefault();try{localStorage.setItem('pk-admin',document.getElementById('pw').value)}catch(e){}login.hidden=true;carica()});
 esci.addEventListener('click',function(){try{localStorage.removeItem('pk-admin')}catch(e){}esci.hidden=true;document.getElementById('push').hidden=true;lista.innerHTML='';login.hidden=false;document.getElementById('pw').value=''});
 /* Link dalle notifiche Telegram: /admin/#contatti o /admin/#recensioni apre la sezione giusta */
-function daHash(){var h=location.hash.slice(1);if(h==='contatti'||h==='recensioni'){tab=h;document.querySelectorAll('[data-tab]').forEach(function(t){t.setAttribute('aria-pressed',t.dataset.tab===h)})}}
+function daHash(){var h=location.hash.slice(1);if(h==='contatti'||h==='recensioni'||h==='gallerie'){tab=h;document.querySelectorAll('[data-tab]').forEach(function(t){t.setAttribute('aria-pressed',t.dataset.tab===h)})}}
 daHash();window.addEventListener('hashchange',function(){daHash();carica()});
 /* Numero per wa.me: solo cifre, prefisso 39 se manca */
 function wa(t){var n=t.replace(/[^\d+]/g,'');return n.charAt(0)==='+'?n.slice(1):n.slice(0,2)==='00'?n.slice(2):'39'+n}
@@ -86,7 +95,7 @@ async function api(path,body){
   var h={'x-admin-password':pw()};if(body)h['content-type']='application/json';
   var r=await fetch('/api/admin/'+path,body?{method:'POST',headers:h,body:JSON.stringify(body)}:{headers:h});
   if(r.status===401){login.hidden=false;esci.hidden=true;document.getElementById('pw').focus();var err=new Error(pw()?'Password errata.':'Inserisci la password del pannello.');err.login=true;throw err}
-  if(!r.ok)throw new Error('Errore '+r.status);
+  if(!r.ok){var j=await r.json().catch(function(){return {}});throw new Error(j.errore||('Errore '+r.status))}
   esci.hidden=!pw();mostraPush();
   return r.json();
 }
@@ -126,10 +135,39 @@ async function carica(){
   lista.innerHTML='<p class="vuoto">Caricamento…</p>';
   try{
     var rows=await api(tab);
+    if(tab==='gallerie'){lista.innerHTML=FORM_G+(rows.length?rows.map(gal).join(''):'<p class="vuoto">Ancora nessuna galleria.</p>');return}
     if(!rows.length){lista.innerHTML='<p class="vuoto">Ancora niente qui.</p>';return}
     lista.innerHTML=rows.map(tab==='recensioni'?rec:con).join('');
   }catch(err){lista.innerHTML='<p class="err">'+e(err.message)+'</p>'}
 }
+/* Gallerie clienti: le foto restano su Aruba Drive (cartella madre condivisa con link, sottocartelle = sezioni) */
+var SITO=location.origin;
+var FORM_G='<form class="item gform" id="gform" style="border-color:var(--steel)"><div class="meta"><b>Nuova galleria</b><span>Su Aruba Drive: cartella madre → Condividi → Condividi tramite link, poi incolla qui il link</span></div>'
+ +'<div class="gcampi"><label>Cliente<input name="cliente" required placeholder="Nome e cognome"></label><label>Evento<input name="titolo" placeholder="Comunione, 18 anni…"></label>'
+ +'<label>Data<input name="data" placeholder="20.09.2026"></label><label style="flex-basis:100%">Link Aruba Drive<input name="link" required placeholder="https://….arubadrive.com/s/…"></label></div>'
+ +'<div class="az"><button type="submit" class="on">Crea galleria</button></div><p class="gesito" hidden></p></form>';
+function linkG(g){return SITO+'/galleria?c='+g.codice}
+function waG(g){return 'https://wa.me/?text='+encodeURIComponent('Ciao '+g.cliente.split(' ')[0]+'! Le tue foto sono pronte.\nLe trovi qui: '+linkG(g)+'\n\nSe te lo chiede, il codice è: '+g.codice)}
+function gal(g){
+  return '<div class="item'+(g.attiva?'':' spenta')+'"><div class="meta"><b>'+(g.attiva?'attiva':'spenta')+'</b><span>creata '+e(data(g.creato))+'</span>'
+   +'<span>'+(g.aperta?'aperta '+e(data(g.aperta))+' · '+g.aperture+' visite':'non ancora aperta')+'</span>'+(g.download?'<span>'+g.download+' download</span>':'')+'</div>'
+   +'<div style="font-size:18px">'+e(g.cliente)+(g.titolo||g.data?' <span style="color:var(--muted)">· '+e([g.titolo,g.data].filter(Boolean).join(' · '))+'</span>':'')+'</div>'
+   +'<div class="gcod"><span>Codice</span><b>'+e(g.codice)+'</b><a href="'+e(linkG(g))+'" target="_blank" rel="noopener">'+e(linkG(g).replace(/^https?:\/\//,''))+'</a></div>'
+   +'<div class="az"><a class="wa" href="'+e(waG(g))+'" target="_blank" rel="noopener">Manda su WhatsApp</a>'
+   +'<button type="button" data-gcopia="'+e(linkG(g))+'">Copia link</button>'
+   +'<button type="button" data-gal="'+g.id+'" data-gatt="'+(g.attiva?0:1)+'">'+(g.attiva?'Spegni':'Riattiva')+'</button>'
+   +'<button type="button" data-gal="'+g.id+'" data-gcod="1">Nuovo codice</button>'
+   +'<button type="button" data-gal="'+g.id+'" data-gdel="1">Elimina</button></div></div>';
+}
+document.addEventListener('submit',async function(ev){
+  if(ev.target.id!=='gform')return;ev.preventDefault();
+  var f=ev.target,es=f.querySelector('.gesito'),b=f.querySelector('button[type=submit]'),dati={};
+  ['cliente','titolo','data','link'].forEach(function(k){dati[k]=f.elements[k].value});
+  b.disabled=true;b.textContent='Controllo il link…';es.hidden=true;
+  try{var r=await api('gallerie',dati);carica();setTimeout(function(){var n=document.querySelector('.gform .gesito');if(n){n.hidden=false;n.className='gesito ok';n.textContent='Galleria creata: '+r.foto+' foto in '+r.sezioni.length+' sezioni ('+r.sezioni.join(', ')+'). Ora mandala al cliente con il pulsante WhatsApp qui sotto.'}},300)}
+  catch(err){es.hidden=false;es.className='gesito err';es.textContent=err.message}
+  finally{b.disabled=false;b.textContent='Crea galleria'}
+});
 function rec(r){
   return '<div class="item'+(r.stato==='attesa'?' nuovo':'')+'"><div class="meta"><b>'+e(r.stato)+'</b><span>'+e(data(r.creato))+'</span><span>'+'★'.repeat(r.voto)+'</span><span>'+e(r.servizio)+'</span></div>'
    +'<div style="font-size:18px">'+e(r.nome)+'</div><div class="testo">'+e(r.testo)+'</div>'
@@ -151,6 +189,13 @@ document.addEventListener('click',async function(ev){
   var b=ev.target.closest('button');if(!b)return;
   if(b.dataset.tab){tab=b.dataset.tab;document.querySelectorAll('[data-tab]').forEach(function(t){t.setAttribute('aria-pressed',t===b)});carica();return}
   try{
+    if(b.dataset.gcopia){try{await navigator.clipboard.writeText(b.dataset.gcopia);b.textContent='Copiato'}catch(x){prompt('Copia il link:',b.dataset.gcopia)}return}
+    if(b.dataset.gal){
+      if(b.dataset.gdel&&!confirm('Eliminare questa galleria? Le foto su Aruba Drive restano dove sono.'))return;
+      if(b.dataset.gcod&&!confirm('Creare un nuovo codice? Il link e il codice vecchi smetteranno di funzionare.'))return;
+      await api('gallerie/'+b.dataset.gal,b.dataset.gdel?{elimina:true}:b.dataset.gcod?{nuovoCodice:true}:{attiva:b.dataset.gatt==='1'});
+      carica();return;
+    }
     if(b.dataset.rec)await api('recensioni/'+b.dataset.rec,b.dataset.stato?{stato:b.dataset.stato}:{in_evidenza:b.dataset.evid==='1'});
     else if(b.dataset.con)await api('contatti/'+b.dataset.con,{letto:b.dataset.letto==='1'});
     else return;

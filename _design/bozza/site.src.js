@@ -101,6 +101,7 @@ function menu(){
       +'<a href="mailto:info@produkts.it" style="color: #E8E4DF; text-decoration: none; padding: 8px 0">info@produkts.it</a>'
       +'<a href="https://www.instagram.com/produkts.it/" target="_blank" rel="noopener" style="color: #E8E4DF; text-decoration: none; padding: 8px 0">Instagram</a>'
       +'<a href="https://www.youtube.com/@produkts-it" target="_blank" rel="noopener" style="color: #E8E4DF; text-decoration: none; padding: 8px 0">YouTube</a>'
+      +'<a href="area-clienti" style="color: #D98A4E; text-decoration: none; padding: 8px 0">Area clienti</a>'
       +'</div><span style="padding: 8px 0">Altamura (BA) · Puglia</span></div></div>';
     d.body.appendChild(mo);
     h.classList.add('menu-open');
@@ -293,6 +294,22 @@ pkCursor();
 clock();
 menu();
 acts();
+/* Intestazione (logo, orologio, Menu): resta in alto, si nasconde scorrendo giù e ricompare appena si torna su */
+(function(){
+  var hd=d.querySelector('body > div > header')||d.querySelector('header');if(!hd)return;
+  hd.classList.add('pk-sticky');
+  var last=w.scrollY,ticking=false;
+  function upd(){
+    var y=w.scrollY;
+    hd.classList.toggle('pk-solid',y>40);
+    if(h.classList.contains('menu-open')){hd.classList.remove('pk-hide')}
+    else if(y>last+4&&y>160){hd.classList.add('pk-hide')}
+    else if(y<last-4||y<=160){hd.classList.remove('pk-hide')}
+    last=y;ticking=false;
+  }
+  w.addEventListener('scroll',function(){if(!ticking){ticking=true;w.requestAnimationFrame(upd)}},{passive:true});
+  upd();
+})();
 /* Video in loop delle pagine (muti, dietro le quinte): fermi sul poster per chi riduce le animazioni */
 d.querySelectorAll('video.pk-loop').forEach(function(v){v.muted=true;if(still){v.removeAttribute('autoplay');v.pause()}else{var p=v.play();if(p&&p.catch)p.catch(function(){})}});
 })();
