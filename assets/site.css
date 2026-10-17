@@ -119,6 +119,8 @@ html.vt-local::view-transition-old(*),html.vt-local::view-transition-new(*){heig
 .work:hover .br-br{bottom:8px!important;right:8px!important;width:44px!important;height:44px!important;border-color:#B46428!important}
 .work .arr{display:inline-block;opacity:0;transform:translateX(-8px);transition:all .4s}
 .work:hover .arr{opacity:1;transform:none}
+.work .warr{transition:all .4s cubic-bezier(.2,.7,.2,1)}
+.work:hover .warr{background:#B46428!important;border-color:#B46428!important;color:#080808!important;transform:translateX(3px)}
 .also{transition:color .3s,gap .4s cubic-bezier(.2,.7,.2,1)}
 .also:hover{color:#E8E4DF!important;gap:12px!important}
 .crow{transition:padding .5s cubic-bezier(.2,.7,.2,1),background .4s}

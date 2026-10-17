@@ -92,7 +92,7 @@ WORKS = [
          crew=[('Video', KI + ', Fabrizio Marinelli'), ('Montaggio', KI + ', Fabrizio Marinelli'), ('Produzione', 'produkts.it')]),
 ]
 CAT_LABELS = [('Tutti', 'Tutti'), ('Cortometraggio', 'Cortometraggi'), ('Videoclip', 'Videoclip'),
-              ('Video aziendale', 'Video aziendali'), ('Opera personale', 'Opere personali')]
+              ('Video aziendale', 'Video aziendali'), ('Opera personale', 'Opere personali'), ('AMARCORD', 'AMARCORD')]
 HOME_WORKS = ['dynamis', 'schizophrenia', 'coseco', 'wake-up']
 
 # Filmografia: solo cinema (cortometraggi, lungometraggi, film, docufilm, documentari). Niente videoclip, social, corporate.
@@ -381,28 +381,34 @@ def put(fname, name, content):
 
 
 def card(w, i):
-    kind = ' · '.join(w['cats'])
-    return '''<a href="%s" class="work stag" data-cats="%s" style="view-transition-name: w%d; display: flex; flex-direction: column; gap: 16px; animation-delay: %.2fs">
-<div class="frame" style="position: relative; aspect-ratio: 2.39 / 1; background: #161616; display: flex; align-items: center; justify-content: center; overflow: hidden">
+    """Scheda della griglia Lavori: tipologia, fotogramma 2.39:1 con la freccia sopra, titolo e anno."""
+    return '''<a href="%s" class="work stag" data-cats="%s" style="view-transition-name: w%d; display: flex; flex-direction: column; gap: 14px; animation-delay: %.2fs">
+<span style="font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: #B46428">%s</span>
+<div class="frame" style="position: relative; aspect-ratio: 2.39 / 1; background: #161616; overflow: hidden">
 <img src="%s" alt="" loading="lazy" style="position: absolute; inset: 0; width: 100%%; height: 100%%; object-fit: cover; object-position: %s">
 <span aria-hidden="true" class="br br-tl" style="position: absolute; top: 12px; left: 12px; width: 16px; height: 16px; border-top: 1px solid #336699; border-left: 1px solid #336699"></span>
 <span aria-hidden="true" class="br br-br" style="position: absolute; bottom: 12px; right: 12px; width: 16px; height: 16px; border-bottom: 1px solid #336699; border-right: 1px solid #336699"></span>
+<span aria-hidden="true" class="warr" style="position: absolute; top: 14px; right: 14px; width: 40px; height: 40px; border-radius: 50%%; border: 1px solid rgba(232,228,223,0.5); background: rgba(8,8,8,0.45); color: #E8E4DF; display: flex; align-items: center; justify-content: center; font-size: 18px">→</span>
 </div>
 <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 16px">
-<h2 style="margin: 0; font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 400; font-size: 28px; line-height: 1.15">%s <span aria-hidden="true" class="arr" style="color: #B46428">→</span></h2>
+<h2 style="margin: 0; font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 400; font-size: 28px; line-height: 1.15; min-width: 0">%s</h2>
 <span style="font-size: 13px; color: #9A948C; white-space: nowrap">%s</span>
 </div>
-<div style="display: flex; flex-wrap: wrap; gap: 4px 20px; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: #9A948C">
-<span style="color: #B46428">%s</span><span>%s</span>
-</div>
 </a>
-''' % (w['slug'], '|'.join(w['cats']), i, 0.4 + i * 0.08, w['img'], w.get('pos', '50% 50%'),
-       e(w['t'] + (' — ' + w['sub'] if w.get('sub') else '')), w['year'], e(kind), e(w['role_short']))
+''' % (w['slug'], '|'.join(w['cats']), i, 0.4 + i * 0.06, e(w['cats'][0]), w['img'], w.get('pos', '50% 50%'), e(w['t']), w['year'])
+
+
+def griglia():
+    """Tutti i lavori in un'unica griglia, dal più recente: Dynamis, poi i corti AMARCORD (2026), poi gli altri."""
+    am = [dict(slug=a['slug'], t=a['t'], year='2026', img=a['img'], cats=['Cortometraggio', 'AMARCORD']) for a in AMARCORD]
+    tutti = [w for w in WORKS if w['year'] >= '2026'] + am + [w for w in WORKS if w['year'] < '2026']
+    return tutti
 
 
 def tab(c, label):
     on = c == 'Tutti'
-    n = len(WORKS) if on else sum(c in w['cats'] for w in WORKS)
+    tutti = griglia()
+    n = len(tutti) if on else sum(c in w['cats'] for w in tutti)
     return ('<button type="button" data-act="cat:%s" aria-pressed="%s" style="background: transparent; border: 0; border-bottom: 1px solid %s; color: %s; padding: 12px 0; font-family: \'Space Grotesk\', sans-serif; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; cursor: pointer">%s <sup style="font-size: 10px; color: #6E6A64">%d</sup></button>\n'
             % (c, 'true' if on else 'false', ACC if on else 'transparent', '#E8E4DF' if on else '#9A948C', e(label), n))
 
@@ -478,11 +484,10 @@ for a in AMARCORD:
     amarcord_page(a)
     print('ok', a['slug'] + '.html')
 put('dynamis.html', 'dynamis:credits', credits(DYNAMIS, 'Troupe'))
-put('lavori.html', 'lavori:tabs', ''.join(tab(c, l) for c, l in CAT_LABELS if c == 'Tutti' or any(c in w['cats'] for w in WORKS)))
-put('lavori.html', 'lavori:griglia', ''.join(card(w, i) for i, w in enumerate(WORKS)))
-put('lavori.html', 'lavori:amarcord', amarcord_section())
+put('lavori.html', 'lavori:tabs', ''.join(tab(c, l) for c, l in CAT_LABELS if c == 'Tutti' or any(c in w['cats'] for w in griglia())))
+put('lavori.html', 'lavori:griglia', ''.join(card(w, i) for i, w in enumerate(griglia())))
 s = open(os.path.join(OUT, 'lavori.html'), encoding='utf-8').read()
-s = re.sub(r'<span data-count>\d+</span>', '<span data-count>%d</span>' % len(WORKS), s)
+s = re.sub(r'<span data-count>\d+</span>', '<span data-count>%d</span>' % len(griglia()), s)
 save(os.path.join(OUT, 'lavori.html'), s)
 bys = {w['slug']: w for w in WORKS}
 put('index.html', 'home:lavori', ''.join(home_card(bys[s], i) for i, s in enumerate(HOME_WORKS)))
