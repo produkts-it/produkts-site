@@ -237,11 +237,8 @@ input[readonly].field{cursor:pointer}
 .mx .x1,.mx .x2{transition:transform .5s cubic-bezier(.2,.7,.2,1)}
 .mx:hover .x1{transform:rotate(135deg)!important}.mx:hover .x2{transform:rotate(45deg)!important}
 html.menu-open{overflow:hidden}
-/* Galleria privata: foto non trascinabili né salvabili col tasto destro, sfocate quando la pagina perde il focus
-   (strumenti di cattura) e nascoste in stampa */
-.g-protect{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-user-drag:none;pointer-events:none}
-html.g-fuori .g-protect{filter:blur(32px) brightness(.55)}
-@media print{.g-protect,.g-griglia,.lbx{display:none!important}}
+/* Copertina della galleria: larga da computer, più alta da telefono (il punto di focus lo sceglie Karim dal pannello) */
+@media (max-width:640px){.g-copbox{aspect-ratio:4 / 5!important}}
 /* Foto aperta: logo e orologio restano visibili sopra lo sfondo sfocato, ma non bloccano i tocchi */
 html.g-lbx header{pointer-events:none}
 html.g-lbx header.pk-sticky.pk-hide{transform:none}

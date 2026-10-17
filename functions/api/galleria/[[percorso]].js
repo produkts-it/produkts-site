@@ -4,7 +4,7 @@
 //   GET /api/galleria/foto?c=CODICE&p=PATH           originale a piena qualità, come download
 //   GET /api/galleria/zip?c=CODICE[&p=SEZIONE]       zip di tutta la galleria o di una sezione
 import { json, notifica } from '../../_lib.js';
-import { trova, ordina, copertina } from '../../_gallerie.js';
+import { trova, ordina, copertina, fuoco } from '../../_gallerie.js';
 import * as aruba from '../../_aruba.js';
 
 const nomeFile = (s) => String(s).replace(/[\\/:*?"<>|]+/g, ' ').replace(/\s+/g, ' ').trim() || 'foto';
@@ -41,7 +41,7 @@ export async function onRequestGet(context) {
       }
       context.waitUntil(env.DB.prepare('UPDATE gallerie SET aperture = aperture + 1 WHERE id = ?').bind(g.id).run());
       const sezioni = ordina(s.sezioni, g.ordine);
-      return json({ cliente: g.cliente, titolo: g.titolo, data: g.data, totale: s.totale, peso: s.peso, copertina: copertina(sezioni, g.copertina),
+      return json({ cliente: g.cliente, titolo: g.titolo, data: g.data, totale: s.totale, peso: s.peso, copertina: copertina(sezioni, g.copertina), fuoco: fuoco(g.fuoco),
         sezioni: sezioni.map((x) => ({ nome: x.nome, foto: x.foto.map((f) => ({ p: f.path, n: f.nome, s: f.size })) })) });
     }
 

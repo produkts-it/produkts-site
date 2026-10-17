@@ -9,12 +9,12 @@
 //   POST /api/admin/push/prova          manda una notifica di prova a tutti i dispositivi
 import { json, corpo, autorizzato } from '../../_lib.js';
 import { chiavePubblica, iscrivi, disiscrivi, inviaPush } from '../../_push.js';
-import { tabella, nuovoCodice, ordina, copertina } from '../../_gallerie.js';
+import { tabella, nuovoCodice, ordina, copertina, fuoco } from '../../_gallerie.js';
 import * as aruba from '../../_aruba.js';
 //   GET  /api/admin/gallerie            elenco gallerie clienti
 //   POST /api/admin/gallerie            { cliente, titolo, data, link } → crea, con codice nuovo
 //   GET  /api/admin/gallerie/:id        sezioni (nell'ordine scelto) con le foto, copertina: per l'editor del pannello
-//   POST /api/admin/gallerie/:id        { attiva } | { nuovoCodice: true } | { elimina: true } | { cliente, titolo, data } | { ordine: [nomi], copertina: path }
+//   POST /api/admin/gallerie/:id        { attiva } | { nuovoCodice: true } | { elimina: true } | { cliente, titolo, data } | { ordine: [nomi], copertina: path, fuoco: "x% y%" }
 
 export async function onRequest({ request, env, params }) {
   if (!(await autorizzato(request, env))) return json({ errore: 'Accesso negato.' }, 401);
@@ -72,12 +72,13 @@ export async function onRequest({ request, env, params }) {
       let s;
       try { s = await aruba.struttura(aruba.link(g.link), true); } catch (err) { return json({ errore: 'Non riesco a leggere il link Aruba: ' + err.message }, 502); }
       const sezioni = ordina(s.sezioni, g.ordine);
-      return json({ codice: g.codice, copertina: copertina(sezioni, g.copertina), sezioni: sezioni.map((x) => ({ nome: x.nome, foto: x.foto.map((f) => f.path) })) });
+      return json({ codice: g.codice, copertina: copertina(sezioni, g.copertina), fuoco: fuoco(g.fuoco), sezioni: sezioni.map((x) => ({ nome: x.nome, foto: x.foto.map((f) => f.path) })) });
     }
     if (request.method === 'POST' && n > 0) {
       const d = (await corpo(request)) || {};
       if (Array.isArray(d.ordine)) await env.DB.prepare('UPDATE gallerie SET ordine = ? WHERE id = ?').bind(JSON.stringify(d.ordine.map(String).slice(0, 200)), n).run();
       if (typeof d.copertina === 'string') await env.DB.prepare('UPDATE gallerie SET copertina = ? WHERE id = ?').bind(d.copertina.slice(0, 500), n).run();
+      if (typeof d.fuoco === 'string') await env.DB.prepare('UPDATE gallerie SET fuoco = ? WHERE id = ?').bind(fuoco(d.fuoco), n).run();
       if (d.elimina === true) {
         await env.DB.prepare('DELETE FROM gallerie WHERE id = ?').bind(n).run();
         return json({ ok: true });

@@ -38,7 +38,7 @@ Sito di Karim Ismail (produkts.it), fotografo, videomaker e D.O.P. ad Altamura (
   - Foto aperta: sfondo sfocato, logo e orologio visibili ma non cliccabili (`html.g-lbx`), comandi in una notch in basso al centro (numero, Scarica, X). Aprire una foto aggiunge un passo alla cronologia: il tasto indietro del telefono chiude la foto e resta nella galleria.
   - Codice: `functions/_aruba.js` (legge il link come un browser: pagina `/s/TOKEN` per cookie + requesttoken, poi WebDAV pubblico `/public.php/dav/files/TOKEN` con `X-Requested-With`; anteprime da `publicpreview`, zip da `/s/TOKEN/download?path=`), `functions/_gallerie.js` (tabella D1 `gallerie`, creata da sola), `functions/api/galleria/[[percorso]].js` (dati, anteprime 480/1600 in cache Cloudflare, originali, zip) e la scheda nel pannello. Notifica a Karim alla prima apertura e a ogni "scarica tutto".
   - Pagine: `galleria.html` (codice o link diretto → copertina, sezioni, griglia, foto ingrandita con download) e `area-clienti.html` (si scrive il codice → galleria). "Area clienti" è nel menu, in basso. Entrambe `noindex`.
-  - Screenshot: sul web non si possono bloccare davvero. Su computer la galleria intercetta Stamp, Cmd+Maiusc+3/4/5 e gli strumenti di cattura (la pagina perde il focus → foto sfocate) e mostra "Perché perdere qualità con uno screenshot? Scarica la foto a tutta qualità"; niente tasto destro/trascina/salva, nascoste in stampa. Sul telefono gli screenshot non sono rilevabili.
+  - Screenshot: nessun blocco né avviso (deciso con Karim: sul web non si possono bloccare davvero).
 - Fotografia resta spenta.
 
 ## Immagini

@@ -17,8 +17,9 @@ export async function tabella(env) {
     aperture INTEGER NOT NULL DEFAULT 0,
     download INTEGER NOT NULL DEFAULT 0
   )`).run();
-  // Colonne aggiunte dopo: ordine delle sezioni (JSON con i nomi delle sottocartelle) e foto di copertina (percorso)
-  for (const col of ['ordine TEXT', 'copertina TEXT']) {
+  // Colonne aggiunte dopo: ordine delle sezioni (JSON con i nomi delle sottocartelle), foto di copertina (percorso)
+  // e suo punto di focus ("x% y%", come object-position)
+  for (const col of ['ordine TEXT', 'copertina TEXT', 'fuoco TEXT']) {
     try { await env.DB.prepare('ALTER TABLE gallerie ADD COLUMN ' + col).run(); } catch (e) { /* esiste già */ }
   }
   pronta = true;
@@ -40,6 +41,9 @@ export function ordina(sezioni, ordineJson) {
   const pos = (n) => { const i = ordine.indexOf(n); return i < 0 ? 1e6 : i; };
   return sezioni.map((s, i) => [s, i]).sort((a, b) => pos(a[0].nome) - pos(b[0].nome) || a[1] - b[1]).map((x) => x[0]);
 }
+
+/** Punto di focus della copertina: "x% y%" valido, altrimenti il centro. */
+export const fuoco = (f) => (/^\d{1,3}(\.\d)?% \d{1,3}(\.\d)?%$/.test(f || '') ? f : '50% 50%');
 
 /** Copertina scelta, se esiste ancora; altrimenti la prima foto. */
 export function copertina(sezioni, scelta) {
