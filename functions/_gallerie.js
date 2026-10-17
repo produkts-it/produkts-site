@@ -17,6 +17,10 @@ export async function tabella(env) {
     aperture INTEGER NOT NULL DEFAULT 0,
     download INTEGER NOT NULL DEFAULT 0
   )`).run();
+  // Colonne aggiunte dopo: ordine delle sezioni (JSON con i nomi delle sottocartelle) e foto di copertina (percorso)
+  for (const col of ['ordine TEXT', 'copertina TEXT']) {
+    try { await env.DB.prepare('ALTER TABLE gallerie ADD COLUMN ' + col).run(); } catch (e) { /* esiste già */ }
+  }
   pronta = true;
 }
 
@@ -28,6 +32,20 @@ export function nuovoCodice() {
 }
 
 export const pulisciCodice = (c) => String(c || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 16);
+
+/** Sezioni nell'ordine scelto da Karim (le sottocartelle nuove, non ancora ordinate, vanno in fondo). */
+export function ordina(sezioni, ordineJson) {
+  let ordine = [];
+  try { ordine = JSON.parse(ordineJson || '[]'); } catch (e) { /* niente ordine */ }
+  const pos = (n) => { const i = ordine.indexOf(n); return i < 0 ? 1e6 : i; };
+  return sezioni.map((s, i) => [s, i]).sort((a, b) => pos(a[0].nome) - pos(b[0].nome) || a[1] - b[1]).map((x) => x[0]);
+}
+
+/** Copertina scelta, se esiste ancora; altrimenti la prima foto. */
+export function copertina(sezioni, scelta) {
+  const tutte = sezioni.flatMap((s) => s.foto);
+  return (scelta && tutte.find((f) => f.path === scelta)) ? scelta : (tutte[0] && tutte[0].path) || '';
+}
 
 /** La galleria attiva con quel codice, oppure null (con un piccolo ritardo, per scoraggiare chi prova codici a caso). */
 export async function trova(env, codice) {

@@ -45,6 +45,16 @@ h2{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:400;font
 .gcod{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 16px}.gcod span{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
 .gcod b{font-size:22px;letter-spacing:.18em;font-weight:500}.gcod a{color:var(--muted);font-size:13px;overflow-wrap:anywhere}
 .item.spenta{opacity:.55}
+.gdata{display:flex;gap:8px}.gdata input{flex:1;color-scheme:dark}
+.gdata button{height:44px;padding:0 14px;border:1px solid #3A3A3A;background:transparent;color:var(--fg);font:inherit;font-size:12px;letter-spacing:.12em;text-transform:uppercase;cursor:pointer}
+.gedit{border-top:1px solid var(--line);padding-top:14px;display:flex;flex-direction:column;gap:10px}
+.gsez{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:6px 0;border-bottom:1px solid var(--line)}
+.gsez small{color:var(--muted);margin-left:8px}.gsez .az button{width:40px;padding:0}
+.gsez .az button:disabled{opacity:.25;cursor:default}
+.gminis{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:6px;max-height:360px;overflow:auto}
+.gmini{padding:0;border:2px solid transparent;background:#161616;cursor:pointer;aspect-ratio:1;overflow:hidden}
+.gmini img{width:100%;height:100%;object-fit:cover;display:block}.gmini.sel{border-color:var(--ember)}
+.gcopsel{width:200px;max-width:100%;aspect-ratio:2.39/1;object-fit:cover;border:1px solid var(--ember)}
 .vuoto,.err{color:var(--muted);margin-top:24px}
 .err{color:#D98A4E}
 a{color:var(--fg)}
@@ -144,7 +154,7 @@ async function carica(){
 var SITO=location.origin;
 var FORM_G='<form class="item gform" id="gform" style="border-color:var(--steel)"><div class="meta"><b>Nuova galleria</b><span>Su Aruba Drive: cartella madre → Condividi → Condividi tramite link, poi incolla qui il link</span></div>'
  +'<div class="gcampi"><label>Cliente<input name="cliente" required placeholder="Nome e cognome"></label><label>Evento<input name="titolo" placeholder="Comunione, 18 anni…"></label>'
- +'<label>Data<input name="data" placeholder="20.09.2026"></label><label style="flex-basis:100%">Link Aruba Drive<input name="link" required placeholder="https://….arubadrive.com/s/…"></label></div>'
+ +'<label>Data<span class="gdata"><input name="data" type="date"><button type="button" data-goggi="1">Oggi</button></span></label><label style="flex-basis:100%">Link Aruba Drive<input name="link" required placeholder="https://….arubadrive.com/s/…"></label></div>'
  +'<div class="az"><button type="submit" class="on">Crea galleria</button></div><p class="gesito" hidden></p></form>';
 function linkG(g){return SITO+'/galleria?c='+g.codice}
 function waG(g){return 'https://wa.me/?text='+encodeURIComponent('Ciao '+g.cliente.split(' ')[0]+'! Le tue foto sono pronte.\nLe trovi qui: '+linkG(g)+'\n\nSe te lo chiede, il codice è: '+g.codice)}
@@ -157,17 +167,44 @@ function gal(g){
    +'<button type="button" data-gcopia="'+e(linkG(g))+'">Copia link</button>'
    +'<button type="button" data-gal="'+g.id+'" data-gatt="'+(g.attiva?0:1)+'">'+(g.attiva?'Spegni':'Riattiva')+'</button>'
    +'<button type="button" data-gal="'+g.id+'" data-gcod="1">Nuovo codice</button>'
-   +'<button type="button" data-gal="'+g.id+'" data-gdel="1">Elimina</button></div></div>';
+   +'<button type="button" data-gal="'+g.id+'" data-gdel="1">Elimina</button>'
+   +'<button type="button" data-gedit="'+g.id+'" data-gcodice="'+e(g.codice)+'">Ordine e copertina</button></div>'
+   +'<div class="gedit" id="ged-'+g.id+'" hidden></div></div>';
 }
 document.addEventListener('submit',async function(ev){
   if(ev.target.id!=='gform')return;ev.preventDefault();
   var f=ev.target,es=f.querySelector('.gesito'),b=f.querySelector('button[type=submit]'),dati={};
   ['cliente','titolo','data','link'].forEach(function(k){dati[k]=f.elements[k].value});
+  if(/^\d{4}-\d{2}-\d{2}$/.test(dati.data))dati.data=dati.data.split('-').reverse().join('.'); /* 2026-10-18 → 18.10.2026 */
   b.disabled=true;b.textContent='Controllo il link…';es.hidden=true;
   try{var r=await api('gallerie',dati);carica();setTimeout(function(){var n=document.querySelector('.gform .gesito');if(n){n.hidden=false;n.className='gesito ok';n.textContent='Galleria creata: '+r.foto+' foto in '+r.sezioni.length+' sezioni ('+r.sezioni.join(', ')+'). Ora mandala al cliente con il pulsante WhatsApp qui sotto.'}},300)}
   catch(err){es.hidden=false;es.className='gesito err';es.textContent=err.message}
   finally{b.disabled=false;b.textContent='Crea galleria'}
 });
+/* Editor di una galleria: ordine delle sottocartelle (frecce) e foto di copertina (clic su una miniatura) */
+var ED={};
+function mini(id,p){return '/api/galleria/anteprima?c='+encodeURIComponent(ED[id].codice)+'&s=240&p='+encodeURIComponent(p)}
+function disegnaEd(id){
+  var st=ED[id],box=document.getElementById('ged-'+id);
+  var sez=st.sezioni.map(function(x,i){return '<div class="gsez"><span>'+e(x.nome||'Altre foto')+' <small>'+x.foto.length+' foto</small></span><span class="az">'
+    +'<button type="button" data-gsu="'+id+'" data-i="'+i+'"'+(i?'':' disabled')+' aria-label="Sposta su">↑</button>'
+    +'<button type="button" data-ggiu="'+id+'" data-i="'+i+'"'+(i<st.sezioni.length-1?'':' disabled')+' aria-label="Sposta giù">↓</button></span></div>'}).join('');
+  var cur=st.sezioni[st.vista]||st.sezioni[0];
+  var tabs=st.sezioni.map(function(x,i){return '<button type="button" data-gvista="'+id+'" data-i="'+i+'"'+(i===st.vista?' class="on"':'')+'>'+e(x.nome||'Altre foto')+'</button>'}).join('');
+  var foto=cur.foto.map(function(p){return '<button type="button" class="gmini'+(p===st.copertina?' sel':'')+'" data-gcop="'+id+'" data-p="'+e(p)+'"><img src="'+e(mini(id,p))+'" alt="" loading="lazy"></button>'}).join('');
+  box.innerHTML='<div class="meta"><b>Ordine delle sezioni</b><span>come le vede il cliente</span></div>'+sez
+    +'<div class="meta" style="margin-top:16px"><b>Copertina</b><span>tocca una foto</span></div>'
+    +(st.copertina?'<img class="gcopsel" src="'+e(mini(id,st.copertina))+'" alt="Copertina scelta">':'')
+    +'<div class="az">'+tabs+'</div><div class="gminis">'+foto+'</div>'
+    +'<div class="az"><button type="button" class="on" data-gsalva="'+id+'">Salva ordine e copertina</button><span class="gesito ok" data-gok="'+id+'"></span></div>';
+}
+async function apriEd(id,codice){
+  var box=document.getElementById('ged-'+id);
+  if(!box.hidden){box.hidden=true;return}
+  box.hidden=false;box.innerHTML='<p class="vuoto">Leggo la cartella su Aruba…</p>';
+  try{var r=await api('gallerie/'+id);ED[id]={codice:r.codice,sezioni:r.sezioni,copertina:r.copertina,vista:0};disegnaEd(id)}
+  catch(err){box.innerHTML='<p class="err">'+e(err.message)+'</p>'}
+}
 function rec(r){
   return '<div class="item'+(r.stato==='attesa'?' nuovo':'')+'"><div class="meta"><b>'+e(r.stato)+'</b><span>'+e(data(r.creato))+'</span><span>'+'★'.repeat(r.voto)+'</span><span>'+e(r.servizio)+'</span></div>'
    +'<div style="font-size:18px">'+e(r.nome)+'</div><div class="testo">'+e(r.testo)+'</div>'
@@ -189,6 +226,13 @@ document.addEventListener('click',async function(ev){
   var b=ev.target.closest('button');if(!b)return;
   if(b.dataset.tab){tab=b.dataset.tab;document.querySelectorAll('[data-tab]').forEach(function(t){t.setAttribute('aria-pressed',t===b)});carica();return}
   try{
+    if(b.dataset.goggi){var t=new Date(),z=function(n){return String(n).padStart(2,'0')};b.previousElementSibling.value=t.getFullYear()+'-'+z(t.getMonth()+1)+'-'+z(t.getDate());return}
+    if(b.dataset.gedit){apriEd(b.dataset.gedit,b.dataset.gcodice);return}
+    if(b.dataset.gsu||b.dataset.ggiu){var id=b.dataset.gsu||b.dataset.ggiu,i=+b.dataset.i,j=b.dataset.gsu?i-1:i+1,a=ED[id].sezioni,t2=a[i];a[i]=a[j];a[j]=t2;disegnaEd(id);return}
+    if(b.dataset.gvista){ED[b.dataset.gvista].vista=+b.dataset.i;disegnaEd(b.dataset.gvista);return}
+    if(b.dataset.gcop){ED[b.dataset.gcop].copertina=b.dataset.p;disegnaEd(b.dataset.gcop);return}
+    if(b.dataset.gsalva){var id2=b.dataset.gsalva;await api('gallerie/'+id2,{ordine:ED[id2].sezioni.map(function(x){return x.nome}),copertina:ED[id2].copertina});
+      var ok=document.querySelector('[data-gok="'+id2+'"]');if(ok)ok.textContent='Salvato. Il cliente vede il nuovo ordine entro pochi minuti.';return}
     if(b.dataset.gcopia){try{await navigator.clipboard.writeText(b.dataset.gcopia);b.textContent='Copiato'}catch(x){prompt('Copia il link:',b.dataset.gcopia)}return}
     if(b.dataset.gal){
       if(b.dataset.gdel&&!confirm('Eliminare questa galleria? Le foto su Aruba Drive restano dove sono.'))return;

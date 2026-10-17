@@ -1,10 +1,10 @@
 // API pubbliche delle gallerie clienti (servono il codice):
 //   GET /api/galleria?c=CODICE                       dati della galleria: cliente, titolo, data, sezioni e foto
-//   GET /api/galleria/anteprima?c=CODICE&p=PATH&s=L  anteprima (L = 480 | 1600 px), dalla cache di Cloudflare quando c'è
+//   GET /api/galleria/anteprima?c=CODICE&p=PATH&s=L  anteprima (L = 240 | 480 | 1600 px), dalla cache di Cloudflare quando c'è
 //   GET /api/galleria/foto?c=CODICE&p=PATH           originale a piena qualità, come download
 //   GET /api/galleria/zip?c=CODICE[&p=SEZIONE]       zip di tutta la galleria o di una sezione
 import { json, notifica } from '../../_lib.js';
-import { trova } from '../../_gallerie.js';
+import { trova, ordina, copertina } from '../../_gallerie.js';
 import * as aruba from '../../_aruba.js';
 
 const nomeFile = (s) => String(s).replace(/[\\/:*?"<>|]+/g, ' ').replace(/\s+/g, ' ').trim() || 'foto';
@@ -40,13 +40,14 @@ export async function onRequestGet(context) {
           [{ text: 'Apri il pannello', url: `${url.origin}/admin/#gallerie` }]);
       }
       context.waitUntil(env.DB.prepare('UPDATE gallerie SET aperture = aperture + 1 WHERE id = ?').bind(g.id).run());
-      return json({ cliente: g.cliente, titolo: g.titolo, data: g.data, totale: s.totale, peso: s.peso,
-        sezioni: s.sezioni.map((x) => ({ nome: x.nome, foto: x.foto.map((f) => ({ p: f.path, n: f.nome, s: f.size })) })) });
+      const sezioni = ordina(s.sezioni, g.ordine);
+      return json({ cliente: g.cliente, titolo: g.titolo, data: g.data, totale: s.totale, peso: s.peso, copertina: copertina(sezioni, g.copertina),
+        sezioni: sezioni.map((x) => ({ nome: x.nome, foto: x.foto.map((f) => ({ p: f.path, n: f.nome, s: f.size })) })) });
     }
 
     if (cosa === 'anteprima') {
       if (!esiste(p)) return json({ errore: 'Foto non trovata.' }, 404);
-      const lato = url.searchParams.get('s') === '1600' ? 1600 : 480;
+      const lato = { 1600: 1600, 240: 240 }[url.searchParams.get('s')] || 480;
       // Cache di Cloudflare per foto, non per codice: chiave interna senza il codice
       const chiave = new Request('https://cache.produkts.it/anteprima/' + l.token + '/' + lato + '/' + encodeURIComponent(p));
       const cache = caches.default;

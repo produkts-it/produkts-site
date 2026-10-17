@@ -13,7 +13,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&amp;family=Space+Grotesk:wght@400;500&amp;display=swap">
-<link rel="stylesheet" href="assets/site.css?v=140823f3">
+<link rel="stylesheet" href="assets/site.css?v=5b53ddf5">
 <script>try{(function(){var n=(performance.getEntriesByType&&performance.getEntriesByType('navigation')[0]||{}).type,r=document.referrer,same=false;try{same=!!r&&new URL(r).origin===location.origin}catch(e){}
 var show=n==='reload'||(n!=='back_forward'&&!same);if(show&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('intro')})()}catch(e){}</script>
 </head>
@@ -98,25 +98,23 @@ var show=n==='reload'||(n!=='back_forward'&&!same);if(show&&!matchMedia('(prefer
 </div>
 
 <div class="if" data-if="lightbox" hidden>
-<div class="lbx" role="dialog" aria-modal="true" aria-label="Foto ingrandita" style="position: fixed; inset: 0; z-index: 40; background: rgba(5,5,5,0.97); display: flex; flex-direction: column">
-<div style="display: flex; justify-content: space-between; align-items: center; padding: 20px 28px; font-size: 13px; letter-spacing: 0.14em; color: #9A948C">
-<span style="font-variant-numeric: tabular-nums"></span>
-<div style="display: flex; gap: 8px; align-items: center">
-<a href="#" class="g-dl" style="height: 44px; padding: 0 16px; display: inline-flex; align-items: center; gap: 10px; text-transform: uppercase; font-size: 12px; letter-spacing: 0.14em">
-<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"></path></svg>Scarica</a>
-<button type="button" data-act="close" aria-label="Chiudi" style="width: 44px; height: 44px; background: transparent; border: 1px solid #3A3A3A; border-radius: 50%; color: #E8E4DF; cursor: pointer; display: flex; align-items: center; justify-content: center">
-<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>
-</button>
-</div>
-</div>
-<div style="flex: 1; min-height: 0; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 0 20px 40px">
+<div class="lbx" role="dialog" aria-modal="true" aria-label="Foto ingrandita" style="position: fixed; inset: 0; z-index: 50; background: rgba(8,8,8,0.6); -webkit-backdrop-filter: blur(28px) saturate(0.85); backdrop-filter: blur(28px) saturate(0.85); display: flex; flex-direction: column">
+<div style="flex: 1; min-height: 0; display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 96px 12px 104px">
 <button type="button" data-act="prev" aria-label="Foto precedente" style="width: 52px; height: 52px; flex: none; background: transparent; border: 0; color: #E8E4DF; cursor: pointer; display: flex; align-items: center; justify-content: center">
 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>
 </button>
-<div style="flex: 1; min-width: 0; height: 100%; max-height: 78vh; display: flex; align-items: center; justify-content: center"><img class="big g-protect" alt="" style="max-width: 100%; max-height: 78vh; object-fit: contain; display: block"></div>
+<div style="flex: 1; min-width: 0; height: 100%; display: flex; align-items: center; justify-content: center"><img class="big g-protect" alt="" style="max-width: 100%; max-height: 100%; object-fit: contain; display: block; box-shadow: 0 30px 80px rgba(0,0,0,0.5)"></div>
 <button type="button" data-act="next" aria-label="Foto successiva" style="width: 52px; height: 52px; flex: none; background: transparent; border: 0; color: #E8E4DF; cursor: pointer; display: flex; align-items: center; justify-content: center">
 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M9 5l7 7-7 7"></path></svg>
 </button>
+<div class="g-notch" style="position: absolute; left: 50%; bottom: max(18px, env(safe-area-inset-bottom)); transform: translateX(-50%); display: flex; align-items: center; gap: 6px; padding: 6px 6px 6px 20px; border-radius: 32px; background: rgba(8,8,8,0.78); border: 1px solid #2A2A2A; -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); white-space: nowrap; max-width: calc(100vw - 24px); box-sizing: border-box">
+<span class="g-pos" style="font-size: 12px; letter-spacing: 0.12em; color: #C9C4BD; font-variant-numeric: tabular-nums; overflow: hidden; text-overflow: ellipsis; min-width: 0"></span>
+<a href="#" class="g-dl" style="height: 44px; padding: 0 16px; margin-left: 8px; border-radius: 22px; background: #E8E4DF; color: #080808; display: inline-flex; align-items: center; gap: 8px; text-transform: uppercase; font-size: 12px; letter-spacing: 0.14em; flex: none">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"></path></svg>Scarica</a>
+<button type="button" data-act="close" aria-label="Chiudi" style="width: 44px; height: 44px; flex: none; background: transparent; border: 1px solid #3A3A3A; border-radius: 50%; color: #E8E4DF; cursor: pointer; display: flex; align-items: center; justify-content: center">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+</button>
+</div>
 </div>
 </div>
 </div>
@@ -128,7 +126,7 @@ var show=n==='reload'||(n!=='back_forward'&&!same);if(show&&!matchMedia('(prefer
 (function(){
 var d=document,w=window,api='/api/galleria',codice='',G=null,foto=[],list=[],cur=null,idx=-1,lastFocus=null;
 var vLock=d.querySelector('[data-if="locked"]'),vOpen=d.querySelector('[data-if="open"]'),box=d.querySelector('[data-if="lightbox"]');
-var pos=box.querySelector('[style*="tabular-nums"]'),big=box.querySelector('.big'),dl=box.querySelector('.g-dl');
+var pos=box.querySelector('.g-pos'),big=box.querySelector('.big'),dl=box.querySelector('.g-dl');
 var input=d.getElementById('g-code'),err=d.querySelector('.g-err'),btn=d.querySelector('[data-act="enter"]');
 var griglia=d.querySelector('.g-griglia'),tabs=d.querySelector('.g-tabs'),zip=d.querySelector('.g-zip'),zipT=d.querySelector('.g-zip-t');
 var velo=d.querySelector('.g-velo'),veloDl=velo.querySelector('.g-velo-dl');
@@ -182,11 +180,14 @@ function mostra(){
   var f=list[idx];if(!f)return;
   big.src=prev(f,1600);dl.href=orig(f);dl.setAttribute('download',f.n);
   pos.textContent=p2(idx+1)+' / '+p2(list.length)+(f.sez?' · '+f.sez:'');
-  box.hidden=false;d.documentElement.classList.add('menu-open');
+  if(box.hidden){box.hidden=false;d.documentElement.classList.add('menu-open','g-lbx');try{history.pushState({foto:1},'')}catch(e){}}
   var n=list[(idx+1)%list.length];if(n)(new Image()).src=prev(n,1600);
   box.querySelector('[aria-label="Chiudi"]').focus();
 }
-function chiudi(){box.hidden=true;idx=-1;big.removeAttribute('src');d.documentElement.classList.remove('menu-open');if(lastFocus)lastFocus.focus()}
+/* Chiudere la foto: X, Esc o il tasto indietro del telefono (la foto aperta è un passo della cronologia) */
+function chiudiOra(){if(box.hidden)return;box.hidden=true;idx=-1;big.removeAttribute('src');d.documentElement.classList.remove('menu-open','g-lbx');if(lastFocus)lastFocus.focus({preventScroll:true})}
+function chiudi(){if(history.state&&history.state.foto)history.back();else chiudiOra()}
+w.addEventListener('popstate',function(){chiudiOra()});
 PK.acts.close=chiudi;
 PK.acts.prev=function(){idx=(idx-1+list.length)%list.length;mostra()};
 PK.acts.next=function(){idx=(idx+1)%list.length;mostra()};
