@@ -9,6 +9,11 @@
 //   POST /api/admin/push/prova          manda una notifica di prova a tutti i dispositivi
 import { json, corpo, autorizzato } from '../../_lib.js';
 import { chiavePubblica, iscrivi, disiscrivi, inviaPush } from '../../_push.js';
+import { tabella, nuovoCodice } from '../../_gallerie.js';
+import * as aruba from '../../_aruba.js';
+//   GET  /api/admin/gallerie            elenco gallerie clienti
+//   POST /api/admin/gallerie            { cliente, titolo, data, link } → crea, con codice nuovo
+//   POST /api/admin/gallerie/:id        { attiva } | { nuovoCodice: true } | { elimina: true } | { cliente, titolo, data }
 
 export async function onRequest({ request, env, params }) {
   if (!(await autorizzato(request, env))) return json({ errore: 'Accesso negato.' }, 401);
@@ -34,6 +39,45 @@ export async function onRequest({ request, env, params }) {
     if (d.stato) await env.DB.prepare('UPDATE recensioni SET stato = ? WHERE id = ?').bind(d.stato, n).run();
     if (typeof d.in_evidenza === 'boolean') await env.DB.prepare('UPDATE recensioni SET in_evidenza = ? WHERE id = ?').bind(d.in_evidenza ? 1 : 0, n).run();
     return json({ ok: true });
+  }
+  if (cosa === 'gallerie') {
+    await tabella(env);
+    if (request.method === 'GET' && !id) {
+      const { results } = await env.DB.prepare('SELECT * FROM gallerie ORDER BY creato DESC').all();
+      return json(results);
+    }
+    if (request.method === 'POST' && !id) {
+      // Nuova galleria: controlla subito che il link Aruba si legga e conta le foto
+      const d = (await corpo(request)) || {};
+      const cliente = String(d.cliente || '').trim().slice(0, 120), linkAruba = String(d.link || '').trim();
+      const l = aruba.link(linkAruba);
+      if (!cliente) return json({ errore: 'Scrivi il nome del cliente.' }, 400);
+      if (!l) return json({ errore: 'Il link deve essere un link di condivisione di Aruba Drive (…arubadrive.com/s/…).' }, 400);
+      let s;
+      try { s = await aruba.struttura(l, true); } catch (err) { return json({ errore: 'Non riesco a leggere il link Aruba: ' + err.message }, 400); }
+      if (!s.totale) return json({ errore: 'Nella cartella condivisa non ho trovato foto.' }, 400);
+      let codice;
+      for (let i = 0; i < 5; i++) {
+        codice = nuovoCodice();
+        const r = await env.DB.prepare('INSERT OR IGNORE INTO gallerie (codice, cliente, titolo, data, link) VALUES (?, ?, ?, ?, ?)')
+          .bind(codice, cliente, String(d.titolo || '').trim().slice(0, 120), String(d.data || '').trim().slice(0, 40), linkAruba).run();
+        if (r.meta.changes) break;
+      }
+      return json({ ok: true, codice, foto: s.totale, sezioni: s.sezioni.map((x) => x.nome || '(cartella principale)') });
+    }
+    if (request.method === 'POST' && n > 0) {
+      const d = (await corpo(request)) || {};
+      if (d.elimina === true) {
+        await env.DB.prepare('DELETE FROM gallerie WHERE id = ?').bind(n).run();
+        return json({ ok: true });
+      }
+      if (typeof d.attiva === 'boolean') await env.DB.prepare('UPDATE gallerie SET attiva = ? WHERE id = ?').bind(d.attiva ? 1 : 0, n).run();
+      if (d.nuovoCodice === true) await env.DB.prepare('UPDATE gallerie SET codice = ? WHERE id = ?').bind(nuovoCodice(), n).run();
+      for (const k of ['cliente', 'titolo', 'data']) {
+        if (typeof d[k] === 'string') await env.DB.prepare(`UPDATE gallerie SET ${k} = ? WHERE id = ?`).bind(d[k].trim().slice(0, 120), n).run();
+      }
+      return json({ ok: true });
+    }
   }
   if (cosa === 'push') {
     if (request.method === 'GET' && id === 'chiave') return json({ chiave: await chiavePubblica(env) });
