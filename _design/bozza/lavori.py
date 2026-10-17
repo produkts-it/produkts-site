@@ -100,40 +100,99 @@ HOME_WORKS = ['dynamis', 'schizophrenia', 'coseco', 'wake-up']
 FILMOGRAFIA = [
     ('Dynamis', 'Produttore, D.O.P., montaggio, color, VFX', 'produkts.it', 'dynamis'),
     ('Tra i Piedi', 'Direttore della fotografia', 'AMARCORD', None),
-    ("L'Inventario", 'Co-D.O.P.', 'AMARCORD', None),
+    ("L'Inventario", 'Co-D.O.P.', 'AMARCORD', 'l-inventario'),
     ('Schizophrenia — Io e Nessun Altro', 'Regia e fotografia', 'produkts.it', 'schizophrenia'),
     ('Troppo bella per loro', 'Docufilm · regia, riprese e montaggio', 'produkts.it', 'troppo-bella-per-loro'),
-    ('Sbaglio Dunque Esisto', 'Operatore, 1ª camera', 'AMARCORD', None),
-    ('La Seduta', 'Operatore', 'AMARCORD', None),
-    ('Paranoia', 'Operatore, 2ª camera', 'AMARCORD', None),
+    ('Sbaglio Dunque Esisto', 'Operatore e fonico', 'AMARCORD', 'sbaglio-dunque-esisto'),
+    ('La Seduta', 'Operatore', 'AMARCORD', 'la-seduta'),
+    ('Paranoia', 'Operatore, 2ª camera', 'AMARCORD', 'paranoia'),
     ('Cuori in Stand-by', 'Assistente operatore, 2ª camera', 'AMARCORD', None),
-    ('Parfum', 'Assistente operatore', 'AMARCORD', None),
-    ('La Sedia', 'Assistente operatore', 'AMARCORD', None),
+    ('Parfum', 'Assistente operatore', 'AMARCORD', 'parfum'),
+    ('La Sedia', 'Assistente operatore', 'AMARCORD', 'la-sedia'),
     ("Spaghetti all'Assassina", 'Assistente operatore', 'AMARCORD', None),
-    ('Il Tanga e la Cravatta', 'Fonico', 'AMARCORD', None),
+    ('Il Tanga e la Cravatta', 'Fonico', 'AMARCORD', 'il-tanga-e-la-cravatta'),
 ]
 HOME_FILMO = 10
 
-# Corti di AMARCORD (Accademia Mediterranea del Cinema), 2026: schede che portano a Vimeo, senza pagina propria.
-# Niente sinossi (no spoiler): solo genere, sceneggiatura e una riga di atmosfera. 'ruolo' vuoto = da chiedere a Karim.
+# Persone ricorrenti: un nome scritto sempre allo stesso modo, così "Anche in…" le riconosce in tutti i lavori.
+GIADA, GIANNI, MIRIANA, MARY, LIBERO = 'Giada Bellanova', 'Gianni Lorusso', 'Miriana Mastronardi', 'Mariachiara Monaco', 'Libero Maria Santomauro'
+TIZIANA, NOEMI, DESIREE, DOMENICO, ANGLANI, MARENGO = 'Tiziana Lattuca', 'Noemi Lorusso', 'Desiree Cataldo', 'Domenico Vesia', 'Francesco Anglani', 'Fabrizio Marengo'
+SONIA, CARBONARA, VENDOLA, DAVIDE, VITTORIA, CIPRI = 'Sonia Sorressa', 'Antonio Carbonara', 'Antonio Vendola', 'Davide De Pinto', 'Vittoria Binetti', 'Alessandro Cipri'
+CARDONE, ANGELICA, MATTEO, LUCA, MICHELE, MAURO = 'Alessandro N. Cardone', 'Angelica Vinci', 'Matteo Gattulli', 'Luca Sportelli', 'Michele Mika Juri Liturri', 'Mauro Zeverino'
+ANDREA, MARIANNA, ROBERTA, MARTIN = 'Andrea La Tanza', 'Marianna Nettis', 'Roberta Giovanetti', 'Martin Barletta'
+PIETRO, FLANOTTE, VERA, FEDERICA, DONATELLA, VANESSA = 'Pietro Di Gioia', 'Francesco La Notte', 'Vera Balice', 'Federica Dalena', 'Donatella Santorsa', 'Vanessa Ciccolella'
+MAYA, ALLEGRETTI, TIGRANO, EMMA, LORENZO = 'Maya Nacci', 'Francesco Allegretti', 'Francesco Tigrano', 'Emma Perini', 'Lorenzo Vitucci'
+SIMONA, ANITA, VITA, AMELIA, LEONARDA, NUZZI, SABRINA = 'Simona Lopez', 'Anita Donno', 'Vita Barberio', 'Amelia Potenza', 'Leonarda Cesonate', 'Mariangela Nuzzi', 'Sabrina Colamoera'
+PROD = TIZIANA + ' per AMARCORD'
+
+# Credits di Dynamis (la pagina è fatta a mano, ma il blocco Credits si genera da qui per avere gli "Anche in…")
+DYNAMIS = dict(slug='dynamis', t='Dynamis',
+    cast=[('Mattia', GIANNI), ('Paranoia', FEDERICA), ('Opportunità', EMMA), ('Saverio', PIETRO), ('Cameo', 'Paolo Greco')],
+    crew=[('Regia', [GIADA]), ('Sceneggiatura', [MIRIANA]), ('Produzione', [KI]), ('Direzione della fotografia', [KI]),
+          ('Montaggio', [KI]), ('Color', [KI]), ('VFX e motion graphics', [KI]), ('Musiche', ['Giuseppe Sorressa']),
+          ('Sound design', [SONIA]), ('Scenografia', [MATTEO]), ('Trucco', [NUZZI]), ('Segretaria di edizione', [ROBERTA]),
+          ('Aiuto regia', [LUCA]), ('Grafica', [LUCA])])
+
+# Corti di AMARCORD (Accademia Mediterranea del Cinema), 2026: tutti cortometraggi, ognuno con la sua pagina e il link a Vimeo.
+# Niente sinossi (no spoiler): solo una riga di atmosfera. Cast: (personaggio o '', nome). Troupe: (ruolo, [nomi]).
 AMARCORD = [
-    dict(t='Paranoia', gen='Dramma psicologico', scrive='Miriana Mastronardi', ruolo='Operatore, 2ª camera', min=7,
-         vimeo='1220653465/634fa7dd97', line='Un campus, un sospetto, una voce che non smette di suggerire.'),
-    dict(t='Sbaglio dunque esisto', gen='Dramma psicologico', scrive='Mariachiara Monaco', ruolo='Operatore, 1ª camera', min=6,
-         vimeo='1220653421/520923c76a', line='Una terapia sperimentale, una stanza chiusa e un viaggio dentro i ricordi.'),
-    dict(t='Parfum', gen='Commedia romantica', scrive='Noemi Lorusso', ruolo='Assistente operatore', min=6,
-         vimeo='1220653459/be50961eb1', line='Un primo appuntamento tra gli scaffali di una libreria, una paura da nascondere e troppi campioncini di profumo.'),
-    dict(t='La sedia', gen='Dramma psicologico', scrive='Noemi Lorusso', ruolo='Assistente operatore', min=6,
-         vimeo='1205077119/8e1ac4d587', line='Una ragazza che non regge il contatto, una sedia davanti a lei e tutto quello che non ha mai detto.'),
-    dict(t='Verità e distorsione', gen='Commedia', scrive='Mariachiara Monaco', ruolo='', min=7,
-         vimeo='1205096912/9477749d7c', line='Notte fonda in un appartamento di studenti: un coinquilino è sicuro che qualcuno sia entrato.'),
-    dict(t='La seduta', es=True, ruolo='Operatore', min=8, vimeo='1198757832/ba4f3c4cf7'),
-    dict(t="L'inventario", es=True, ruolo='Co-D.O.P.', min=5, vimeo='1205074164/052af8153b'),
-    dict(t='Il tanga e la cravatta', es=True, ruolo='Fonico', min=5, vimeo='1205098451/48cd24e2f4'),
-    dict(t='Troppo per poco', es=True, ruolo='', min=6, vimeo='1195193265/0f7b18a157'),
+    dict(slug='paranoia', t='Paranoia', gen='Dramma psicologico', ruolo='Operatore', min=7, vimeo='1220653465/634fa7dd97',
+         line='Un campus, un sospetto, una voce che non smette di suggerire.',
+         cast=[('Luna', DONATELLA), ('Mirta', FEDERICA), ('Francesca', MAYA), ('Stefano', ALLEGRETTI), ('Alessandro', LORENZO)],
+         crew=[('Regia', [MAURO]), ('Produzione', [PROD]), ('Soggetto', [MIRIANA]), ('Sceneggiatura', [DESIREE]),
+               ('Direzione della fotografia', [VENDOLA]), ('Operatori', [DAVIDE, KI]), ('Assistenti operatore', [GIADA, VITTORIA]),
+               ('Montaggio', [ANGELICA]), ('Aiuto regia', [LUCA]), ('Scenografia', [MICHELE]), ('Fonico', ['Antonio A.']),
+               ('Segretaria di edizione', [MARIANNA]), ('Ciak', [SONIA]), ('Backstage', [ANDREA]),
+               ('Capo reparto trucco', ['Simona Zagaria']), ('Trucco', [VITA, 'Annachiara De Palo'])]),
+    dict(slug='sbaglio-dunque-esisto', t='Sbaglio dunque esisto', gen='Dramma psicologico', ruolo='Operatore e fonico', min=6, vimeo='1220653421/520923c76a',
+         line='Una terapia sperimentale, una stanza chiusa e un viaggio dentro i ricordi.',
+         cast=[('Selene', VANESSA), ('Infermiera', EMMA), ('Dottore', PIETRO), ('Infermiere', TIGRANO), ('Mamma', FEDERICA), ('Papà', LORENZO)],
+         crew=[('Regia', [MARIANNA]), ('Produzione', [PROD]), ('Soggetto', [MARY]), ('Sceneggiatura', [MIRIANA]),
+               ('Direzione della fotografia', [GIADA]), ('Operatori', [CIPRI, KI]), ('Assistenti operatore', [SONIA, CARBONARA]),
+               ('Fonico', [KI]), ('Montaggio', [CARDONE]), ('Aiuto regia', [ANDREA]), ('Scenografia', [MAURO]),
+               ('Segretaria di edizione', [MARTIN]), ('Ciak', [VITTORIA]), ('Backstage', [MATTEO]),
+               ('Capo reparto trucco', [SABRINA]), ('Trucco', [LEONARDA, SIMONA])]),
+    dict(slug='parfum', t='Parfum', gen='Commedia romantica', ruolo='Assistente operatore', min=6, vimeo='1220653459/be50961eb1',
+         line='Un primo appuntamento tra gli scaffali di una libreria, una paura da nascondere e troppi campioncini di profumo.',
+         cast=[('Rita', DONATELLA), ('Luca', ALLEGRETTI), ('Paola', VERA), ('Gilberto', TIGRANO), ('Laura', EMMA)],
+         crew=[('Regia', [MICHELE]), ('Produzione', [PROD]), ('Soggetto', [NOEMI]), ('Sceneggiatura', [MARENGO]), ('Editor', [DESIREE]),
+               ('Direzione della fotografia', [DAVIDE]), ('Operatori', [SONIA, VENDOLA]), ('Assistenti operatore', [KI, VITTORIA]),
+               ('Montaggio', [DAVIDE]), ('Aiuto regia', [MATTEO]), ('Scenografia', [ANDREA]), ('Fonico', [CIPRI]),
+               ('Segretaria di edizione', [ROBERTA]), ('Ciak', [CARBONARA]), ('Backstage', [MARTIN]),
+               ('Capo reparto trucco', [NUZZI]), ('Trucco', [ANITA, VITA])]),
+    dict(slug='la-sedia', t='La sedia', gen='Dramma psicologico', ruolo='Assistente operatore', min=6, vimeo='1205077119/8e1ac4d587',
+         line='Una ragazza che non regge il contatto, una sedia davanti a lei e tutto quello che non ha mai detto.',
+         cast=[('', DONATELLA), ('', VERA), ('', FLANOTTE), ('', ALLEGRETTI)],
+         crew=[('Regia', [MARTIN]), ('Produzione', [PROD]), ('Soggetto', [NOEMI]), ('Sceneggiatura', [DOMENICO]),
+               ('Direzione della fotografia', [SONIA]), ('Operatori', [DAVIDE, VITTORIA]), ('Assistenti operatore', [GIADA, KI]),
+               ('Montaggio', [CARDONE]), ('Aiuto regia', [ROBERTA]), ('Scenografia', [ANDREA]), ('Fonico', [VENDOLA]),
+               ('Segretaria di edizione', [MATTEO]), ('Ciak', [CIPRI]), ('Backstage', [MAURO]),
+               ('Capo reparto trucco', ['Gloria Lombardo']), ('Trucco', [ANITA, 'Alessandra Maiellaro'])]),
+    dict(slug='la-seduta', t='La seduta', gen='', ruolo='Operatore', min=8, vimeo='1198757832/ba4f3c4cf7',
+         line='Un cortometraggio di AMARCORD girato nel 2026.',
+         cast=[('', DONATELLA), ('', VANESSA), ('', FEDERICA), ('', MAYA), ('', ALLEGRETTI)],
+         crew=[('Regia', [ROBERTA, MARTIN]), ('Produzione', [PROD]), ('Soggetto', [LIBERO]), ('Sceneggiatura', [ANGLANI, MARENGO]),
+               ('Direzione della fotografia', [DAVIDE, VITTORIA]), ('Operatore', [KI]), ('Assistente operatore', [VENDOLA]),
+               ('Montaggio', [CARDONE]), ('Aiuto regia', [MAURO]), ('Scenografia', [MICHELE]), ('Fonico', [CIPRI]),
+               ('Segretaria di edizione', [ANDREA]), ('Ciak', [CARBONARA]), ('Backstage', [MARIANNA]),
+               ('Capo reparto trucco', [LEONARDA]), ('Trucco', [NUZZI, AMELIA])]),
+    dict(slug='l-inventario', t="L'inventario", gen='', ruolo='Co-direttore della fotografia', min=5, vimeo='1205074164/052af8153b',
+         line='Un cortometraggio di AMARCORD girato nel 2026.',
+         cast=[('', TIGRANO), ('', VERA), ('', EMMA), ('', PIETRO), ('', VANESSA)],
+         crew=[('Regia', [LUCA, MATTEO]), ('Produzione', [PROD]), ('Soggetto', [ANGLANI]), ('Sceneggiatura', [DOMENICO, DESIREE]),
+               ('Direzione della fotografia', [KI, GIADA]), ('Operatore', [SONIA]), ('Assistente operatore', [CIPRI]),
+               ('Montaggio', [CARDONE, DAVIDE]), ('Aiuto regia', [MARTIN]), ('Scenografia', [ROBERTA]), ('Fonico', [DAVIDE]),
+               ('Segretaria di edizione', [ROBERTA]), ('Ciak', [VITTORIA]), ('Backstage', [MICHELE]),
+               ('Capo reparto trucco', ['Maria Rosa Laera']), ('Trucco', ['Betty Corradini', SABRINA])]),
+    dict(slug='il-tanga-e-la-cravatta', t='Il tanga e la cravatta', gen='', ruolo='Fonico', min=5, vimeo='1205098451/48cd24e2f4',
+         line='Un cortometraggio di AMARCORD girato nel 2026.',
+         cast=[('Gerardo', PIETRO), ('Giacinto', FLANOTTE), ('Adelina', VERA), ('Ginevra', FEDERICA)],
+         crew=[('Regia', [ANDREA, MARIANNA]), ('Produzione', [PROD]), ('Soggetto', [MARY]), ('Sceneggiatura', [MIRIANA, LIBERO]),
+               ('Direzione della fotografia', [SONIA, CARBONARA]), ('Operatore', [GIADA]), ('Assistente operatore', [DAVIDE]),
+               ('Fonico', [KI]), ('Montaggio', [ANGELICA]), ('Aiuto regia', [MATTEO]), ('Scenografia', [LUCA]),
+               ('Segretaria di edizione', [MICHELE]), ('Ciak', [VITTORIA]), ('Backstage', [MAURO]),
+               ('Capo reparto trucco', [SIMONA]), ('Trucco', [ANITA, VITA, AMELIA])]),
 ]
-# Filmografia: i titoli con un corto su Vimeo diventano link
-VIMEO_FILMO = {a['t'].lower(): 'https://vimeo.com/' + a['vimeo'] for a in AMARCORD}
 
 e = lambda s: html.escape(s, quote=True)
 
@@ -142,6 +201,39 @@ def names(v):
     """Il nome di Karim in arancio, gli altri normali."""
     return ', '.join('<span style="color: %s">%s</span>' % (ACC, e(n)) if n == KI else e(n) for n in v.split(', ')) \
         if KI in v else e(v)
+
+
+# ---- "Anche in…": per ogni persona, gli altri lavori in cui compare (Karim escluso, è in tutti) ----
+def _persone(w):
+    for c in w.get('cast', []):
+        yield c[1], c[0] or 'nel cast'
+    for ruolo, v in w.get('crew', []):
+        for n in (v if isinstance(v, list) else v.split(', ')):
+            yield n, ruolo.lower()
+
+INDICE = {}
+for _w in [DYNAMIS] + [w for w in WORKS if w.get('page', True)] + AMARCORD:
+    for _n, _r in _persone(_w):
+        if _n in (KI, PROD):  # Karim e la produzione AMARCORD sono in tutti: niente "Anche in"
+            continue
+        lst = INDICE.setdefault(_n, [])
+        if not any(x[0] == _w['slug'] for x in lst):
+            lst.append((_w['slug'], _w['t'], _r))
+
+ALSO_A = 'font-size: 12px; letter-spacing: 0.04em; color: #9A948C'
+
+
+def anche(nome, slug, right=False):
+    altri = [x for x in INDICE.get(nome, []) if x[0] != slug]
+    if not altri:
+        return ''
+    link = lambda x: '<a href="%s" class="also" style="color: #C9C4BD">%s</a>' % (x[0], e(x[1]))
+    if len(altri) == 1:
+        testo = 'Anche in %s, %s' % (link(altri[0]), e(altri[0][2]))
+    else:
+        testo = 'Anche in ' + ', '.join(link(x) for x in altri[:-1]) + ' e ' + link(altri[-1])
+    return ('<span style="%s; display: inline-flex; align-items: baseline; gap: 8px%s"><span aria-hidden="true" style="width: 6px; height: 6px; border-radius: 50%%; background: %s; flex: none; transform: translateY(-1px)"></span><span>%s</span></span>'
+            % (ALSO_A, '; justify-content: flex-end; text-align: right' if right else '', ACC, testo))
 
 
 HEAD = open(os.path.join(OUT, 'dynamis.html'), encoding='utf-8').read()
@@ -179,20 +271,58 @@ def meta_item(k, v):
             '<dd style="margin: 0; font-size: 16px; line-height: 1.5">%s</dd>\n</div>\n') % (e(k), e(v))
 
 
-def crew_row(k, v):
+def crew_row(k, v, slug):
+    """Ruolo a sinistra, nomi a destra: uno per riga con il proprio "Anche in…"."""
+    lista = v if isinstance(v, list) else [v]
+    righe = []
+    for n in lista:
+        nomi = n.split(', ') if not isinstance(v, list) else [n]
+        nome_html = names(n)
+        extra = ''.join(anche(x, slug, True) for x in nomi)
+        righe.append('<span style="font-size: 16px; overflow-wrap: anywhere">%s</span>%s' % (nome_html, extra))
     return ('<div class="crow reveal" style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; padding: 14px 0; border-bottom: 1px solid #1F1F1F">\n'
             '<span style="font-size: 13px; letter-spacing: 0.1em; text-transform: uppercase; color: #9A948C; flex: none; max-width: 45%%">%s</span>\n'
-            '<span style="font-size: 16px; text-align: right; min-width: 0; overflow-wrap: anywhere">%s</span>\n</div>\n') % (e(k), names(v))
+            '<span style="display: flex; flex-direction: column; align-items: flex-end; gap: 6px; text-align: right; min-width: 0">%s</span>\n</div>\n') % (e(k), ''.join(righe))
 
 
-def cast_row(k, v, also):
-    link = ''
-    if also:
-        link = ('<a href="%s" class="also" style="font-size: 12px; letter-spacing: 0.04em; color: #9A948C; display: inline-flex; align-items: center; gap: 8px">'
-                '<span aria-hidden="true" style="width: 6px; height: 6px; border-radius: 50%%; background: %s; flex: none"></span>%s</a>') % (also[0], ACC, e(also[1]))
+def cast_row(k, v, slug):
     return ('<div class="crow reveal" style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; padding: 14px 0; border-bottom: 1px solid #1F1F1F">\n'
-            '<span style="display: flex; flex-direction: column; gap: 6px"><span style="font-size: 16px">%s</span>%s</span>\n'
-            '<span style="font-family: \'Cormorant Garamond\', serif; font-style: italic; font-size: 20px; color: #C9C4BD">%s</span>\n</div>\n') % (e(v), link, e(k))
+            '<span style="display: flex; flex-direction: column; gap: 6px; min-width: 0"><span style="font-size: 16px">%s</span>%s</span>\n'
+            '<span style="font-family: \'Cormorant Garamond\', serif; font-style: italic; font-size: 20px; color: #C9C4BD; text-align: right">%s</span>\n</div>\n') % (names(v), anche(v, w_slug(slug)), e(k))
+
+
+w_slug = lambda s: s
+
+
+def credits(w, crewlabel):
+    cast = ''
+    if w.get('cast'):
+        cast = ('<div>\n<span style="display: block; %s; padding-bottom: 12px">Cast</span>\n%s</div>\n'
+                % (KICK, ''.join(cast_row(c[0], c[1], w['slug']) for c in w['cast'])))
+    return cast + ('<div>\n<span style="display: block; %s; padding-bottom: 12px">%s</span>\n%s</div>\n'
+                   % (KICK, crewlabel, ''.join(crew_row(k, v, w['slug']) for k, v in w['crew'])))
+
+
+def hero(w, url, plat):
+    if w.get('img'):
+        return '''<div style="position: relative; width: 100%%; aspect-ratio: 16 / 9; background: #161616; overflow: hidden">
+<img class="kb" src="%(img)s" alt="Fotogramma di %(t)s" style="position: absolute; inset: 0; width: 100%%; height: 100%%; object-fit: cover">
+<span aria-hidden="true" style="position: absolute; inset: 0; background: linear-gradient(rgba(8,8,8,0.35), transparent 22%%, transparent 78%%, rgba(8,8,8,0.5))"></span>
+<span aria-hidden="true" class="lb" style="position: absolute; left: 0; right: 0; top: 0; background: #080808; z-index: 2"></span>
+<span aria-hidden="true" class="lb lb-b" style="position: absolute; left: 0; right: 0; background: #080808; z-index: 2"></span>
+<span aria-hidden="true" style="position: absolute; top: 24px; left: 24px; width: 36px; height: 36px; border-top: 1px solid #336699; border-left: 1px solid #336699"></span>
+<span aria-hidden="true" style="position: absolute; bottom: 24px; right: 24px; width: 36px; height: 36px; border-bottom: 1px solid #336699; border-right: 1px solid #336699"></span>
+<a href="%(url)s" target="_blank" rel="noopener" aria-label="Guarda %(t)s su %(plat)s (si apre in una nuova scheda)" style="position: absolute; inset: 0; z-index: 1"></a>
+</div>''' % dict(img=w['img'], t=e(w['t']), url=url, plat=plat)
+    # Senza fotogramma: mirino scuro con il titolo, che porta al video
+    return '''<a href="%(url)s" target="_blank" rel="noopener" aria-label="Guarda %(t)s su %(plat)s (si apre in una nuova scheda)" class="pill" style="position: relative; display: flex; align-items: center; justify-content: center; width: 100%%; aspect-ratio: 2.39 / 1; background: #0E0E0E; overflow: hidden; color: #E8E4DF">
+<span aria-hidden="true" class="lb" style="position: absolute; left: 0; right: 0; top: 0; background: #080808; z-index: 2"></span>
+<span aria-hidden="true" class="lb lb-b" style="position: absolute; left: 0; right: 0; background: #080808; z-index: 2"></span>
+<span aria-hidden="true" style="position: absolute; top: 24px; left: 24px; width: 36px; height: 36px; border-top: 1px solid #336699; border-left: 1px solid #336699"></span>
+<span aria-hidden="true" style="position: absolute; bottom: 24px; right: 24px; width: 36px; height: 36px; border-bottom: 1px solid #336699; border-right: 1px solid #336699"></span>
+<span aria-hidden="true" style="position: absolute; top: 28px; right: 72px; font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: #6E6A64">AMARCORD · 2026</span>
+<span style="display: inline-flex; align-items: center; gap: 12px; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; border: 1px solid rgba(232,228,223,0.6); border-radius: 26px; height: 52px; padding: 0 26px 0 20px"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5l11 7-11 7V5z"></path></svg>Guarda su %(plat)s</span>
+</a>''' % dict(t=e(w['t']), url=url, plat=plat)
 
 
 def page(w):
@@ -200,10 +330,6 @@ def page(w):
     title = w['t'] + (' — ' + w['sub'] if w.get('sub') else '')
     head = HEAD.replace('<title>Dynamis — produkts.it</title>', '<title>%s — produkts.it</title>' % e(title))
     metas = [('Il mio ruolo', w['role'])] + w['meta']
-    cast = ''
-    if w.get('cast'):
-        cast = ('<div>\n<span style="display: block; %s; padding-bottom: 12px">Cast</span>\n%s</div>\n'
-                % (KICK, ''.join(cast_row(*c) for c in w['cast'])))
     body = '''<section style="max-width: 1440px; margin: 0 auto; padding: 24px 56px 72px; box-sizing: border-box">
 <a href="lavori" style="font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; color: #9A948C; padding: 12px 0; display: inline-block; margin-bottom: 24px">← Tutti i lavori</a>
 <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 24px 64px; margin-bottom: 40px">
@@ -214,15 +340,7 @@ def page(w):
 <a href="%(url)s" target="_blank" rel="noopener" class="pill fade d3" style="height: 52px; padding: 0 26px 0 20px; border-radius: 26px; border: 1px solid rgba(232,228,223,0.6); color: #E8E4DF; display: inline-flex; align-items: center; gap: 12px; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; white-space: nowrap">
 <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5l11 7-11 7V5z"></path></svg>Guarda su %(plat)s <span aria-hidden="true">↗</span></a>
 </div>
-<div style="position: relative; width: 100%%; aspect-ratio: 16 / 9; background: #161616; overflow: hidden">
-<img class="kb" src="%(img)s" alt="Fotogramma di %(t)s" style="position: absolute; inset: 0; width: 100%%; height: 100%%; object-fit: cover">
-<span aria-hidden="true" style="position: absolute; inset: 0; background: linear-gradient(rgba(8,8,8,0.35), transparent 22%%, transparent 78%%, rgba(8,8,8,0.5))"></span>
-<span aria-hidden="true" class="lb" style="position: absolute; left: 0; right: 0; top: 0; background: #080808; z-index: 2"></span>
-<span aria-hidden="true" class="lb lb-b" style="position: absolute; left: 0; right: 0; background: #080808; z-index: 2"></span>
-<span aria-hidden="true" style="position: absolute; top: 24px; left: 24px; width: 36px; height: 36px; border-top: 1px solid #336699; border-left: 1px solid #336699"></span>
-<span aria-hidden="true" style="position: absolute; bottom: 24px; right: 24px; width: 36px; height: 36px; border-bottom: 1px solid #336699; border-right: 1px solid #336699"></span>
-<a href="%(url)s" target="_blank" rel="noopener" aria-label="Guarda %(t)s su %(plat)s (si apre in una nuova scheda)" style="position: absolute; inset: 0; z-index: 1"></a>
-</div>
+%(hero)s
 </section>
 
 <section style="border-top: 1px solid #1F1F1F">
@@ -240,16 +358,12 @@ def page(w):
 <div style="max-width: 1440px; margin: 0 auto; padding: 96px 56px; box-sizing: border-box; display: flex; flex-wrap: wrap; gap: 48px 96px">
 <h2 class="reveal" style="margin: 0; flex: 1 1 240px; font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300; font-size: 56px; line-height: 1">Credits</h2>
 <div style="flex: 999 1 640px; min-width: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%%, 300px), 1fr)); gap: 0 48px">
-%(cast)s<div>
-<span style="display: block; %(kick)s; padding-bottom: 12px">%(crewlabel)s</span>
-%(crew)s</div>
-</div>
+%(credits)s</div>
 </div>
 </section>
-''' % dict(kick=KICK, kicker=e(w['kicker']), t=e(w['t']), url=url, plat=plat, img=w['img'], line=e(w['line']),
+''' % dict(kick=KICK, kicker=e(w['kicker']), t=e(w['t']), url=url, plat=plat, hero=hero(w, url, plat), line=e(w['line']),
            sub=('<p class="fade d2" style="margin: 0; font-family: \'Cormorant Garamond\', serif; font-style: italic; font-weight: 300; font-size: clamp(24px, 3vw, 36px); line-height: 1.2; color: #C9C4BD">%s</p>\n' % e(w['sub'])) if w.get('sub') else '',
-           meta=''.join(meta_item(k, v) for k, v in metas), cast=cast, crewlabel='Troupe' if w.get('cast') else 'Crediti',
-           crew=''.join(crew_row(k, v) for k, v in w['crew']))
+           meta=''.join(meta_item(k, v) for k, v in metas), credits=credits(w, 'Troupe' if w.get('cast') else 'Crediti'))
     save(os.path.join(OUT, w['slug'] + '.html'), head + body + FOOT)
 
 
@@ -310,38 +424,38 @@ def home_card(w, i):
        e(w.get('home_kind') or w['kicker'].rsplit(' · ', 1)[0]), e(w.get('home_role') or w['role_short']))
 
 
+def amarcord_page(a):
+    w = dict(a, kicker='Cortometraggio · AMARCORD · 2026', role=a['ruolo'],
+             meta=[('Regia', ', '.join(dict(a['crew'])['Regia'])), ('Produzione', PROD)]
+                  + ([('Genere', a['gen'])] if a.get('gen') else []) + [('Durata', '%d minuti' % a['min']), ('Anno', '2026 · Vimeo')])
+    page(w)
+
+
 def amarcord_card(a, i):
-    kick = ' · '.join(x for x in ['Esercitazione' if a.get('es') else a['gen'], '%d min' % a['min']] if x)
-    line = ('<p style="margin: 0; font-family: \'Cormorant Garamond\', serif; font-style: italic; font-weight: 300; font-size: 22px; line-height: 1.35; color: #C9C4BD">%s</p>\n' % e(a['line'])) if a.get('line') else ''
-    scrive = ('<span style="font-size: 13px; color: #9A948C">Scritto da %s</span>\n' % e(a['scrive'])) if a.get('scrive') else ''
-    ruolo = ('<span style="color: %s">%s</span>' % (ACC, e(a['ruolo']))) if a['ruolo'] else '<span></span>'
-    return '''<a href="https://vimeo.com/%s" target="_blank" rel="noopener" class="work reveal" aria-label="%s, guarda su Vimeo (si apre in una nuova scheda)" style="position: relative; display: flex; flex-direction: column; justify-content: space-between; gap: 28px; padding: 28px; border: 1px solid #1F1F1F; min-height: 260px; box-sizing: border-box">
+    kick = ' · '.join(x for x in ['Cortometraggio', a.get('gen'), '%d min' % a['min']] if x)
+    regia = ' e '.join(dict(a['crew'])['Regia'])
+    return '''<a href="%s" class="work reveal" style="position: relative; display: flex; flex-direction: column; justify-content: space-between; gap: 28px; padding: 28px; border: 1px solid #1F1F1F; min-height: 240px; box-sizing: border-box">
 <span aria-hidden="true" class="br br-tl" style="position: absolute; top: 12px; left: 12px; width: 16px; height: 16px; border-top: 1px solid #336699; border-left: 1px solid #336699"></span>
 <span aria-hidden="true" class="br br-br" style="position: absolute; bottom: 12px; right: 12px; width: 16px; height: 16px; border-bottom: 1px solid #336699; border-right: 1px solid #336699"></span>
 <div style="display: flex; flex-direction: column; gap: 14px">
 <span style="font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: #9A948C">%s</span>
-<h3 style="margin: 0; font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 400; font-size: 36px; line-height: 1.05">%s</h3>
-%s%s</div>
+<h3 style="margin: 0; font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 400; font-size: 36px; line-height: 1.05">%s <span aria-hidden="true" class="arr" style="color: #B46428">→</span></h3>
+<span style="font-size: 13px; color: #9A948C">Regia di %s</span>
+</div>
 <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 16px; border-top: 1px solid #1F1F1F; padding-top: 14px; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase">
-%s<span style="white-space: nowrap; color: #E8E4DF">Vimeo <span aria-hidden="true" class="arr" style="color: #B46428">↗</span></span>
+<span style="color: %s">%s</span><span style="white-space: nowrap; color: #9A948C">Credits</span>
 </div>
 </a>
-''' % (a['vimeo'], e(a['t']), e(kick), e(a['t']), line, scrive, ruolo)
+''' % (a['slug'], e(kick), e(a['t']), e(regia), ACC, e(a['ruolo']))
 
 
 def amarcord_section():
-    def gruppo(titolo, items):
-        return ('<div style="display: flex; flex-direction: column; gap: 20px">\n<h3 class="reveal" style="margin: 0; font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: %s">%s</h3>\n'
-                '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%%, 320px), 1fr)); gap: 24px">\n%s</div>\n</div>\n') % (ACC, e(titolo), ''.join(amarcord_card(a, i) for i, a in enumerate(items)))
-    return (gruppo('Cortometraggi 2026', [a for a in AMARCORD if not a.get('es')])
-            + gruppo('Esercitazioni 2026', [a for a in AMARCORD if a.get('es')]))
+    return ('<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%%, 320px), 1fr)); gap: 24px">\n%s</div>\n'
+            % ''.join(amarcord_card(a, i) for i, a in enumerate(AMARCORD)))
 
 
 def filmo_row(t, role, prod, href, cls, cols, fs, pad):
     title = '<span style="font-family: \'Cormorant Garamond\', serif; font-style: italic; font-size: %dpx">%s</span>' % (fs, e(t))
-    ext = VIMEO_FILMO.get(t.lower()) if not href else None
-    if ext:
-        title = '<a href="%s" target="_blank" rel="noopener" style="font-family: \'Cormorant Garamond\', serif; font-style: italic; font-size: %dpx">%s <span aria-hidden="true" style="color: #B46428">↗</span></a>' % (ext, fs, e(t))
     if href:
         title = '<a href="%s" style="font-family: \'Cormorant Garamond\', serif; font-style: italic; font-size: %dpx">%s <span aria-hidden="true" style="color: #B46428">→</span></a>' % (href, fs, e(t))
     return ('<div class="%s" style="display: grid; grid-template-columns: %s; gap: 16px; padding: %s 0; border-bottom: 1px solid #1F1F1F; align-items: baseline">\n'
@@ -352,6 +466,10 @@ for w in WORKS:
     if w.get('page', True):
         page(w)
         print('ok', w['slug'] + '.html')
+for a in AMARCORD:
+    amarcord_page(a)
+    print('ok', a['slug'] + '.html')
+put('dynamis.html', 'dynamis:credits', credits(DYNAMIS, 'Troupe'))
 put('lavori.html', 'lavori:tabs', ''.join(tab(c, l) for c, l in CAT_LABELS if c == 'Tutti' or any(c in w['cats'] for w in WORKS)))
 put('lavori.html', 'lavori:griglia', ''.join(card(w, i) for i, w in enumerate(WORKS)))
 put('lavori.html', 'lavori:amarcord', amarcord_section())
