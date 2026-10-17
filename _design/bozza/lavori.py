@@ -120,9 +120,9 @@ TIZIANA, NOEMI, DESIREE, DOMENICO, ANGLANI, MARENGO = 'Tiziana Lattuca', 'Noemi 
 SONIA, CARBONARA, VENDOLA, DAVIDE, VITTORIA, CIPRI = 'Sonia Sorressa', 'Antonio Carbonara', 'Antonio Vendola', 'Davide De Pinto', 'Vittoria Binetti', 'Alessandro Cipri'
 CARDONE, ANGELICA, MATTEO, LUCA, MICHELE, MAURO = 'Alessandro N. Cardone', 'Angelica Vinci', 'Matteo Gattulli', 'Luca Sportelli', 'Michele Mika Juri Liturri', 'Mauro Zeverino'
 ANDREA, MARIANNA, ROBERTA, MARTIN = 'Andrea La Tanza', 'Marianna Nettis', 'Roberta Giovanetti', 'Martin Barletta'
-PIETRO, FLANOTTE, VERA, FEDERICA, DONATELLA, VANESSA = 'Pietro Di Gioia', 'Francesco La Notte', 'Vera Balice', 'Federica Dalena', 'Donatella Santorsa', 'Vanessa Ciccolella'
+PIETRO, FLANOTTE, VERA, FEDERICA, DONATELLA, VANESSA = 'Pietro Di Gioia', 'Francesco Lanotte', 'Vera Balice', 'Federica Dalena', 'Donatella Santorsa', 'Vanessa Ciccolella'
 MAYA, ALLEGRETTI, TIGRANO, EMMA, LORENZO = 'Maya Nacci', 'Francesco Allegretti', 'Francesco Tigrano', 'Emma Perini', 'Lorenzo Vitucci'
-SIMONA, ANITA, VITA, AMELIA, LEONARDA, NUZZI, SABRINA = 'Simona Lopez', 'Anita Donno', 'Vita Barberio', 'Amelia Potenza', 'Leonarda Cesonate', 'Mariangela Nuzzi', 'Sabrina Colamoera'
+SIMONA, ANITA, VITA, AMELIA, LEONARDA, NUZZI, SABRINA = 'Simona Lopez', 'Anita Donno', 'Vita Barberio', 'Amelia Potenza', 'Leonarda Cesonate', 'Mariangela Nuzzi', 'Sabrina Colamorea'
 PROD = TIZIANA + ' per AMARCORD'
 
 # Credits di Dynamis (la pagina è fatta a mano, ma il blocco Credits si genera da qui per avere gli "Anche in…")
@@ -136,15 +136,15 @@ DYNAMIS = dict(slug='dynamis', t='Dynamis',
 # Corti di AMARCORD (Accademia Mediterranea del Cinema), 2026: tutti cortometraggi, ognuno con la sua pagina e il link a Vimeo.
 # Niente sinossi (no spoiler): solo una riga di atmosfera. Cast: (personaggio o '', nome). Troupe: (ruolo, [nomi]).
 AMARCORD = [
-    dict(slug='paranoia', t='Paranoia', gen='Dramma psicologico', ruolo='Operatore', min=7, vimeo='1220653465/634fa7dd97',
+    dict(slug='paranoia', img='img/amarcord/paranoia.jpg', t='Paranoia', gen='Dramma psicologico', ruolo='Operatore', min=7, vimeo='1220653465/634fa7dd97',
          line='Un campus, un sospetto, una voce che non smette di suggerire.',
          cast=[('Luna', DONATELLA), ('Mirta', FEDERICA), ('Francesca', MAYA), ('Stefano', ALLEGRETTI), ('Alessandro', LORENZO)],
          crew=[('Regia', [MAURO]), ('Produzione', [PROD]), ('Soggetto', [MIRIANA]), ('Sceneggiatura', [DESIREE]),
                ('Direzione della fotografia', [VENDOLA]), ('Operatori', [DAVIDE, KI]), ('Assistenti operatore', [GIADA, VITTORIA]),
-               ('Montaggio', [ANGELICA]), ('Aiuto regia', [LUCA]), ('Scenografia', [MICHELE]), ('Fonico', ['Antonio A.']),
+               ('Montaggio', [ANGELICA]), ('Aiuto regia', [LUCA]), ('Scenografia', [MICHELE]), ('Fonico', [CARBONARA]),
                ('Segretaria di edizione', [MARIANNA]), ('Ciak', [SONIA]), ('Backstage', [ANDREA]),
                ('Capo reparto trucco', ['Simona Zagaria']), ('Trucco', [VITA, 'Annachiara De Palo'])]),
-    dict(slug='sbaglio-dunque-esisto', t='Sbaglio dunque esisto', gen='Dramma psicologico', ruolo='Operatore e fonico', min=6, vimeo='1220653421/520923c76a',
+    dict(slug='sbaglio-dunque-esisto', img='img/amarcord/sbaglio-dunque-esisto.jpg', t='Sbaglio dunque esisto', gen='Dramma psicologico', ruolo='Operatore e fonico', min=6, vimeo='1220653421/520923c76a',
          line='Una terapia sperimentale, una stanza chiusa e un viaggio dentro i ricordi.',
          cast=[('Selene', VANESSA), ('Infermiera', EMMA), ('Dottore', PIETRO), ('Infermiere', TIGRANO), ('Mamma', FEDERICA), ('Papà', LORENZO)],
          crew=[('Regia', [MARIANNA]), ('Produzione', [PROD]), ('Soggetto', [MARY]), ('Sceneggiatura', [MIRIANA]),
@@ -152,7 +152,7 @@ AMARCORD = [
                ('Fonico', [KI]), ('Montaggio', [CARDONE]), ('Aiuto regia', [ANDREA]), ('Scenografia', [MAURO]),
                ('Segretaria di edizione', [MARTIN]), ('Ciak', [VITTORIA]), ('Backstage', [MATTEO]),
                ('Capo reparto trucco', [SABRINA]), ('Trucco', [LEONARDA, SIMONA])]),
-    dict(slug='parfum', t='Parfum', gen='Commedia romantica', ruolo='Assistente operatore', min=6, vimeo='1220653459/be50961eb1',
+    dict(slug='parfum', img='img/amarcord/parfum.jpg', t='Parfum', gen='Commedia romantica', ruolo='Assistente operatore', min=6, vimeo='1220653459/be50961eb1',
          line='Un primo appuntamento tra gli scaffali di una libreria, una paura da nascondere e troppi campioncini di profumo.',
          cast=[('Rita', DONATELLA), ('Luca', ALLEGRETTI), ('Paola', VERA), ('Gilberto', TIGRANO), ('Laura', EMMA)],
          crew=[('Regia', [MICHELE]), ('Produzione', [PROD]), ('Soggetto', [NOEMI]), ('Sceneggiatura', [MARENGO]), ('Editor', [DESIREE]),
@@ -160,7 +160,7 @@ AMARCORD = [
                ('Montaggio', [DAVIDE]), ('Aiuto regia', [MATTEO]), ('Scenografia', [ANDREA]), ('Fonico', [CIPRI]),
                ('Segretaria di edizione', [ROBERTA]), ('Ciak', [CARBONARA]), ('Backstage', [MARTIN]),
                ('Capo reparto trucco', [NUZZI]), ('Trucco', [ANITA, VITA])]),
-    dict(slug='la-sedia', t='La sedia', gen='Dramma psicologico', ruolo='Assistente operatore', min=6, vimeo='1205077119/8e1ac4d587',
+    dict(slug='la-sedia', img='img/amarcord/la-sedia.jpg', t='La sedia', gen='Dramma psicologico', ruolo='Assistente operatore', min=6, vimeo='1205077119/8e1ac4d587',
          line='Una ragazza che non regge il contatto, una sedia davanti a lei e tutto quello che non ha mai detto.',
          cast=[('', DONATELLA), ('', VERA), ('', FLANOTTE), ('', ALLEGRETTI)],
          crew=[('Regia', [MARTIN]), ('Produzione', [PROD]), ('Soggetto', [NOEMI]), ('Sceneggiatura', [DOMENICO]),
@@ -168,7 +168,7 @@ AMARCORD = [
                ('Montaggio', [CARDONE]), ('Aiuto regia', [ROBERTA]), ('Scenografia', [ANDREA]), ('Fonico', [VENDOLA]),
                ('Segretaria di edizione', [MATTEO]), ('Ciak', [CIPRI]), ('Backstage', [MAURO]),
                ('Capo reparto trucco', ['Gloria Lombardo']), ('Trucco', [ANITA, 'Alessandra Maiellaro'])]),
-    dict(slug='la-seduta', t='La seduta', gen='', ruolo='Operatore', min=8, vimeo='1198757832/ba4f3c4cf7',
+    dict(slug='la-seduta', img='img/amarcord/la-seduta.jpg', t='La seduta', gen='', ruolo='Operatore', min=8, vimeo='1198757832/ba4f3c4cf7',
          line='Un cortometraggio di AMARCORD girato nel 2026.',
          cast=[('', DONATELLA), ('', VANESSA), ('', FEDERICA), ('', MAYA), ('', ALLEGRETTI)],
          crew=[('Regia', [ROBERTA, MARTIN]), ('Produzione', [PROD]), ('Soggetto', [LIBERO]), ('Sceneggiatura', [ANGLANI, MARENGO]),
@@ -176,7 +176,7 @@ AMARCORD = [
                ('Montaggio', [CARDONE]), ('Aiuto regia', [MAURO]), ('Scenografia', [MICHELE]), ('Fonico', [CIPRI]),
                ('Segretaria di edizione', [ANDREA]), ('Ciak', [CARBONARA]), ('Backstage', [MARIANNA]),
                ('Capo reparto trucco', [LEONARDA]), ('Trucco', [NUZZI, AMELIA])]),
-    dict(slug='l-inventario', t="L'inventario", gen='', ruolo='Co-direttore della fotografia', min=5, vimeo='1205074164/052af8153b',
+    dict(slug='l-inventario', img='img/amarcord/l-inventario.jpg', t="L'inventario", gen='', ruolo='Co-direttore della fotografia', min=5, vimeo='1205074164/052af8153b',
          line='Un cortometraggio di AMARCORD girato nel 2026.',
          cast=[('', TIGRANO), ('', VERA), ('', EMMA), ('', PIETRO), ('', VANESSA)],
          crew=[('Regia', [LUCA, MATTEO]), ('Produzione', [PROD]), ('Soggetto', [ANGLANI]), ('Sceneggiatura', [DOMENICO, DESIREE]),
@@ -184,7 +184,7 @@ AMARCORD = [
                ('Montaggio', [CARDONE, DAVIDE]), ('Aiuto regia', [MARTIN]), ('Scenografia', [ROBERTA]), ('Fonico', [DAVIDE]),
                ('Segretaria di edizione', [ROBERTA]), ('Ciak', [VITTORIA]), ('Backstage', [MICHELE]),
                ('Capo reparto trucco', ['Maria Rosa Laera']), ('Trucco', ['Betty Corradini', SABRINA])]),
-    dict(slug='il-tanga-e-la-cravatta', t='Il tanga e la cravatta', gen='', ruolo='Fonico', min=5, vimeo='1205098451/48cd24e2f4',
+    dict(slug='il-tanga-e-la-cravatta', img='img/amarcord/il-tanga-e-la-cravatta.jpg', t='Il tanga e la cravatta', gen='', ruolo='Fonico', min=5, vimeo='1205098451/48cd24e2f4',
          line='Un cortometraggio di AMARCORD girato nel 2026.',
          cast=[('Gerardo', PIETRO), ('Giacinto', FLANOTTE), ('Adelina', VERA), ('Ginevra', FEDERICA)],
          crew=[('Regia', [ANDREA, MARIANNA]), ('Produzione', [PROD]), ('Soggetto', [MARY]), ('Sceneggiatura', [MIRIANA, LIBERO]),
@@ -223,17 +223,21 @@ for _w in [DYNAMIS] + [w for w in WORKS if w.get('page', True)] + AMARCORD:
 ALSO_A = 'font-size: 12px; letter-spacing: 0.04em; color: #9A948C'
 
 
+GIA_VISTI = set()  # una persona ha il suo "anche in" solo la prima volta che compare nella pagina
+
+
 def anche(nome, slug, right=False):
+    """Riga discreta sotto il nome: «anche in Paranoia · La sedia +3». Al massimo due titoli, gli altri nel +N (tooltip)."""
     altri = [x for x in INDICE.get(nome, []) if x[0] != slug]
-    if not altri:
+    if not altri or nome in GIA_VISTI:
         return ''
-    link = lambda x: '<a href="%s" class="also" style="color: #C9C4BD">%s</a>' % (x[0], e(x[1]))
-    if len(altri) == 1:
-        testo = 'Anche in %s, %s' % (link(altri[0]), e(altri[0][2]))
-    else:
-        testo = 'Anche in ' + ', '.join(link(x) for x in altri[:-1]) + ' e ' + link(altri[-1])
-    return ('<span style="%s; display: inline-flex; align-items: baseline; gap: 8px%s"><span aria-hidden="true" style="width: 6px; height: 6px; border-radius: 50%%; background: %s; flex: none; transform: translateY(-1px)"></span><span>%s</span></span>'
-            % (ALSO_A, '; justify-content: flex-end; text-align: right' if right else '', ACC, testo))
+    GIA_VISTI.add(nome)
+    link = lambda x: '<a href="%s" class="also" style="color: #9A948C; border-bottom: 1px solid #2A2A2A">%s</a>' % (x[0], e(x[1]))
+    testo = ' · '.join(link(x) for x in altri[:2])
+    if len(altri) > 2:
+        resto = altri[2:]
+        testo += ' <span title="%s" style="color: #6E6A64">+%d</span>' % (e(', '.join(x[1] for x in resto)), len(resto))
+    return '<span style="font-size: 12px; line-height: 1.5; color: #6E6A64%s">anche in %s</span>' % ('; text-align: right' if right else '', testo)
 
 
 HEAD = open(os.path.join(OUT, 'dynamis.html'), encoding='utf-8').read()
@@ -295,6 +299,7 @@ w_slug = lambda s: s
 
 
 def credits(w, crewlabel):
+    GIA_VISTI.clear()
     cast = ''
     if w.get('cast'):
         cast = ('<div>\n<span style="display: block; %s; padding-bottom: 12px">Cast</span>\n%s</div>\n'
@@ -432,25 +437,28 @@ def amarcord_page(a):
 
 
 def amarcord_card(a, i):
-    kick = ' · '.join(x for x in ['Cortometraggio', a.get('gen'), '%d min' % a['min']] if x)
+    """Come le schede dei lavori: fotogramma 2.39:1, titolo, regia e il ruolo di Karim."""
+    kick = ' · '.join(x for x in [a.get('gen') or 'Cortometraggio', '%d min' % a['min']] if x)
     regia = ' e '.join(dict(a['crew'])['Regia'])
-    return '''<a href="%s" class="work reveal" style="position: relative; display: flex; flex-direction: column; justify-content: space-between; gap: 28px; padding: 28px; border: 1px solid #1F1F1F; min-height: 240px; box-sizing: border-box">
+    return '''<a href="%s" class="work reveal" style="display: flex; flex-direction: column; gap: 16px">
+<div class="frame" style="position: relative; aspect-ratio: 2.39 / 1; background: #161616; overflow: hidden">
+<img src="%s" alt="" loading="lazy" style="position: absolute; inset: 0; width: 100%%; height: 100%%; object-fit: cover">
 <span aria-hidden="true" class="br br-tl" style="position: absolute; top: 12px; left: 12px; width: 16px; height: 16px; border-top: 1px solid #336699; border-left: 1px solid #336699"></span>
 <span aria-hidden="true" class="br br-br" style="position: absolute; bottom: 12px; right: 12px; width: 16px; height: 16px; border-bottom: 1px solid #336699; border-right: 1px solid #336699"></span>
-<div style="display: flex; flex-direction: column; gap: 14px">
-<span style="font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: #9A948C">%s</span>
-<h3 style="margin: 0; font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 400; font-size: 36px; line-height: 1.05">%s <span aria-hidden="true" class="arr" style="color: #B46428">→</span></h3>
-<span style="font-size: 13px; color: #9A948C">Regia di %s</span>
 </div>
-<div style="display: flex; justify-content: space-between; align-items: baseline; gap: 16px; border-top: 1px solid #1F1F1F; padding-top: 14px; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase">
-<span style="color: %s">%s</span><span style="white-space: nowrap; color: #9A948C">Credits</span>
+<div style="display: flex; justify-content: space-between; align-items: baseline; gap: 16px">
+<h3 style="margin: 0; font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 400; font-size: 28px; line-height: 1.15">%s <span aria-hidden="true" class="arr" style="color: #B46428">→</span></h3>
+<span style="font-size: 13px; color: #9A948C; white-space: nowrap">%s</span>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 4px 20px; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: #9A948C">
+<span style="color: %s">%s</span><span>Regia di %s</span>
 </div>
 </a>
-''' % (a['slug'], e(kick), e(a['t']), e(regia), ACC, e(a['ruolo']))
+''' % (a['slug'], a['img'], e(a['t']), e(kick), ACC, e(a['ruolo']), e(regia))
 
 
 def amarcord_section():
-    return ('<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%%, 320px), 1fr)); gap: 24px">\n%s</div>\n'
+    return ('<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%%, 360px), 1fr)); gap: 56px 32px">\n%s</div>\n'
             % ''.join(amarcord_card(a, i) for i, a in enumerate(AMARCORD)))
 
 
