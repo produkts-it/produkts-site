@@ -244,6 +244,7 @@ html.g-fuori .g-protect{filter:blur(32px) brightness(.55)}
 @media print{.g-protect,.g-griglia,.lbx{display:none!important}}
 /* Foto aperta: logo e orologio restano visibili sopra lo sfondo sfocato, ma non bloccano i tocchi */
 html.g-lbx header{pointer-events:none}
+html.g-lbx header.pk-sticky.pk-hide{transform:none}
 html.g-lbx header.pk-sticky.pk-solid{background:transparent;-webkit-backdrop-filter:none;backdrop-filter:none}
 .g-notch .g-pos:empty{display:none}
 @media (max-width:480px){.g-notch{padding-left:14px!important}.g-notch .g-dl{padding:0 12px!important}}
