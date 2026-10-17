@@ -341,7 +341,11 @@ var show=n==='reload'||(n!=='back_forward'&&!same);if(show&&!matchMedia('(prefer
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 20px">
 <div style="display: flex; flex-direction: column; gap: 8px">
 <label for="rv-nome" style="font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: #9A948C">Nome</label>
-<input id="rv-nome" class="field" type="text" autocomplete="name" style="height: 52px; background: #080808; border: 1px solid #3A3A3A; color: #E8E4DF; padding: 0 16px; font-family: 'Space Grotesk', sans-serif; font-size: 15px; box-sizing: border-box">
+<input id="rv-nome" class="field" type="text" autocomplete="given-name" style="height: 52px; background: #080808; border: 1px solid #3A3A3A; color: #E8E4DF; padding: 0 16px; font-family: 'Space Grotesk', sans-serif; font-size: 15px; box-sizing: border-box">
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px">
+<label for="rv-cognome" style="font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: #9A948C">Cognome</label>
+<input id="rv-cognome" class="field" type="text" autocomplete="family-name" style="height: 52px; background: #080808; border: 1px solid #3A3A3A; color: #E8E4DF; padding: 0 16px; font-family: 'Space Grotesk', sans-serif; font-size: 15px; box-sizing: border-box">
 </div>
 <div style="display: flex; flex-direction: column; gap: 8px">
 <label for="rv-tipo" style="font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: #9A948C">Servizio</label>
@@ -433,11 +437,11 @@ function errore(m){err.textContent=m;err.hidden=!m}
 PK.acts.send=function(){
   if(btn.getAttribute('aria-busy')==='true')return;
   var servizio=d.getElementById('rv-tipo').value;
-  if(!v('rv-nome')||!v('rv-testo'))return errore('Scrivi il tuo nome e la tua esperienza.');
+  if(!v('rv-nome')||!v('rv-cognome')||!v('rv-testo'))return errore('Scrivi nome, cognome e la tua esperienza.');
   if(servizio==='Altro'&&!v('rv-altro'))return errore('Scrivi quale servizio.');
   if(!d.getElementById('rv-ok').checked)return errore('Serve il consenso alla pubblicazione.');
   errore('');btn.setAttribute('aria-busy','true');
-  PK.invia('/api/recensioni',{nome:v('rv-nome'),servizio:servizio,altro:v('rv-altro'),voto:voto,testo:v('rv-testo'),consenso:true,
+  PK.invia('/api/recensioni',{nome:v('rv-nome'),cognome:v('rv-cognome'),servizio:servizio,altro:v('rv-altro'),voto:voto,testo:v('rv-testo'),consenso:true,
     sito:form.querySelector('.pk-hp').value,turnstile:token()}).then(function(r){
     btn.removeAttribute('aria-busy');
     if(r.ok){form.reset();PK.vt(function(){show('notSent',false);show('sent',true)})}else{errore(r.errore);PK.turnstileReset(ts)}

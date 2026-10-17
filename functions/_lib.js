@@ -33,7 +33,23 @@ export async function corpo(request) {
   try { return JSON.parse(raw); } catch { return null; }
 }
 
-/** "Mario Rossi" -> "Mario R." (le recensioni mostrano nome e iniziale del cognome). */
+/** Nome e cognome arrivano separati dai moduli (dal 18/10/2026): colonna cognome aggiunta a contatti e recensioni. */
+let cognomePronto = false;
+export async function colonnaCognome(env) {
+  if (cognomePronto) return;
+  for (const t of ['contatti', 'recensioni']) {
+    try { await env.DB.prepare(`ALTER TABLE ${t} ADD COLUMN cognome TEXT NOT NULL DEFAULT ''`).run(); } catch (e) { /* esiste già */ }
+  }
+  cognomePronto = true;
+}
+
+/** Sul sito: nome intero e iniziale del cognome ("Carmela Carrassa" -> "Carmela C."). */
+export function nomeCognomePubblico(nome, cognome) {
+  const c = String(cognome || '').trim();
+  return c ? String(nome).trim() + ' ' + c[0].toUpperCase() + '.' : nomePubblico(nome);
+}
+
+/** Recensioni vecchie, con nome e cognome insieme: "Mario Rossi" -> "Mario R.". */
 export function nomePubblico(nome) {
   const parti = nome.trim().split(/\s+/);
   if (parti.length < 2) return parti[0] || '';

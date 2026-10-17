@@ -231,7 +231,7 @@ async function apriEd(id,codice){
 }
 function rec(r){
   return '<div class="item'+(r.stato==='attesa'?' nuovo':'')+'"><div class="meta"><b>'+e(r.stato)+'</b><span>'+e(data(r.creato))+'</span><span>'+'★'.repeat(r.voto)+'</span><span>'+e(r.servizio)+'</span></div>'
-   +'<div style="font-size:18px">'+e(r.nome)+'</div><div class="testo">'+e(r.testo)+'</div>'
+   +'<div style="font-size:18px">'+e((r.nome+' '+(r.cognome||'')).trim())+'</div><div class="testo">'+e(r.testo)+'</div>'
    +'<div class="az"><button type="button" data-rec="'+r.id+'" data-stato="approvata"'+(r.stato==='approvata'?' class="on"':'')+'>Approva</button>'
    +'<button type="button" data-rec="'+r.id+'" data-stato="rifiutata"'+(r.stato==='rifiutata'?' class="on"':'')+'>Rifiuta</button>'
    +'<button type="button" data-rec="'+r.id+'" data-evid="'+(r.in_evidenza?0:1)+'"'+(r.in_evidenza?' class="on"':'')+'>In evidenza</button></div></div>';
@@ -243,7 +243,7 @@ function con(c){
   var waBtn=tel?'<a class="wa" href="https://wa.me/'+e(wa(c.recapito))+'" target="_blank" rel="noopener">Scrivi su WhatsApp</a>':'';
   return '<div class="item'+(c.letto?'':' nuovo')+'"><div class="meta"><b>'+(c.letto?'letto':'nuovo')+'</b><span>'+e(data(c.creato))+'</span>'
    +(c.tipo?'<span>'+e(c.tipo)+'</span>':'')+(c.budget?'<span>'+e(c.budget)+'</span>':'')+(c.quando?'<span>'+e(c.quando)+'</span>':'')+(c.dove?'<span>'+e(c.dove)+'</span>':'')+'</div>'
-   +'<div style="font-size:18px">'+e(c.nome)+' · '+rec+'</div><div class="testo">'+e(c.messaggio)+'</div>'
+   +'<div style="font-size:18px">'+e((c.nome+' '+(c.cognome||'')).trim())+' · '+rec+'</div><div class="testo">'+e(c.messaggio)+'</div>'
    +'<div class="az">'+waBtn+'<button type="button" data-con="'+c.id+'" data-letto="'+(c.letto?0:1)+'">'+(c.letto?'Segna come nuovo':'Segna come letto')+'</button></div></div>';
 }
 document.addEventListener('click',async function(ev){

@@ -109,7 +109,11 @@ var show=n==='reload'||(n!=='back_forward'&&!same);if(show&&!matchMedia('(prefer
 <div class="st" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 20px; animation-delay: 2s">
 <div style="display: flex; flex-direction: column; gap: 8px">
 <label for="c-nome" style="font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: #9A948C">Nome</label>
-<input id="c-nome" class="field" type="text" autocomplete="name" style="height: 52px; background: #080808; border: 1px solid #3A3A3A; color: #E8E4DF; padding: 0 16px; font-family: 'Space Grotesk', sans-serif; font-size: 15px; box-sizing: border-box">
+<input id="c-nome" class="field" type="text" autocomplete="given-name" style="height: 52px; background: #080808; border: 1px solid #3A3A3A; color: #E8E4DF; padding: 0 16px; font-family: 'Space Grotesk', sans-serif; font-size: 15px; box-sizing: border-box">
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px">
+<label for="c-cognome" style="font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: #9A948C">Cognome</label>
+<input id="c-cognome" class="field" type="text" autocomplete="family-name" style="height: 52px; background: #080808; border: 1px solid #3A3A3A; color: #E8E4DF; padding: 0 16px; font-family: 'Space Grotesk', sans-serif; font-size: 15px; box-sizing: border-box">
 </div>
 <div style="display: flex; flex-direction: column; gap: 8px">
 <label for="c-tel" style="font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: #9A948C">Telefono (WhatsApp)</label>
@@ -160,11 +164,11 @@ PK.acts.chip=function(arg,el){var g=arg.split('|')[0],was=el.getAttribute('aria-
 /* Invio a /api/contatti: la richiesta finisce nel pannello /admin */
 PK.acts.send=function(){
   if(btn.getAttribute('aria-busy')==='true')return;
-  if(!v('c-nome')||!v('c-tel')||!v('c-msg'))return errore('Scrivi nome, numero di telefono e la tua idea.');
+  if(!v('c-nome')||!v('c-cognome')||!v('c-tel')||!v('c-msg'))return errore('Scrivi nome, cognome, numero di telefono e la tua idea.');
   if(v('c-tel').replace(/\D/g,'').length<8)return errore('Controlla il numero di telefono: ti ricontatto su WhatsApp.');
   if(!d.getElementById('c-ok').checked)return errore("Spunta la casella dell'informativa privacy.");
   errore('');btn.setAttribute('aria-busy','true');
-  PK.invia('/api/contatti',{tipo:scelta('type'),budget:scelta('budget'),quando:d.getElementById('c-data').dataset.iso||'',dove:v('c-luogo'),nome:v('c-nome'),recapito:v('c-tel'),
+  PK.invia('/api/contatti',{tipo:scelta('type'),budget:scelta('budget'),quando:d.getElementById('c-data').dataset.iso||'',dove:v('c-luogo'),nome:v('c-nome'),cognome:v('c-cognome'),recapito:v('c-tel'),
     messaggio:v('c-msg'),privacy:true,sito:form.querySelector('.pk-hp').value,turnstile:token()}).then(function(r){
     btn.removeAttribute('aria-busy');
     if(r.ok){form.reset();if(PK.calendario.azzera)PK.calendario.azzera();PK.vt(function(){show('notSent',false);show('sent',true)})}else{errore(r.errore);PK.turnstileReset(ts)}
