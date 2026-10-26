@@ -43,6 +43,14 @@ Sito di Karim Ismail (produkts.it), fotografo, videomaker e D.O.P. ad Altamura (
   - Screenshot: nessun blocco né avviso (deciso con Karim: sul web non si possono bloccare davvero).
 - Fotografia resta spenta.
 
+## Come lavorare con Karim (passaggio di PC, 26/10/2026)
+- Parla sempre in italiano, semplice. Spesso scrive dal telefono (Remote Control): niente comandi da fargli eseguire, li fai tu.
+- **Pagine web: aprile nel suo Chrome** con l'estensione Claude in Chrome, non nel browser interno dell'app (lì è già collegato a GitHub, Cloudflare, Search Console, Telegram, Aruba Drive). Quando deve copiare un valore da un sito a un altro, apri due schede (da dove copiare e dove incollare). Password, token e chiavi li inserisce lui, mai tu.
+- Le modifiche al sito si pubblicano con push su `main` (online in 1-2 minuti) e si controllano dopo sul sito vero. Per le cose grosse prima un ramo con anteprima.
+- Strumenti sul PC: app Claude, Git, Python 3.12 (`python -X utf8 _design/bozza/lavori.py`, `python _design/bozza/build.py`, anteprima `python _design/serve.py 8081`), pacchetti Python `pillow` e `imageio-ffmpeg` (ritagli di foto, compressione video, fotogrammi). GitHub: account produkts-it (al primo push si apre il login nel browser).
+- Google Search Console (account produkts.studio, in Chrome è il secondo account, `/u/1/`): il 22/10/2026 chiesta l'indicizzazione di Home, Dynamis, Chi sono, Contatti, Recensioni (Home e Lavori già indicizzate). Da ricontrollare a inizio novembre.
+- In sospeso: still o link per "Tra i piedi", "Spaghetti all'assassina", "Cuori in stand-by"; nuova brand identity in arrivo.
+
 ## Immagini
 - Brand: `brand/*.svg` (logo verticale/orizzontale, monogrammi PRK, simbolo). La scritta del logo è #231f20: sul fondo scuro va resa in chiaro.
 - Nei mockup le immagini puntano a `/_blob/<id>`. Corrispondenze:
