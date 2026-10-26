@@ -31,176 +31,19 @@ def yt_thumb(vid, size='maxresdefault'):
     return 'https://i.ytimg.com/vi/%s/%s.jpg' % (vid, size)
 
 
-# Dal più recente. 'cats' decide i filtri di Lavori; 'page': False = pagina fatta a mano.
-WORKS = [
-    dict(slug='dynamis', page=False, t='Dynamis', year='2026', img='dynamis.jpg', pos='50% 35%',
-         cats=['Cortometraggio', 'Opera personale'], role_short='Produttore e D.O.P. · VerticalMovie 2026',
-         home_kind='Corto verticale · VerticalMovie 2026', home_role='Produzione e fotografia'),
-    dict(slug='schizophrenia', t='Schizophrenia', sub='Io e Nessun Altro', year='2025', date='10 maggio 2025',
-         yt='yAJK1VXfAm0', img=yt_thumb('yAJK1VXfAm0'), cats=['Cortometraggio', 'Opera personale'],
-         kicker='Cortometraggio · opera personale · 2025',
-         line='Un cortometraggio introspettivo sul silenzio, sul tempo e sul confine sottile tra dentro e fuori. Una notte sospesa, tra realtà e percezione.',
-         role='Regia, produzione, sceneggiatura, fotografia, montaggio e sound design',
-         role_short='Regia, fotografia e montaggio',
-         meta=[('Produzione', 'produkts.it'), ('Interprete', 'Gianni Lorusso'), ('Uscita', '10 maggio 2025 · YouTube')],
-         cast=[('Unico interprete', 'Gianni Lorusso', ('dynamis', 'Anche in Dynamis, nel ruolo di Mattia'))],
-         crew=[('Regia', KI), ('Produzione', KI), ('Sceneggiatura', KI + ', Donatella Loviglio'),
-               ('Direzione della fotografia', KI), ('Operatore', KI), ('Montaggio', KI), ('Sound design', KI),
-               ('Fonico di doppiaggio', KI), ('Costumi', 'Gianni Lorusso, Donatella Loviglio'), ('Assistente', 'Gianni Lorusso'),
-               ('Colonna sonora', '“Schizophrenia” – XXXTENTACION'),
-               ('Effetti sonori', 'Pixabay: freesound_community, LIECIO, BRVHRTZ, ABD3LHADI, sachintempini, baranova_n, FreeSoundsxx')]),
-    dict(slug='romance-anonimo', t='Romance Anónimo', sub='Bartek Dabrowski', year='2025', date='25 aprile 2025',
-         yt='z0G1CfqjHxI', img='img/lavori/romance-anonimo.jpg', cats=['Videoclip'],
-         kicker='Videoclip musicale · 2025',
-         line='Videoclip per Bartek Dabrowski su «Romance Anónimo», classico senza tempo della chitarra spagnola.',
-         role='Direzione della fotografia, riprese, montaggio, color e VFX', role_short='D.O.P., montaggio e color',
-         meta=[('Artista', 'Bartek Dabrowski'), ('Uscita', '25 aprile 2025 · YouTube')],
-         crew=[('Artista', 'Bartek Dabrowski'), ('Direzione della fotografia', KI), ('Riprese', KI), ('Montaggio', KI),
-               ('Color', KI), ('VFX', KI)]),
-    dict(slug='coseco', t='Coseco Industrie', sub='50 anni', year='2024', date='18 dicembre 2024',
-         yt='mpesKIpv9N8', img='img/lavori/coseco.jpg', cats=['Video aziendale'],
-         kicker='Video aziendale · 2024',
-         line='Video corporate per i 50 anni di Coseco Industrie, proiettato al cinema durante la celebrazione. Produzione kontents.eu.',
-         role='Riprese, montaggio, post-produzione, color, VFX e audio', role_short='Riprese e post-produzione',
-         meta=[('Produzione', 'kontents.eu'), ('Cliente', 'Coseco Industrie'), ('Uscita', '18 dicembre 2024 · YouTube')],
-         crew=[('Produzione', 'kontents.eu'), ('Riprese', 'Gianni Ragone, ' + KI), ('Montaggio', 'Gianni Ragone, ' + KI),
-               ('Post-produzione', KI), ('Color', KI), ('VFX', KI), ('Effetti sonori', KI), ('Audio design', KI),
-               ('Fonico di presa diretta', KI)]),
-    dict(slug='wake-up', t='Wake Up', sub='Bartek Dabrowski · Orchestra', year='2024', date='29 marzo 2024',
-         yt='MZFk-CNkgGY', img='img/lavori/wake-up.jpg', cats=['Videoclip'],
-         kicker='Videoclip musicale · 2024',
-         line='Videoclip per la versione orchestrale di «Wake Up» di Bartek Dabrowski: un invito ad ascoltare la propria voce interiore.',
-         role='Direzione della fotografia, riprese, montaggio, color e VFX', role_short='D.O.P., montaggio e color',
-         meta=[('Artista', 'Bartek Dabrowski'), ('Uscita', '29 marzo 2024 · YouTube')],
-         crew=[('Artista', 'Bartek Dabrowski'), ('Direzione della fotografia', KI), ('Riprese', KI), ('Montaggio', KI),
-               ('Color', KI), ('VFX', KI)]),
-    dict(slug='korvo', t='Hai perso soltanto', year='2023', date='giugno 2023',
-         vimeo='888211568', img='img/lavori/korvo.jpg', cats=['Videoclip'],
-         kicker='Videoclip musicale · 2023',
-         line="Videoclip di «Hai perso soltanto» per Korvo, curato dall'idea alla consegna: regia, riprese, montaggio e color.",
-         role='Regia, direzione della fotografia, riprese, montaggio e color', role_short='Regia, D.O.P., montaggio e color',
-         meta=[('Artista', 'Korvo'), ('Uscita', 'Giugno 2023 · Vimeo')],
-         crew=[('Artista e musica', 'Korvo'), ('Regia', KI), ('Direzione della fotografia', KI), ('Riprese', KI),
-               ('Montaggio', KI), ('Color', KI)]),
-    dict(slug='troppo-bella-per-loro', t='Troppo bella per loro', sub='Docufilm in dialetto altamurano', year='2022', date='marzo 2022',
-         vimeo='888136670', img='img/lavori/troppo-bella-per-loro.jpg',
-         cats=['Cortometraggio', 'Opera personale'], kicker='Docufilm · opera personale · 2022',
-         line="Un docufilm in dialetto altamurano sul rapporto di amore e odio tra l'uomo e la natura.",
-         role='Regia, riprese e montaggio, con Fabrizio Marinelli', role_short='Regia, riprese e montaggio',
-         meta=[('Produzione', 'produkts.it'), ('Lingua', 'Dialetto altamurano'), ('Uscita', 'Marzo 2022 · Vimeo')],
-         cast=[('Protagonista', 'Paolo Cappiello', None)],
-         crew=[('Video', KI + ', Fabrizio Marinelli'), ('Montaggio', KI + ', Fabrizio Marinelli'), ('Produzione', 'produkts.it')]),
-]
-CAT_LABELS = [('Tutti', 'Tutti'), ('Cortometraggio', 'Cortometraggi'), ('Videoclip', 'Videoclip'),
-              ('Video aziendale', 'Video aziendali'), ('Opera personale', 'Opere personali'), ('AMARCORD', 'AMARCORD')]
-HOME_WORKS = ['dynamis', 'schizophrenia', 'coseco', 'wake-up']
-
-# Filmografia: solo cinema (cortometraggi, lungometraggi, film, docufilm, documentari). Niente videoclip, social, corporate.
-# Titolo, ruolo, produzione, pagina (se c'è)
-FILMOGRAFIA = [
-    ('Dynamis', 'Produttore, D.O.P., montaggio, color, VFX', 'produkts.it', 'dynamis'),
-    ('Tra i Piedi', 'Direttore della fotografia', 'AMARCORD', 'tra-i-piedi'),
-    ("L'Inventario", 'Co-D.O.P.', 'AMARCORD', 'l-inventario'),
-    ('Schizophrenia — Io e Nessun Altro', 'Regia e fotografia', 'produkts.it', 'schizophrenia'),
-    ('Troppo bella per loro', 'Docufilm · regia, riprese e montaggio', 'produkts.it', 'troppo-bella-per-loro'),
-    ('Sbaglio Dunque Esisto', 'Operatore e fonico', 'AMARCORD', 'sbaglio-dunque-esisto'),
-    ('La Seduta', 'Operatore', 'AMARCORD', 'la-seduta'),
-    ('Paranoia', 'Operatore, 2ª camera', 'AMARCORD', 'paranoia'),
-    ('Cuori in Stand-by', 'Assistente operatore, 2ª camera', 'AMARCORD', None),
-    ('Parfum', 'Assistente operatore', 'AMARCORD', 'parfum'),
-    ('La Sedia', 'Assistente operatore', 'AMARCORD', 'la-sedia'),
-    ("Spaghetti all'Assassina", 'Assistente operatore', 'AMARCORD', None),
-    ('Il Tanga e la Cravatta', 'Fonico', 'AMARCORD', 'il-tanga-e-la-cravatta'),
-]
-HOME_FILMO = 10
-
-# Persone ricorrenti: un nome scritto sempre allo stesso modo, così "Anche in…" le riconosce in tutti i lavori.
-GIADA, GIANNI, MIRIANA, MARY, LIBERO = 'Giada Bellanova', 'Gianni Lorusso', 'Miriana Mastronardi', 'Mariachiara Monaco', 'Libero Maria Santomauro'
-TIZIANA, NOEMI, DESIREE, DOMENICO, ANGLANI, MARENGO = 'Tiziana Lattuca', 'Noemi Lorusso', 'Desiree Cataldo', 'Domenico Vesia', 'Francesco Anglani', 'Fabrizio Marengo'
-SONIA, CARBONARA, VENDOLA, DAVIDE, VITTORIA, CIPRI = 'Sonia Sorressa', 'Antonio Carbonara', 'Antonio Vendola', 'Davide De Pinto', 'Vittoria Binetti', 'Alessandro Cipri'
-CARDONE, ANGELICA, MATTEO, LUCA, MICHELE, MAURO = 'Alessandro N. Cardone', 'Angelica Vinci', 'Matteo Gattulli', 'Luca Sportelli', 'Michele Mika Juri Liturri', 'Mauro Zeverino'
-ANDREA, MARIANNA, ROBERTA, MARTIN = 'Andrea La Tanza', 'Marianna Nettis', 'Roberta Giovanetti', 'Martin Barletta'
-PIETRO, FLANOTTE, VERA, FEDERICA, DONATELLA, VANESSA = 'Pietro Di Gioia', 'Francesco Lanotte', 'Vera Balice', 'Federica Dalena', 'Donatella Santorsa', 'Vanessa Ciccolella'
-MAYA, ALLEGRETTI, TIGRANO, EMMA, LORENZO = 'Maya Nacci', 'Francesco Allegretti', 'Francesco Tigrano', 'Emma Perini', 'Lorenzo Vitucci'
-SIMONA, ANITA, VITA, AMELIA, LEONARDA, NUZZI, SABRINA = 'Simona Lopez', 'Anita Donno', 'Vita Barberio', 'Amelia Potenza', 'Leonarda Cesonate', 'Mariangela Nuzzi', 'Sabrina Colamorea'
-LAERA, BETTY, ZAGARIA = 'Maria Rosaria Laera', 'Betty Corradini', 'Simona Zagaria'
-PROD = TIZIANA + ' per AMARCORD'
-
-# Credits di Dynamis (la pagina è fatta a mano, ma il blocco Credits si genera da qui per avere gli "Anche in…")
-DYNAMIS = dict(slug='dynamis', t='Dynamis',
-    cast=[('Mattia', GIANNI), ('Paranoia', FEDERICA), ('Opportunità', EMMA), ('Saverio', PIETRO), ('Cameo', 'Paolo Greco')],
-    crew=[('Regia', [GIADA]), ('Sceneggiatura', [MIRIANA]), ('Produzione', [KI]), ('Direzione della fotografia', [KI]),
-          ('Montaggio', [KI]), ('Color', [KI]), ('VFX e motion graphics', [KI]), ('Musiche', ['Giuseppe Sorressa']),
-          ('Sound design', [SONIA]), ('Scenografia', [MATTEO]), ('Trucco', [NUZZI]), ('Segretaria di edizione', [ROBERTA]),
-          ('Aiuto regia', [LUCA]), ('Grafica', [LUCA])])
-
-# Corti di AMARCORD (Accademia Mediterranea del Cinema), 2026: tutti cortometraggi, ognuno con la sua pagina e il link a Vimeo.
-# Niente sinossi (no spoiler): solo una riga di atmosfera. Cast: (personaggio o '', nome). Troupe: (ruolo, [nomi]).
-AMARCORD = [
-    dict(slug='tra-i-piedi', img='img/amarcord/tra-i-piedi.jpg', t='Tra i piedi', gen='Commedia grottesca', ruolo='Direttore della fotografia', min=6, vimeo='1236005846/a8fe909088',
-         line='Il bagno di un locale, una serata tra amici e un telefono che passa di mano più del dovuto.',
-         cast=[('Marta', DONATELLA), ('Edoardo', ALLEGRETTI), ('Diego', TIGRANO), ('Stefania', MAYA), ('Martina', VERA)],
-         crew=[('Regia', [MATTEO]), ('Produzione', [PROD]), ('Direzione della fotografia', [KI]), ('Operatori', [CARBONARA, VITTORIA]),
-               ('Assistenti operatore', [SONIA, CIPRI]), ('Montaggio', [ANGELICA]), ('Aiuto regia', [MICHELE]), ('Scenografia', [LUCA]),
-               ('Fonico', [DAVIDE]), ('Segretario di edizione', [ANDREA]), ('Ciak', [GIADA]),
-               ('Capo reparto trucco', [LAERA]), ('Trucco', [BETTY, ZAGARIA])]),
-    dict(slug='paranoia', img='img/amarcord/paranoia.jpg', t='Paranoia', gen='Dramma psicologico', ruolo='Operatore', min=7, vimeo='1220653465/634fa7dd97',
-         line='Un campus, un sospetto, una voce che non smette di suggerire.',
-         cast=[('Luna', DONATELLA), ('Mirta', FEDERICA), ('Francesca', MAYA), ('Stefano', ALLEGRETTI), ('Alessandro', LORENZO)],
-         crew=[('Regia', [MAURO]), ('Produzione', [PROD]), ('Soggetto', [MIRIANA]), ('Sceneggiatura', [DESIREE]),
-               ('Direzione della fotografia', [VENDOLA]), ('Operatori', [DAVIDE, KI]), ('Assistenti operatore', [GIADA, VITTORIA]),
-               ('Montaggio', [ANGELICA]), ('Aiuto regia', [LUCA]), ('Scenografia', [MICHELE]), ('Fonico', [CARBONARA]),
-               ('Segretaria di edizione', [MARIANNA]), ('Ciak', [SONIA]), ('Backstage', [ANDREA]),
-               ('Capo reparto trucco', [ZAGARIA]), ('Trucco', [VITA, 'Annachiara De Palo'])]),
-    dict(slug='sbaglio-dunque-esisto', img='img/amarcord/sbaglio-dunque-esisto.jpg', t='Sbaglio dunque esisto', gen='Dramma psicologico', ruolo='Operatore e fonico', min=6, vimeo='1220653421/520923c76a',
-         line='Una terapia sperimentale, una stanza chiusa e un viaggio dentro i ricordi.',
-         cast=[('Selene', VANESSA), ('Infermiera', EMMA), ('Dottore', PIETRO), ('Infermiere', TIGRANO), ('Mamma', FEDERICA), ('Papà', LORENZO)],
-         crew=[('Regia', [MARIANNA]), ('Produzione', [PROD]), ('Soggetto', [MARY]), ('Sceneggiatura', [MIRIANA]),
-               ('Direzione della fotografia', [GIADA]), ('Operatori', [CIPRI, KI]), ('Assistenti operatore', [SONIA, CARBONARA]),
-               ('Fonico', [KI]), ('Montaggio', [CARDONE]), ('Aiuto regia', [ANDREA]), ('Scenografia', [MAURO]),
-               ('Segretaria di edizione', [MARTIN]), ('Ciak', [VITTORIA]), ('Backstage', [MATTEO]),
-               ('Capo reparto trucco', [SABRINA]), ('Trucco', [LEONARDA, SIMONA])]),
-    dict(slug='parfum', img='img/amarcord/parfum.jpg', t='Parfum', gen='Commedia romantica', ruolo='Assistente operatore', min=6, vimeo='1220653459/be50961eb1',
-         line='Un primo appuntamento tra gli scaffali di una libreria, una paura da nascondere e troppi campioncini di profumo.',
-         cast=[('Rita', DONATELLA), ('Luca', ALLEGRETTI), ('Paola', VERA), ('Gilberto', TIGRANO), ('Laura', EMMA)],
-         crew=[('Regia', [MICHELE]), ('Produzione', [PROD]), ('Soggetto', [NOEMI]), ('Sceneggiatura', [MARENGO]), ('Editor', [DESIREE]),
-               ('Direzione della fotografia', [DAVIDE]), ('Operatori', [SONIA, VENDOLA]), ('Assistenti operatore', [KI, VITTORIA]),
-               ('Montaggio', [DAVIDE]), ('Aiuto regia', [MATTEO]), ('Scenografia', [ANDREA]), ('Fonico', [CIPRI]),
-               ('Segretaria di edizione', [ROBERTA]), ('Ciak', [CARBONARA]), ('Backstage', [MARTIN]),
-               ('Capo reparto trucco', [NUZZI]), ('Trucco', [ANITA, VITA])]),
-    dict(slug='la-sedia', img='img/amarcord/la-sedia.jpg', t='La sedia', gen='Dramma psicologico', ruolo='Assistente operatore', min=6, vimeo='1205077119/8e1ac4d587',
-         line='Una ragazza che non regge il contatto, una sedia davanti a lei e tutto quello che non ha mai detto.',
-         cast=[('', DONATELLA), ('', VERA), ('', FLANOTTE), ('', ALLEGRETTI)],
-         crew=[('Regia', [MARTIN]), ('Produzione', [PROD]), ('Soggetto', [NOEMI]), ('Sceneggiatura', [DOMENICO]),
-               ('Direzione della fotografia', [SONIA]), ('Operatori', [DAVIDE, VITTORIA]), ('Assistenti operatore', [GIADA, KI]),
-               ('Montaggio', [CARDONE]), ('Aiuto regia', [ROBERTA]), ('Scenografia', [ANDREA]), ('Fonico', [VENDOLA]),
-               ('Segretaria di edizione', [MATTEO]), ('Ciak', [CIPRI]), ('Backstage', [MAURO]),
-               ('Capo reparto trucco', ['Gloria Lombardo']), ('Trucco', [ANITA, 'Alessandra Maiellaro'])]),
-    dict(slug='la-seduta', img='img/amarcord/la-seduta.jpg', t='La seduta', gen='', ruolo='Operatore', min=8, vimeo='1198757832/ba4f3c4cf7',
-         line='Un cortometraggio di AMARCORD girato nel 2026.',
-         cast=[('', DONATELLA), ('', VANESSA), ('', FEDERICA), ('', MAYA), ('', ALLEGRETTI)],
-         crew=[('Regia', [ROBERTA, MARTIN]), ('Produzione', [PROD]), ('Soggetto', [LIBERO]), ('Sceneggiatura', [ANGLANI, MARENGO]),
-               ('Direzione della fotografia', [DAVIDE, VITTORIA]), ('Operatore', [KI]), ('Assistente operatore', [VENDOLA]),
-               ('Montaggio', [CARDONE]), ('Aiuto regia', [MAURO]), ('Scenografia', [MICHELE]), ('Fonico', [CIPRI]),
-               ('Segretaria di edizione', [ANDREA]), ('Ciak', [CARBONARA]), ('Backstage', [MARIANNA]),
-               ('Capo reparto trucco', [LEONARDA]), ('Trucco', [NUZZI, AMELIA])]),
-    dict(slug='l-inventario', img='img/amarcord/l-inventario.jpg', t="L'inventario", gen='', ruolo='Co-direttore della fotografia', min=5, vimeo='1205074164/052af8153b',
-         line='Un cortometraggio di AMARCORD girato nel 2026.',
-         cast=[('', TIGRANO), ('', VERA), ('', EMMA), ('', PIETRO), ('', VANESSA)],
-         crew=[('Regia', [LUCA, MATTEO]), ('Produzione', [PROD]), ('Soggetto', [ANGLANI]), ('Sceneggiatura', [DOMENICO, DESIREE]),
-               ('Direzione della fotografia', [KI, GIADA]), ('Operatore', [SONIA]), ('Assistente operatore', [CIPRI]),
-               ('Montaggio', [CARDONE, DAVIDE]), ('Aiuto regia', [MARTIN]), ('Scenografia', [ROBERTA]), ('Fonico', [DAVIDE]),
-               ('Segretaria di edizione', [ROBERTA]), ('Ciak', [VITTORIA]), ('Backstage', [MICHELE]),
-               ('Capo reparto trucco', [LAERA]), ('Trucco', [BETTY, SABRINA])]),
-    dict(slug='il-tanga-e-la-cravatta', img='img/amarcord/il-tanga-e-la-cravatta.jpg', t='Il tanga e la cravatta', gen='', ruolo='Fonico', min=5, vimeo='1205098451/48cd24e2f4',
-         line='Un cortometraggio di AMARCORD girato nel 2026.',
-         cast=[('Gerardo', PIETRO), ('Giacinto', FLANOTTE), ('Adelina', VERA), ('Ginevra', FEDERICA)],
-         crew=[('Regia', [ANDREA, MARIANNA]), ('Produzione', [PROD]), ('Soggetto', [MARY]), ('Sceneggiatura', [MIRIANA, LIBERO]),
-               ('Direzione della fotografia', [SONIA, CARBONARA]), ('Operatore', [GIADA]), ('Assistente operatore', [DAVIDE]),
-               ('Fonico', [KI]), ('Montaggio', [ANGELICA]), ('Aiuto regia', [MATTEO]), ('Scenografia', [LUCA]),
-               ('Segretaria di edizione', [MICHELE]), ('Ciak', [VITTORIA]), ('Backstage', [MAURO]),
-               ('Capo reparto trucco', [SIMONA]), ('Trucco', [ANITA, VITA, AMELIA])]),
-]
+# I dati stanno in lavori.json (li modifica anche il pannello /admin, scheda Lavori): qui solo la lettura.
+# lavori: dal più recente; 'cats' decide i filtri di Lavori; 'page': False = pagina fatta a mano (Dynamis).
+# amarcord: corti di AMARCORD (Accademia Mediterranea del Cinema), ognuno con la sua pagina e il link a Vimeo.
+#   Niente sinossi (no spoiler): solo una riga di atmosfera. Cast: [personaggio o '', nome]. Troupe: [ruolo, [nomi]].
+# filmografia: solo cinema (cortometraggi, lungometraggi, film, docufilm, documentari): [titolo, ruolo, produzione, pagina].
+# I nomi delle persone vanno scritti sempre allo stesso modo, così "Anche in…" li riconosce in tutti i lavori.
+import json
+DATI = json.load(open(os.path.join(HERE, 'lavori.json'), encoding='utf-8'))
+WORKS, AMARCORD, FILMOGRAFIA = DATI['lavori'], DATI['amarcord'], DATI['filmografia']
+HOME_WORKS, HOME_FILMO, CAT_LABELS = DATI['home'], DATI['home_filmografia'], DATI['categorie']
+DYNAMIS = DATI['dynamis']  # pagina fatta a mano, ma il blocco Credits si genera da qui per avere gli "Anche in…"
+PROD = 'Tiziana Lattuca per AMARCORD'
+anno = lambda a: a.get('anno') or '2026'  # i corti AMARCORD senza anno sono quelli del 2026
 
 e = lambda s: html.escape(s, quote=True)
 
@@ -333,9 +176,9 @@ def hero(w, url, plat):
 <span aria-hidden="true" class="lb lb-b" style="position: absolute; left: 0; right: 0; background: #080808; z-index: 2"></span>
 <span aria-hidden="true" style="position: absolute; top: 24px; left: 24px; width: 36px; height: 36px; border-top: 1px solid #336699; border-left: 1px solid #336699"></span>
 <span aria-hidden="true" style="position: absolute; bottom: 24px; right: 24px; width: 36px; height: 36px; border-bottom: 1px solid #336699; border-right: 1px solid #336699"></span>
-<span aria-hidden="true" style="position: absolute; top: 28px; right: 72px; font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: #6E6A64">AMARCORD · 2026</span>
+<span aria-hidden="true" style="position: absolute; top: 28px; right: 72px; font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: #6E6A64">%(mirino)s</span>
 <span style="display: inline-flex; align-items: center; gap: 12px; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; border: 1px solid rgba(232,228,223,0.6); border-radius: 26px; height: 52px; padding: 0 26px 0 20px"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5l11 7-11 7V5z"></path></svg>Guarda su %(plat)s</span>
-</a>''' % dict(t=e(w['t']), url=url, plat=plat)
+</a>''' % dict(t=e(w['t']), url=url, plat=plat, mirino=e(w.get('mirino') or w.get('year', '')))
 
 
 def page(w):
@@ -411,7 +254,7 @@ def dati_copertine():
         out.append(dict(slug=w['slug'], img=w['img'], kicker=w['kicker'], t=w['t'], sub=w.get('sub', ''),
                         dati=[list(w['meta'][0]), [KI, w['role_short']], ['Uscita', w['date']]]))
     for a in AMARCORD:
-        out.append(dict(slug=a['slug'], img=a['img'], kicker='Cortometraggio · AMARCORD · 2026', t=a['t'], sub='',
+        out.append(dict(slug=a['slug'], img=a['img'], kicker='Cortometraggio · AMARCORD · ' + anno(a), t=a['t'], sub='',
                         dati=[['Regia', ' e '.join(dict(a['crew'])['Regia'])], [KI, a['ruolo']], ['Durata', '%d minuti' % a['min']]]))
     import json
     save(os.path.join(HERE, '..', 'copertine', 'dati.json'), json.dumps(out, ensure_ascii=False, indent=1))
@@ -436,10 +279,9 @@ def card(w, i):
 
 
 def griglia():
-    """Tutti i lavori in un'unica griglia, dal più recente: Dynamis, poi i corti AMARCORD (2026), poi gli altri."""
-    am = [dict(slug=a['slug'], t=a['t'], year='2026', img=a['img'], cats=['Cortometraggio', 'AMARCORD']) for a in AMARCORD]
-    tutti = [w for w in WORKS if w['year'] >= '2026'] + am + [w for w in WORKS if w['year'] < '2026']
-    return tutti
+    """Tutti i lavori in un'unica griglia, dal più recente; a parità di anno prima i lavori (Dynamis), poi i corti AMARCORD."""
+    am = [dict(slug=a['slug'], t=a['t'], year=anno(a), img=a['img'], cats=['Cortometraggio', 'AMARCORD']) for a in AMARCORD]
+    return sorted(WORKS + am, key=lambda w: w['year'], reverse=True)  # sorted è stabile: l'ordine dei dati resta tra pari anno
 
 
 def tab(c, label):
@@ -473,9 +315,9 @@ def home_card(w, i):
 
 
 def amarcord_page(a):
-    w = dict(a, kicker='Cortometraggio · AMARCORD · 2026', role=a['ruolo'],
+    w = dict(a, kicker='Cortometraggio · AMARCORD · ' + anno(a), role=a['ruolo'], mirino='AMARCORD · ' + anno(a),
              meta=[('Regia', ', '.join(dict(a['crew'])['Regia'])), ('Produzione', PROD)]
-                  + ([('Genere', a['gen'])] if a.get('gen') else []) + [('Durata', '%d minuti' % a['min']), ('Anno', '2026 · Vimeo')])
+                  + ([('Genere', a['gen'])] if a.get('gen') else []) + [('Durata', '%d minuti' % a['min']), ('Anno', anno(a) + ' · Vimeo')])
     page(w)
 
 

@@ -11,6 +11,9 @@ import { json, corpo, autorizzato } from '../../_lib.js';
 import { chiavePubblica, iscrivi, disiscrivi, inviaPush } from '../../_push.js';
 import { tabella, nuovoCodice, ordina, copertina, fuoco } from '../../_gallerie.js';
 import * as aruba from '../../_aruba.js';
+import * as lavori from '../../_lavori.js';
+//   GET  /api/admin/lavori              dati dei lavori (lavori.json sul ramo del sito) per la scheda Lavori
+//   POST /api/admin/lavori              { gruppo, nuovo, lavoro, filmografia, fotogramma, copertina } → commit su GitHub
 //   GET  /api/admin/gallerie            elenco gallerie clienti
 //   POST /api/admin/gallerie            { cliente, titolo, data, link } → crea, con codice nuovo
 //   GET  /api/admin/gallerie/:id        sezioni (nell'ordine scelto) con le foto, copertina: per l'editor del pannello
@@ -89,6 +92,22 @@ export async function onRequest({ request, env, params }) {
         if (typeof d[k] === 'string') await env.DB.prepare(`UPDATE gallerie SET ${k} = ? WHERE id = ?`).bind(d[k].trim().slice(0, 120), n).run();
       }
       return json({ ok: true });
+    }
+  }
+  if (cosa === 'lavori' && !id) {
+    try {
+      const branch = lavori.ramo(request, env);
+      if (request.method === 'GET') return json(await lavori.leggi(env, branch));
+      if (request.method === 'POST') {
+        // Corpo più grande del solito: arrivano anche fotogramma e copertina (JPEG in base64)
+        const raw = await request.text();
+        if (raw.length > 4_500_000) return json({ errore: 'Immagini troppo grandi.' }, 413);
+        let d;
+        try { d = JSON.parse(raw); } catch { return json({ errore: 'Dati non validi.' }, 400); }
+        return json(await lavori.salva(env, branch, d));
+      }
+    } catch (err) {
+      return json({ errore: err.message }, err.stato === 401 ? 502 : 400);
     }
   }
   if (cosa === 'push') {

@@ -4,7 +4,8 @@
 <meta charset="utf-8">
 <title>Copertine dei lavori — produkts.it</title>
 <!--
-Copertine dei lavori: fotogramma scelto + titolo e dati, con i font e i colori del sito.
+Copertine dei lavori: fotogramma scelto + titolo e dati, con i font e i colori del sito (disegno in /admin/copertina.js,
+lo stesso che usa la scheda Lavori del pannello).
 Uso: python -X utf8 _design/bozza/lavori.py (scrive dati.json), poi python _design/serve.py 8081
 e aprire http://localhost:8081/_design/copertine/ ; "Salva tutte" scrive img/copertine/<slug>.jpg.
 Poi rilanciare lavori.py + build.py: le schede di Lavori e Home usano la copertina se esiste.
@@ -22,83 +23,18 @@ Poi rilanciare lavori.py + build.py: le schede di Lavori e Home usano la coperti
 <body>
 <header><button type="button" id="salva">Salva tutte</button><small id="stato"></small></header>
 <div id="griglia"></div>
+<script src="/admin/copertina.js"></script>
 <script>
-const W = 1600, H = Math.round(1600 / 2.39), M = 72;
-const TESTO = '#E8E4DF', GRIGIO = '#9A948C', ARANCIO = '#D98A4E';
-
 function carica(src) {
   return new Promise((ok, ko) => { const i = new Image(); i.onload = () => ok(i); i.onerror = ko; i.src = src; });
 }
 
-// Va a capo dentro la larghezza data; restituisce le righe
-function righe(ctx, testo, larg) {
-  const out = []; let r = '';
-  for (const p of testo.split(' ')) {
-    const prova = r ? r + ' ' + p : p;
-    if (ctx.measureText(prova).width > larg && r) { out.push(r); r = p; } else r = prova;
-  }
-  if (r) out.push(r);
-  return out;
-}
-
-async function disegna(d) {
-  const c = document.createElement('canvas'); c.width = W; c.height = H;
-  const x = c.getContext('2d');
-  const img = await carica('/' + d.img);
-  const s = Math.max(W / img.width, H / img.height);
-  x.drawImage(img, (W - img.width * s) / 2, (H - img.height * s) / 2, img.width * s, img.height * s);
-
-  // Velature: leggera su tutto, forte a sinistra e in basso dove sta il testo
-  x.fillStyle = 'rgba(8,8,8,0.16)'; x.fillRect(0, 0, W, H);
-  let g = x.createLinearGradient(0, 0, W * 0.78, 0);
-  g.addColorStop(0, 'rgba(8,8,8,0.86)'); g.addColorStop(0.55, 'rgba(8,8,8,0.42)'); g.addColorStop(1, 'rgba(8,8,8,0)');
-  x.fillStyle = g; x.fillRect(0, 0, W, H);
-  g = x.createLinearGradient(0, H * 0.42, 0, H);
-  g.addColorStop(0, 'rgba(8,8,8,0)'); g.addColorStop(1, 'rgba(8,8,8,0.82)');
-  x.fillStyle = g; x.fillRect(0, 0, W, H);
-
-  x.textBaseline = 'alphabetic';
-  // Occhiello
-  x.font = '500 22px "Space Grotesk"'; x.letterSpacing = '4px'; x.fillStyle = ARANCIO;
-  x.fillText(d.kicker.toUpperCase(), M, 92);
-
-  // Titolo: una riga, rimpicciolito finché non sta in 1050px
-  x.letterSpacing = '0px';
-  let fs = 156;
-  do { x.font = `italic 300 ${fs}px "Cormorant Garamond"`; fs -= 4; } while (x.measureText(d.t).width > 1050 && fs > 84);
-  const yT = d.sub ? 360 : 392;
-  x.fillStyle = TESTO; x.fillText(d.t, M - 4, yT);
-  if (d.sub) {
-    x.font = 'italic 300 48px "Cormorant Garamond"'; x.fillStyle = '#C9C4BD';
-    x.fillText(d.sub, M, yT + 66);
-  }
-
-  // Filetto e tre dati in colonna
-  const yL = 488;
-  x.fillStyle = 'rgba(232,228,223,0.24)'; x.fillRect(M, yL, W - 2 * M, 1.5);
-  const colW = 360, gap = 40;
-  d.dati.forEach(([etichetta, valore], i) => {
-    const cx = M + i * (colW + gap);
-    x.font = '500 18px "Space Grotesk"'; x.letterSpacing = '3px'; x.fillStyle = GRIGIO;
-    x.fillText(etichetta.toUpperCase(), cx, yL + 50);
-    x.font = '400 28px "Space Grotesk"'; x.letterSpacing = '0px'; x.fillStyle = TESTO;
-    righe(x, valore, colW).slice(0, 2).forEach((r, k) => x.fillText(r, cx, yL + 94 + k * 36));
-  });
-
-  // Firma
-  x.font = 'italic 400 38px "Cormorant Garamond"'; x.fillStyle = 'rgba(232,228,223,0.85)'; x.textAlign = 'right';
-  x.fillText('produkts.it', W - M, yL + 94);
-  x.textAlign = 'left';
-  return c;
-}
-
 (async () => {
-  await Promise.all(['italic 300 40px "Cormorant Garamond"', 'italic 400 40px "Cormorant Garamond"',
-    '400 20px "Space Grotesk"', '500 20px "Space Grotesk"'].map(f => document.fonts.load(f)));
+  await PKCopertina.font();
   const dati = await (await fetch('dati.json', { cache: 'no-store' })).json();
   const tele = [];
   for (const d of dati) {
-    const c = await disegna(d); c.dataset.slug = d.slug; c.title = d.slug;
+    const c = PKCopertina.disegna(await carica('/' + d.img), d); c.dataset.slug = d.slug; c.title = d.slug;
     document.getElementById('griglia').appendChild(c); tele.push(c);
   }
   document.getElementById('stato').textContent = tele.length + ' copertine';
