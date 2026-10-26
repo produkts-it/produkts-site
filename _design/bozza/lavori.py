@@ -183,8 +183,12 @@ def hero(w, url, plat):
 
 def page(w):
     url, plat = ('https://vimeo.com/' + w['vimeo'], 'Vimeo') if w.get('vimeo') else ('https://www.youtube.com/watch?v=' + w['yt'], 'YouTube')
-    title = w['t'] + (' — ' + w['sub'] if w.get('sub') else '')
-    head = HEAD.replace('<title>Dynamis — produkts.it</title>', '<title>%s — produkts.it</title>' % e(title))
+    # Titolo per Google: lavoro e nome di Karim con il suo ruolo («Tra i piedi — Karim Ismail, direttore della fotografia»)
+    ruolo = w['role_short'] if 'role_short' in w else w['role']
+    if ruolo[1:2].islower():  # «Regia, …» → «regia, …», ma «D.O.P., …» resta com'è
+        ruolo = ruolo[:1].lower() + ruolo[1:]
+    title = '%s — %s, %s | produkts.it' % (w['t'], KI, ruolo)
+    head = re.sub(r'<title>.*?</title>', lambda m: '<title>%s</title>' % e(title), HEAD, count=1)
     metas = [('Il mio ruolo', w['role'])] + w['meta']
     body = '''<section style="max-width: 1440px; margin: 0 auto; padding: 24px 56px 72px; box-sizing: border-box">
 <a href="lavori" style="font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; color: #9A948C; padding: 12px 0; display: inline-block; margin-bottom: 24px">← Tutti i lavori</a>
@@ -220,7 +224,49 @@ def page(w):
 ''' % dict(kick=KICK, kicker=e(w['kicker']), t=e(w['t']), url=url, plat=plat, hero=hero(w, url, plat), line=e(w['line']),
            sub=('<p class="fade d2" style="margin: 0; font-family: \'Cormorant Garamond\', serif; font-style: italic; font-weight: 300; font-size: clamp(24px, 3vw, 36px); line-height: 1.2; color: #C9C4BD">%s</p>\n' % e(w['sub'])) if w.get('sub') else '',
            meta=''.join(meta_item(k, v) for k, v in metas), credits=credits(w, 'Troupe' if w.get('cast') else 'Crediti'))
-    save(os.path.join(OUT, w['slug'] + '.html'), head + body + FOOT)
+    save(os.path.join(OUT, w['slug'] + '.html'), head + body + schema_lavoro(w) + FOOT)
+
+
+# Dati strutturati di ogni lavoro (schema.org): il corto o il video, con Karim collegato come regista o con il suo ruolo.
+# Gli @id sono gli stessi di seo.py (persona Karim Ismail, attività produkts.it, sito).
+SITE = 'https://produkts.it'
+ID_KARIM, ID_PRODUKTS, ID_SITO = SITE + '/#karim-ismail', SITE + '/#produkts', SITE + '/#sito'
+
+
+def schema_lavoro(w, descrizione=None):
+    import json
+    persone = lambda nomi: [{'@id': ID_KARIM} if n == KI else {'@type': 'Person', 'name': n} for n in nomi]
+    crew = {r: (v if isinstance(v, list) else v.split(', ')) for r, v in w.get('crew', [])}
+    img = w.get('img') or ''
+    d = {
+        '@context': 'https://schema.org', '@type': 'Movie' if 'Cortometraggio' in w.get('cats', ['Cortometraggio']) else 'CreativeWork',
+        '@id': SITE + '/' + w['slug'] + '#lavoro', 'name': w['t'], 'url': SITE + '/' + w['slug'],
+        'description': descrizione or w.get('line', ''), 'inLanguage': 'it',
+        'dateCreated': w.get('anno') or w.get('year') or '2026', 'isPartOf': {'@id': ID_SITO},
+        'contributor': {'@type': 'Role', 'contributor': {'@id': ID_KARIM}, 'roleName': w.get('role') or w.get('ruolo')},
+    }
+    if w.get('sub'):
+        d['alternateName'] = w['t'] + ' — ' + w['sub']
+    if img:
+        d['image'] = img if img.startswith('http') else SITE + '/' + img
+    if crew.get('Regia'):
+        d['director'] = persone(crew['Regia'])
+    if w.get('cast'):
+        d['actor'] = persone([c[1] for c in w['cast']])
+    if w.get('gen') or w.get('kicker'):
+        d['genre'] = w.get('gen') or w['kicker'].split(' · ')[0]
+    if w.get('min'):
+        d['duration'] = 'PT%dM' % w['min']
+    prod = crew.get('Produzione', [])
+    if any('AMARCORD' in p for p in prod):
+        d['productionCompany'] = {'@type': 'Organization', 'name': 'AMARCORD — Accademia Mediterranea del Cinema'}
+    elif KI in prod or 'produkts.it' in prod:
+        d['productionCompany'] = {'@id': ID_PRODUKTS}
+    elif prod:
+        d['productionCompany'] = {'@type': 'Organization', 'name': prod[0]}
+    if w.get('yt') or w.get('vimeo'):
+        d['sameAs'] = 'https://www.youtube.com/watch?v=' + w['yt'] if w.get('yt') else 'https://vimeo.com/' + w['vimeo']
+    return '<script type="application/ld+json">%s</script>\n' % json.dumps(d, ensure_ascii=False)
 
 
 def put(fname, name, content):
@@ -260,6 +306,12 @@ def dati_copertine():
     save(os.path.join(HERE, '..', 'copertine', 'dati.json'), json.dumps(out, ensure_ascii=False, indent=1))
 
 
+def alt(w):
+    """Testo alternativo delle immagini nelle schede: titolo, tipo e anno, con il nome di Karim (aiuta la ricerca per immagini)."""
+    tipo = 'cortometraggio AMARCORD' if 'AMARCORD' in w['cats'] else w['cats'][0].lower()
+    return '%s, %s %s — %s' % (w['t'], tipo, w['year'], KI)
+
+
 EVIDENZA = 'dynamis'  # in Lavori occupa due righe con la locandina verticale (regole .work.evid in site.css)
 
 
@@ -270,7 +322,7 @@ def card(w, i):
     return '''<a href="%s" class="work stag%s" data-cats="%s" style="view-transition-name: w%d; display: flex; flex-direction: column; gap: 14px; animation-delay: %.2fs">
 <span style="font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: #B46428">%s</span>
 <div class="frame" style="position: relative;%s background: #161616; overflow: hidden">
-<img src="%s" alt="" loading="lazy" style="position: absolute; inset: 0; width: 100%%; height: 100%%; object-fit: cover; object-position: %s">
+<img src="%s" alt="%s" loading="lazy" style="position: absolute; inset: 0; width: 100%%; height: 100%%; object-fit: cover; object-position: %s">
 <span aria-hidden="true" class="br br-tl" style="position: absolute; top: 12px; left: 12px; width: 16px; height: 16px; border-top: 1px solid #336699; border-left: 1px solid #336699"></span>
 <span aria-hidden="true" class="br br-br" style="position: absolute; bottom: 12px; right: 12px; width: 16px; height: 16px; border-bottom: 1px solid #336699; border-right: 1px solid #336699"></span>
 <span aria-hidden="true" class="warr" style="position: absolute; top: 14px; right: 14px; width: 40px; height: 40px; border-radius: 50%%; border: 1px solid rgba(232,228,223,0.5); background: rgba(8,8,8,0.45); color: #E8E4DF; display: flex; align-items: center; justify-content: center; font-size: 18px">→</span>
@@ -281,7 +333,7 @@ def card(w, i):
 </div>
 </a>
 ''' % (w['slug'], ' evid' if evid else '', '|'.join(w['cats']), i, 0.4 + i * 0.06, e(w.get('home_kind', w['cats'][0]) if evid else w['cats'][0]),
-       '' if evid else ' aspect-ratio: 2.39 / 1;', copertina(w), w.get('pos', '50% 50%'), e(w['t']), w['year'])
+       '' if evid else ' aspect-ratio: 2.39 / 1;', copertina(w), e(alt(w)), w.get('pos', '50% 50%'), e(w['t']), w['year'])
 
 
 def griglia():
@@ -301,7 +353,7 @@ def tab(c, label):
 def home_card(w, i):
     return '''<a href="%s" class="work reveal" style="display: flex; flex-direction: column; gap: 20px">
 <div class="frame" style="position: relative; aspect-ratio: 2.39 / 1; background: #161616; display: flex; align-items: center; justify-content: center; overflow: hidden">
-<img src="%s" alt="" loading="lazy" style="position: absolute; inset: 0; width: 100%%; height: 100%%; object-fit: cover; object-position: %s">
+<img src="%s" alt="%s" loading="lazy" style="position: absolute; inset: 0; width: 100%%; height: 100%%; object-fit: cover; object-position: %s">
 <span aria-hidden="true" class="br br-tl" style="position: absolute; top: 14px; left: 14px; width: 18px; height: 18px; border-top: 1px solid #336699; border-left: 1px solid #336699"></span>
 <span aria-hidden="true" class="br br-br" style="position: absolute; bottom: 14px; right: 14px; width: 18px; height: 18px; border-bottom: 1px solid #336699; border-right: 1px solid #336699"></span>
 </div>
@@ -316,7 +368,7 @@ def home_card(w, i):
 <span>%s</span><span>%s</span>
 </div>
 </a>
-''' % (w['slug'], copertina(w), w.get('pos', '50% 50%'), i + 1, e(w['t']), w['year'],
+''' % (w['slug'], copertina(w), e(alt(w)), w.get('pos', '50% 50%'), i + 1, e(w['t']), w['year'],
        e(w.get('home_kind') or w['kicker'].rsplit(' · ', 1)[0]), e(w.get('home_role') or w['role_short']))
 
 
@@ -368,7 +420,11 @@ for w in WORKS:
 for a in AMARCORD:
     amarcord_page(a)
     print('ok', a['slug'] + '.html')
-put('dynamis.html', 'dynamis:credits', credits(DYNAMIS, 'Troupe'))
+_dyn = next(w for w in WORKS if w['slug'] == 'dynamis')
+put('dynamis.html', 'dynamis:credits', credits(DYNAMIS, 'Troupe') + schema_lavoro(
+    dict(DYNAMIS, year=_dyn['year'], img=_dyn['img'], cats=_dyn['cats'], yt='nLLtk0Lwxq8', gen='Corto verticale',
+         role='Produttore, direttore della fotografia, montaggio, color e VFX'),
+    'Dynamis, cortometraggio verticale prodotto da produkts.it, regia di Giada Bellanova: nomination al VerticalMovie Festival 2026 alla Casa del Cinema di Roma.'))
 put('lavori.html', 'lavori:tabs', ''.join(tab(c, l) for c, l in CAT_LABELS if c == 'Tutti' or any(c in w['cats'] for w in griglia())))
 put('lavori.html', 'lavori:griglia', ''.join(card(w, i) for i, w in enumerate(griglia())))
 s = open(os.path.join(OUT, 'lavori.html'), encoding='utf-8').read()

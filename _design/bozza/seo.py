@@ -21,13 +21,44 @@ DESCR = {
 }
 IMG = {'dynamis.html': SITE + '/dynamis.jpg'}
 
+# Dati strutturati (schema.org): chi è Karim Ismail, l'attività produkts.it e il sito. Servono a Google per capire
+# che "Karim Ismail" è questa persona e che produkts.it è il suo sito (stesso @id in tutte le pagine e nei lavori).
+ID_KARIM, ID_PRODUKTS, ID_SITO = SITE + '/#karim-ismail', SITE + '/#produkts', SITE + '/#sito'
+SOCIAL = ['https://www.instagram.com/produkts.it/', 'https://www.youtube.com/@produkts-it']
+INDIRIZZO = {'@type': 'PostalAddress', 'addressLocality': 'Altamura', 'addressRegion': 'BA', 'postalCode': '70022', 'addressCountry': 'IT'}
+AMARCORD = {'@type': 'EducationalOrganization', 'name': 'AMARCORD — Accademia Mediterranea del Cinema'}
 PERSONA = {
-    '@context': 'https://schema.org', '@type': 'Person', 'name': 'Karim Ismail',
-    'jobTitle': 'Direttore della fotografia, videomaker e fotografo', 'url': SITE + '/',
-    'image': SITE + '/img/set/ritratto.jpg', 'email': 'mailto:info@produkts.it', 'telephone': '+393711444875',
-    'address': {'@type': 'PostalAddress', 'addressLocality': 'Altamura', 'addressRegion': 'BA', 'addressCountry': 'IT'},
-    'sameAs': ['https://www.instagram.com/produkts.it/', 'https://www.youtube.com/@produkts-it'],
-    'brand': {'@type': 'Brand', 'name': 'produkts.it'},
+    '@type': 'Person', '@id': ID_KARIM, 'name': 'Karim Ismail', 'givenName': 'Karim', 'familyName': 'Ismail',
+    'jobTitle': 'Direttore della fotografia, videomaker e fotografo',
+    'description': 'Karim Ismail è un direttore della fotografia (D.O.P.), videomaker e fotografo di Altamura (BA), '
+                   'fondatore di produkts.it. Cortometraggi, videoclip, eventi e contenuti per brand.',
+    'url': SITE + '/chi-sono',
+    'image': {'@type': 'ImageObject', 'url': SITE + '/img/set/ritratto.jpg',
+              'caption': 'Karim Ismail al VerticalMovie Festival, Casa del Cinema di Roma'},
+    'email': 'mailto:karim@produkts.it', 'telephone': '+393711444875', 'address': INDIRIZZO,
+    'homeLocation': {'@type': 'Place', 'name': 'Altamura', 'address': INDIRIZZO},
+    'hasOccupation': [{'@type': 'Occupation', 'name': n} for n in ('Direttore della fotografia', 'Videomaker', 'Fotografo')],
+    'knowsAbout': ['Direzione della fotografia', 'Cinematografia', 'Cortometraggi', 'Videoclip', 'Fotografia',
+                   'Montaggio', 'Color grading', 'VFX'],
+    'alumniOf': [{'@type': 'EducationalOrganization', 'name': 'I.T.T. Nervi Galilei', 'address': INDIRIZZO}, AMARCORD],
+    'hasCredential': {'@type': 'EducationalOccupationalCredential', 'name': 'Direttore della fotografia certificato AMARCORD',
+                      'credentialCategory': 'certificate', 'recognizedBy': AMARCORD},
+    'award': 'Nomination VerticalMovie Festival 2026 con il cortometraggio Dynamis',
+    'worksFor': {'@id': ID_PRODUKTS}, 'sameAs': SOCIAL,
+}
+PRODUKTS = {
+    '@type': 'ProfessionalService', '@id': ID_PRODUKTS, 'name': 'produkts.it', 'url': SITE + '/',
+    'description': 'Direzione della fotografia, video e fotografia di Karim Ismail ad Altamura: cortometraggi, videoclip, eventi e brand.',
+    'logo': SITE + '/apple-touch-icon.png', 'image': OG, 'founder': {'@id': ID_KARIM},
+    'email': 'mailto:info@produkts.it', 'telephone': '+393711444875', 'address': INDIRIZZO,
+    'areaServed': ['Altamura', 'Puglia', 'Italia'], 'sameAs': SOCIAL,
+}
+SITO = {'@type': 'WebSite', '@id': ID_SITO, 'url': SITE + '/', 'name': 'produkts.it', 'alternateName': ['Karim Ismail', 'produkts'],
+        'inLanguage': 'it-IT', 'publisher': {'@id': ID_PRODUKTS}, 'about': {'@id': ID_KARIM}}
+SCHEMA = {
+    'index.html': [PERSONA, PRODUKTS, SITO],
+    'chi-sono.html': [{'@type': 'ProfilePage', '@id': SITE + '/chi-sono#pagina', 'url': SITE + '/chi-sono',
+                       'name': 'Chi sono — Karim Ismail', 'isPartOf': {'@id': ID_SITO}, 'mainEntity': {'@id': ID_KARIM}}, PERSONA],
 }
 
 a = lambda s: html.escape(s, quote=True)
@@ -40,9 +71,17 @@ def testo(s):
 def descrizione(nome, s):
     if nome in DESCR:
         return DESCR[nome]
-    # Pagine dei lavori: la riga di "Il progetto"
+    # Pagine dei lavori: la riga di "Il progetto" più il ruolo di Karim (il nome aiuta chi cerca "Karim Ismail")
     m = re.search(r'>Il progetto</span>\s*<p[^>]*>(.*?)</p>', s, re.S)
-    return testo(m.group(1)) if m else ''
+    r = re.search(r'>Il mio ruolo</dt>\s*<dd[^>]*>(.*?)</dd>', s, re.S)
+    d = testo(m.group(1)) if m else ''
+    g = re.search(r'>Regia</dt>\s*<dd[^>]*>(.*?)</dd>', s, re.S)
+    if g:
+        d += ' Regia di %s.' % testo(g.group(1)).replace(', ', ' e ')
+    if r:
+        ruolo = testo(r.group(1))
+        d += ' Karim Ismail: %s.' % (ruolo[:1].lower() + ruolo[1:] if ruolo[1:2].islower() else ruolo)
+    return d.strip()
 
 
 def immagine(nome, s):
@@ -75,8 +114,9 @@ for f in sorted(glob.glob(os.path.join(REPO, '*.html'))):
               '<meta property="og:url" content="%s">' % url,
               '<meta property="og:image" content="%s">' % immagine(nome, s),
               '<meta name="twitter:card" content="summary_large_image">']
-    if nome == 'index.html':
-        blocco.append('<script type="application/ld+json">%s</script>' % json.dumps(PERSONA, ensure_ascii=False))
+    if nome in SCHEMA:
+        blocco.append('<script type="application/ld+json">%s</script>'
+                      % json.dumps({'@context': 'https://schema.org', '@graph': SCHEMA[nome]}, ensure_ascii=False))
     blocco.append('<!-- /seo -->')
     blocco = '\n'.join(blocco)
     s = re.sub(r'\n?<!-- seo -->.*?<!-- /seo -->', '', s, flags=re.S)
