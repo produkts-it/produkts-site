@@ -60,7 +60,8 @@
     var b = D.amarcord.map(function (l) { return { l: l, g: 'amarcord', anno: l.anno || '2026' }; });
     return b.concat(a).sort(function (x, y) { return y.anno.localeCompare(x.anno); });
   }
-  function anteprima(l) { return SENZA_COPERTINA[l.slug] || !l.img || /^http/.test(l.img) ? l.img : '/img/copertine/' + l.slug + '.jpg'; }
+  var VERSIONE = Date.now(); // miniature sempre fresche: dopo un salvataggio la copertina cambia
+  function anteprima(l) { return SENZA_COPERTINA[l.slug] || !l.img || /^http/.test(l.img) ? l.img : '/img/copertine/' + l.slug + '.jpg?t=' + VERSIONE; }
   function elenco(msg) {
     var righe = tutti().map(function (x, i) {
       var l = x.l, tipo = x.g === 'amarcord' ? 'AMARCORD' : (l.kicker || '').split(' · ')[0];
