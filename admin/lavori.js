@@ -3,7 +3,7 @@
    Cloudflare ripubblica il sito in 1–2 minuti. I nomi già presenti vengono suggeriti, così "Anche in…" li collega. */
 (function () {
   var KI = 'Karim Ismail', PROD = 'Tiziana Lattuca per AMARCORD';
-  var SENZA_COPERTINA = { dynamis: 1, schizophrenia: 1 };
+  var SENZA_COPERTINA = { dynamis: 1 };
   var TIPI = [['amarcord', 'Cortometraggio AMARCORD'], ['corto', 'Cortometraggio'], ['docufilm', 'Docufilm'], ['videoclip', 'Videoclip'], ['aziendale', 'Video aziendale']];
   var ETICHETTA = { corto: 'Cortometraggio', docufilm: 'Docufilm', videoclip: 'Videoclip musicale', aziendale: 'Video aziendale' };
   var CAT = { corto: 'Cortometraggio', docufilm: 'Cortometraggio', videoclip: 'Videoclip', aziendale: 'Video aziendale' };

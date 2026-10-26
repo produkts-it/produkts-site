@@ -231,7 +231,7 @@ def put(fname, name, content):
     save(p, s)
 
 
-SENZA_COPERTINA = {'dynamis', 'schizophrenia'}  # hanno già la loro immagine: niente copertina disegnata
+SENZA_COPERTINA = {'dynamis'}  # Dynamis ha la sua locandina (in evidenza in Lavori): niente copertina disegnata
 
 
 def copertina(w):
@@ -260,11 +260,16 @@ def dati_copertine():
     save(os.path.join(HERE, '..', 'copertine', 'dati.json'), json.dumps(out, ensure_ascii=False, indent=1))
 
 
+EVIDENZA = 'dynamis'  # in Lavori occupa due righe con la locandina verticale (regole .work.evid in site.css)
+
+
 def card(w, i):
-    """Scheda della griglia Lavori: tipologia, fotogramma 2.39:1 con la freccia sopra, titolo e anno."""
-    return '''<a href="%s" class="work stag" data-cats="%s" style="view-transition-name: w%d; display: flex; flex-direction: column; gap: 14px; animation-delay: %.2fs">
+    """Scheda della griglia Lavori: tipologia, fotogramma 2.39:1 con la freccia sopra, titolo e anno.
+    Il lavoro in evidenza ha la locandina verticale alta quanto due schede (il formato lo decide site.css)."""
+    evid = w['slug'] == EVIDENZA
+    return '''<a href="%s" class="work stag%s" data-cats="%s" style="view-transition-name: w%d; display: flex; flex-direction: column; gap: 14px; animation-delay: %.2fs">
 <span style="font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: #B46428">%s</span>
-<div class="frame" style="position: relative; aspect-ratio: 2.39 / 1; background: #161616; overflow: hidden">
+<div class="frame" style="position: relative;%s background: #161616; overflow: hidden">
 <img src="%s" alt="" loading="lazy" style="position: absolute; inset: 0; width: 100%%; height: 100%%; object-fit: cover; object-position: %s">
 <span aria-hidden="true" class="br br-tl" style="position: absolute; top: 12px; left: 12px; width: 16px; height: 16px; border-top: 1px solid #336699; border-left: 1px solid #336699"></span>
 <span aria-hidden="true" class="br br-br" style="position: absolute; bottom: 12px; right: 12px; width: 16px; height: 16px; border-bottom: 1px solid #336699; border-right: 1px solid #336699"></span>
@@ -275,7 +280,8 @@ def card(w, i):
 <span style="font-size: 13px; color: #9A948C; white-space: nowrap">%s</span>
 </div>
 </a>
-''' % (w['slug'], '|'.join(w['cats']), i, 0.4 + i * 0.06, e(w['cats'][0]), copertina(w), w.get('pos', '50% 50%'), e(w['t']), w['year'])
+''' % (w['slug'], ' evid' if evid else '', '|'.join(w['cats']), i, 0.4 + i * 0.06, e(w.get('home_kind', w['cats'][0]) if evid else w['cats'][0]),
+       '' if evid else ' aspect-ratio: 2.39 / 1;', copertina(w), w.get('pos', '50% 50%'), e(w['t']), w['year'])
 
 
 def griglia():

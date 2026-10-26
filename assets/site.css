@@ -113,6 +113,12 @@ html.vt-local::view-transition-old(*),html.vt-local::view-transition-new(*){heig
 .pill{transition:background .3s,color .3s,border-color .3s}
 .pill:hover{background:#E8E4DF!important;color:#080808!important;border-color:#E8E4DF!important}
 .work .frame{transition:transform .7s cubic-bezier(.2,.7,.2,1),background .5s}
+/* Lavori: il lavoro in evidenza (Dynamis) occupa due righe con la locandina intera nel suo formato (4:5);
+   con una colonna sola (telefono) resta su una riga, sempre in 4:5 */
+.griglia{container:griglia/inline-size}
+.work.evid{grid-row:span 2}
+.work.evid .frame{aspect-ratio:4/5}
+@container griglia (max-width:831px){.work.evid{grid-row:auto}}
 .work:hover .frame{transform:scale(1.015);background:#1B1B1B}
 .work .br{transition:all .45s cubic-bezier(.2,.7,.2,1)}
 .work:hover .br-tl{top:8px!important;left:8px!important;width:44px!important;height:44px!important;border-color:#B46428!important}
