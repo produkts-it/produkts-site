@@ -50,7 +50,7 @@ WORKS = [
                ('Colonna sonora', '“Schizophrenia” – XXXTENTACION'),
                ('Effetti sonori', 'Pixabay: freesound_community, LIECIO, BRVHRTZ, ABD3LHADI, sachintempini, baranova_n, FreeSoundsxx')]),
     dict(slug='romance-anonimo', t='Romance Anónimo', sub='Bartek Dabrowski', year='2025', date='25 aprile 2025',
-         yt='z0G1CfqjHxI', img=yt_thumb('z0G1CfqjHxI', 'sddefault'), cats=['Videoclip'],
+         yt='z0G1CfqjHxI', img='img/lavori/romance-anonimo.jpg', cats=['Videoclip'],
          kicker='Videoclip musicale · 2025',
          line='Videoclip per Bartek Dabrowski su «Romance Anónimo», classico senza tempo della chitarra spagnola.',
          role='Direzione della fotografia, riprese, montaggio, color e VFX', role_short='D.O.P., montaggio e color',
@@ -58,7 +58,7 @@ WORKS = [
          crew=[('Artista', 'Bartek Dabrowski'), ('Direzione della fotografia', KI), ('Riprese', KI), ('Montaggio', KI),
                ('Color', KI), ('VFX', KI)]),
     dict(slug='coseco', t='Coseco Industrie', sub='50 anni', year='2024', date='18 dicembre 2024',
-         yt='mpesKIpv9N8', img=yt_thumb('mpesKIpv9N8'), cats=['Video aziendale'],
+         yt='mpesKIpv9N8', img='img/lavori/coseco.jpg', cats=['Video aziendale'],
          kicker='Video aziendale · 2024',
          line='Video corporate per i 50 anni di Coseco Industrie, proiettato al cinema durante la celebrazione. Produzione kontents.eu.',
          role='Riprese, montaggio, post-produzione, color, VFX e audio', role_short='Riprese e post-produzione',
@@ -67,7 +67,7 @@ WORKS = [
                ('Post-produzione', KI), ('Color', KI), ('VFX', KI), ('Effetti sonori', KI), ('Audio design', KI),
                ('Fonico di presa diretta', KI)]),
     dict(slug='wake-up', t='Wake Up', sub='Bartek Dabrowski · Orchestra', year='2024', date='29 marzo 2024',
-         yt='MZFk-CNkgGY', img=yt_thumb('MZFk-CNkgGY'), cats=['Videoclip'],
+         yt='MZFk-CNkgGY', img='img/lavori/wake-up.jpg', cats=['Videoclip'],
          kicker='Videoclip musicale · 2024',
          line='Videoclip per la versione orchestrale di «Wake Up» di Bartek Dabrowski: un invito ad ascoltare la propria voce interiore.',
          role='Direzione della fotografia, riprese, montaggio, color e VFX', role_short='D.O.P., montaggio e color',
@@ -75,7 +75,7 @@ WORKS = [
          crew=[('Artista', 'Bartek Dabrowski'), ('Direzione della fotografia', KI), ('Riprese', KI), ('Montaggio', KI),
                ('Color', KI), ('VFX', KI)]),
     dict(slug='korvo', t='Hai perso', sub='Korvo', year='2023', date='giugno 2023',
-         vimeo='888211568', img='https://i.vimeocdn.com/video/1827512944-964bac90703858cc9e174129dd46cb4674a3071036ff2f2ba992aea82ef1e2e4-d_1280', cats=['Videoclip'],
+         vimeo='888211568', img='img/lavori/korvo.jpg', cats=['Videoclip'],
          kicker='Videoclip musicale · 2023',
          line="Videoclip di «Hai perso» per Korvo, curato dall'idea alla consegna: regia, riprese, montaggio e color.",
          role='Regia, direzione della fotografia, riprese, montaggio e color', role_short='Regia, D.O.P., montaggio e color',
@@ -83,7 +83,7 @@ WORKS = [
          crew=[('Artista e musica', 'Korvo'), ('Regia', KI), ('Direzione della fotografia', KI), ('Riprese', KI),
                ('Montaggio', KI), ('Color', KI)]),
     dict(slug='troppo-bella-per-loro', t='Troppo bella per loro', sub='Docufilm in dialetto altamurano', year='2022', date='marzo 2022',
-         vimeo='888136670', img='https://i.vimeocdn.com/video/1827511993-0288a826b6a4dc1d324bb6c9738bd7aaea47b4e3dfbdd5ce144f1d0b21b95b31-d_1280',
+         vimeo='888136670', img='img/lavori/troppo-bella-per-loro.jpg',
          cats=['Cortometraggio', 'Opera personale'], kicker='Docufilm · opera personale · 2022',
          line="Un docufilm in dialetto altamurano sul rapporto di amore e odio tra l'uomo e la natura.",
          role='Regia, riprese e montaggio, con Fabrizio Marinelli', role_short='Regia, riprese e montaggio',
@@ -137,8 +137,8 @@ DYNAMIS = dict(slug='dynamis', t='Dynamis',
 # Corti di AMARCORD (Accademia Mediterranea del Cinema), 2026: tutti cortometraggi, ognuno con la sua pagina e il link a Vimeo.
 # Niente sinossi (no spoiler): solo una riga di atmosfera. Cast: (personaggio o '', nome). Troupe: (ruolo, [nomi]).
 AMARCORD = [
-    dict(slug='tra-i-piedi', img='img/amarcord/tra-i-piedi.jpg', t='Tra i piedi', gen='', ruolo='Direttore della fotografia', min=6, vimeo='1236005846/a8fe909088',
-         line='Un cortometraggio di AMARCORD girato nel 2026.',
+    dict(slug='tra-i-piedi', img='img/amarcord/tra-i-piedi.jpg', t='Tra i piedi', gen='Commedia grottesca', ruolo='Direttore della fotografia', min=6, vimeo='1236005846/a8fe909088',
+         line='Il bagno di un locale, una serata tra amici e un telefono che passa di mano più del dovuto.',
          cast=[('Marta', DONATELLA), ('Edoardo', ALLEGRETTI), ('Diego', TIGRANO), ('Stefania', MAYA), ('Martina', VERA)],
          crew=[('Regia', [MATTEO]), ('Produzione', [PROD]), ('Direzione della fotografia', [KI]), ('Operatori', [CARBONARA, VITTORIA]),
                ('Assistenti operatore', [SONIA, CIPRI]), ('Montaggio', [ANGELICA]), ('Aiuto regia', [MICHELE]), ('Scenografia', [LUCA]),
@@ -388,6 +388,30 @@ def put(fname, name, content):
     save(p, s)
 
 
+SENZA_COPERTINA = {'dynamis', 'schizophrenia'}  # hanno già la loro immagine: niente copertina disegnata
+
+
+def copertina(w):
+    """Copertina disegnata (titolo e dati sul fotogramma, da _design/copertine/) se c'è, altrimenti il fotogramma."""
+    p = 'img/copertine/%s.jpg' % w['slug']
+    return p if w['slug'] not in SENZA_COPERTINA and os.path.exists(os.path.join(OUT, p)) else w['img']
+
+
+def dati_copertine():
+    """Testi delle copertine per _design/copertine/index.html: occhiello, titolo, sottotitolo e tre dati in basso."""
+    out = []
+    for w in WORKS:
+        if w['slug'] in SENZA_COPERTINA:
+            continue
+        out.append(dict(slug=w['slug'], img=w['img'], kicker=w['kicker'], t=w['t'], sub=w.get('sub', ''),
+                        dati=[list(w['meta'][0]), [KI, w['role_short']], ['Uscita', w['date']]]))
+    for a in AMARCORD:
+        out.append(dict(slug=a['slug'], img=a['img'], kicker='Cortometraggio · AMARCORD · 2026', t=a['t'], sub='',
+                        dati=[['Regia', ' e '.join(dict(a['crew'])['Regia'])], [KI, a['ruolo']], ['Durata', '%d minuti' % a['min']]]))
+    import json
+    save(os.path.join(HERE, '..', 'copertine', 'dati.json'), json.dumps(out, ensure_ascii=False, indent=1))
+
+
 def card(w, i):
     """Scheda della griglia Lavori: tipologia, fotogramma 2.39:1 con la freccia sopra, titolo e anno."""
     return '''<a href="%s" class="work stag" data-cats="%s" style="view-transition-name: w%d; display: flex; flex-direction: column; gap: 14px; animation-delay: %.2fs">
@@ -403,7 +427,7 @@ def card(w, i):
 <span style="font-size: 13px; color: #9A948C; white-space: nowrap">%s</span>
 </div>
 </a>
-''' % (w['slug'], '|'.join(w['cats']), i, 0.4 + i * 0.06, e(w['cats'][0]), w['img'], w.get('pos', '50% 50%'), e(w['t']), w['year'])
+''' % (w['slug'], '|'.join(w['cats']), i, 0.4 + i * 0.06, e(w['cats'][0]), copertina(w), w.get('pos', '50% 50%'), e(w['t']), w['year'])
 
 
 def griglia():
@@ -439,7 +463,7 @@ def home_card(w, i):
 <span>%s</span><span>%s</span>
 </div>
 </a>
-''' % (w['slug'], w['img'], w.get('pos', '50% 50%'), i + 1, e(w['t']), w['year'],
+''' % (w['slug'], copertina(w), w.get('pos', '50% 50%'), i + 1, e(w['t']), w['year'],
        e(w.get('home_kind') or w['kicker'].rsplit(' · ', 1)[0]), e(w.get('home_role') or w['role_short']))
 
 
@@ -501,4 +525,5 @@ bys = {w['slug']: w for w in WORKS}
 put('index.html', 'home:lavori', ''.join(home_card(bys[s], i) for i, s in enumerate(HOME_WORKS)))
 put('index.html', 'home:filmografia', ''.join(filmo_row(*f, 'reveal', 'minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 0.8fr)', 26, '20px') for f in FILMOGRAFIA[:HOME_FILMO]))
 put('chi-sono.html', 'chisono:filmografia', ''.join(filmo_row(*f, 'row reveal', 'minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 0.7fr)', 24, '18px') for f in FILMOGRAFIA))
+dati_copertine()
 print('ok elenchi')

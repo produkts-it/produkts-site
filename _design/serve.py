@@ -23,6 +23,24 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             return BytesIO(body)
         return super().send_head()
 
+    def do_POST(self):
+        """Solo per _design/copertine/: POST /_salva-copertina?slug=... salva il JPEG in img/copertine/<slug>.jpg."""
+        import re
+        from urllib.parse import urlparse, parse_qs
+        u = urlparse(self.path)
+        slug = parse_qs(u.query).get('slug', [''])[0]
+        if u.path != '/_salva-copertina' or not re.fullmatch(r'[a-z0-9-]+', slug):
+            self.send_error(400)
+            return
+        os.makedirs(os.path.join(ROOT, 'img', 'copertine'), exist_ok=True)
+        data = self.rfile.read(int(self.headers.get('Content-Length', 0)))
+        with open(os.path.join(ROOT, 'img', 'copertine', slug + '.jpg'), 'wb') as f:
+            f.write(data)
+        self.send_response(200)
+        self.send_header('Content-Type', 'text/plain')
+        self.end_headers()
+        self.wfile.write(b'ok')
+
     def end_headers(self):
         self.send_header('Cache-Control', 'no-store')  # in anteprima sempre i file appena modificati
         super().end_headers()
