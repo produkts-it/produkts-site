@@ -43,6 +43,7 @@ WORKS, AMARCORD, FILMOGRAFIA = DATI['lavori'], DATI['amarcord'], DATI['filmograf
 HOME_WORKS, HOME_FILMO, CAT_LABELS = DATI['home'], DATI['home_filmografia'], DATI['categorie']
 DYNAMIS = DATI['dynamis']  # pagina fatta a mano, ma il blocco Credits si genera da qui per avere gli "Anche in…"
 PROD = 'Tiziana Lattuca per AMARCORD'
+anno = lambda a: a.get('anno') or '2026'  # i corti AMARCORD senza anno sono quelli del 2026
 
 e = lambda s: html.escape(s, quote=True)
 
@@ -175,9 +176,9 @@ def hero(w, url, plat):
 <span aria-hidden="true" class="lb lb-b" style="position: absolute; left: 0; right: 0; background: #080808; z-index: 2"></span>
 <span aria-hidden="true" style="position: absolute; top: 24px; left: 24px; width: 36px; height: 36px; border-top: 1px solid #336699; border-left: 1px solid #336699"></span>
 <span aria-hidden="true" style="position: absolute; bottom: 24px; right: 24px; width: 36px; height: 36px; border-bottom: 1px solid #336699; border-right: 1px solid #336699"></span>
-<span aria-hidden="true" style="position: absolute; top: 28px; right: 72px; font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: #6E6A64">AMARCORD · 2026</span>
+<span aria-hidden="true" style="position: absolute; top: 28px; right: 72px; font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: #6E6A64">%(mirino)s</span>
 <span style="display: inline-flex; align-items: center; gap: 12px; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; border: 1px solid rgba(232,228,223,0.6); border-radius: 26px; height: 52px; padding: 0 26px 0 20px"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5l11 7-11 7V5z"></path></svg>Guarda su %(plat)s</span>
-</a>''' % dict(t=e(w['t']), url=url, plat=plat)
+</a>''' % dict(t=e(w['t']), url=url, plat=plat, mirino=e(w.get('mirino') or w.get('year', '')))
 
 
 def page(w):
@@ -248,7 +249,7 @@ def dati_copertine():
         out.append(dict(slug=w['slug'], img=w['img'], kicker=w['kicker'], t=w['t'], sub=w.get('sub', ''),
                         dati=[list(w['meta'][0]), [KI, w['role_short']], ['Uscita', w['date']]]))
     for a in AMARCORD:
-        out.append(dict(slug=a['slug'], img=a['img'], kicker='Cortometraggio · AMARCORD · 2026', t=a['t'], sub='',
+        out.append(dict(slug=a['slug'], img=a['img'], kicker='Cortometraggio · AMARCORD · ' + anno(a), t=a['t'], sub='',
                         dati=[['Regia', ' e '.join(dict(a['crew'])['Regia'])], [KI, a['ruolo']], ['Durata', '%d minuti' % a['min']]]))
     import json
     save(os.path.join(HERE, '..', 'copertine', 'dati.json'), json.dumps(out, ensure_ascii=False, indent=1))
@@ -273,10 +274,9 @@ def card(w, i):
 
 
 def griglia():
-    """Tutti i lavori in un'unica griglia, dal più recente: Dynamis, poi i corti AMARCORD (2026), poi gli altri."""
-    am = [dict(slug=a['slug'], t=a['t'], year='2026', img=a['img'], cats=['Cortometraggio', 'AMARCORD']) for a in AMARCORD]
-    tutti = [w for w in WORKS if w['year'] >= '2026'] + am + [w for w in WORKS if w['year'] < '2026']
-    return tutti
+    """Tutti i lavori in un'unica griglia, dal più recente; a parità di anno prima i lavori (Dynamis), poi i corti AMARCORD."""
+    am = [dict(slug=a['slug'], t=a['t'], year=anno(a), img=a['img'], cats=['Cortometraggio', 'AMARCORD']) for a in AMARCORD]
+    return sorted(WORKS + am, key=lambda w: w['year'], reverse=True)  # sorted è stabile: l'ordine dei dati resta tra pari anno
 
 
 def tab(c, label):
@@ -310,9 +310,9 @@ def home_card(w, i):
 
 
 def amarcord_page(a):
-    w = dict(a, kicker='Cortometraggio · AMARCORD · 2026', role=a['ruolo'],
+    w = dict(a, kicker='Cortometraggio · AMARCORD · ' + anno(a), role=a['ruolo'], mirino='AMARCORD · ' + anno(a),
              meta=[('Regia', ', '.join(dict(a['crew'])['Regia'])), ('Produzione', PROD)]
-                  + ([('Genere', a['gen'])] if a.get('gen') else []) + [('Durata', '%d minuti' % a['min']), ('Anno', '2026 · Vimeo')])
+                  + ([('Genere', a['gen'])] if a.get('gen') else []) + [('Durata', '%d minuti' % a['min']), ('Anno', anno(a) + ' · Vimeo')])
     page(w)
 
 
