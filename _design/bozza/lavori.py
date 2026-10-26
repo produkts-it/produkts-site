@@ -74,7 +74,7 @@ WORKS = [
          meta=[('Artista', 'Bartek Dabrowski'), ('Uscita', '29 marzo 2024 · YouTube')],
          crew=[('Artista', 'Bartek Dabrowski'), ('Direzione della fotografia', KI), ('Riprese', KI), ('Montaggio', KI),
                ('Color', KI), ('VFX', KI)]),
-    dict(slug='korvo', t='Hai perso', sub='Korvo', year='2023', date='giugno 2023',
+    dict(slug='korvo', t='Hai perso', year='2023', date='giugno 2023',
          vimeo='888211568', img='img/lavori/korvo.jpg', cats=['Videoclip'],
          kicker='Videoclip musicale · 2023',
          line="Videoclip di «Hai perso» per Korvo, curato dall'idea alla consegna: regia, riprese, montaggio e color.",
