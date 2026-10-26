@@ -99,7 +99,7 @@ HOME_WORKS = ['dynamis', 'schizophrenia', 'coseco', 'wake-up']
 # Titolo, ruolo, produzione, pagina (se c'è)
 FILMOGRAFIA = [
     ('Dynamis', 'Produttore, D.O.P., montaggio, color, VFX', 'produkts.it', 'dynamis'),
-    ('Tra i Piedi', 'Direttore della fotografia', 'AMARCORD', None),
+    ('Tra i Piedi', 'Direttore della fotografia', 'AMARCORD', 'tra-i-piedi'),
     ("L'Inventario", 'Co-D.O.P.', 'AMARCORD', 'l-inventario'),
     ('Schizophrenia — Io e Nessun Altro', 'Regia e fotografia', 'produkts.it', 'schizophrenia'),
     ('Troppo bella per loro', 'Docufilm · regia, riprese e montaggio', 'produkts.it', 'troppo-bella-per-loro'),
@@ -123,6 +123,7 @@ ANDREA, MARIANNA, ROBERTA, MARTIN = 'Andrea La Tanza', 'Marianna Nettis', 'Rober
 PIETRO, FLANOTTE, VERA, FEDERICA, DONATELLA, VANESSA = 'Pietro Di Gioia', 'Francesco Lanotte', 'Vera Balice', 'Federica Dalena', 'Donatella Santorsa', 'Vanessa Ciccolella'
 MAYA, ALLEGRETTI, TIGRANO, EMMA, LORENZO = 'Maya Nacci', 'Francesco Allegretti', 'Francesco Tigrano', 'Emma Perini', 'Lorenzo Vitucci'
 SIMONA, ANITA, VITA, AMELIA, LEONARDA, NUZZI, SABRINA = 'Simona Lopez', 'Anita Donno', 'Vita Barberio', 'Amelia Potenza', 'Leonarda Cesonate', 'Mariangela Nuzzi', 'Sabrina Colamorea'
+LAERA, BETTY, ZAGARIA = 'Maria Rosaria Laera', 'Betty Corradini', 'Simona Zagaria'
 PROD = TIZIANA + ' per AMARCORD'
 
 # Credits di Dynamis (la pagina è fatta a mano, ma il blocco Credits si genera da qui per avere gli "Anche in…")
@@ -136,6 +137,13 @@ DYNAMIS = dict(slug='dynamis', t='Dynamis',
 # Corti di AMARCORD (Accademia Mediterranea del Cinema), 2026: tutti cortometraggi, ognuno con la sua pagina e il link a Vimeo.
 # Niente sinossi (no spoiler): solo una riga di atmosfera. Cast: (personaggio o '', nome). Troupe: (ruolo, [nomi]).
 AMARCORD = [
+    dict(slug='tra-i-piedi', img='img/amarcord/tra-i-piedi.jpg', t='Tra i piedi', gen='', ruolo='Direttore della fotografia', min=6, vimeo='1236005846/a8fe909088',
+         line='Un cortometraggio di AMARCORD girato nel 2026.',
+         cast=[('Marta', DONATELLA), ('Edoardo', ALLEGRETTI), ('Diego', TIGRANO), ('Stefania', MAYA), ('Martina', VERA)],
+         crew=[('Regia', [MATTEO]), ('Produzione', [PROD]), ('Direzione della fotografia', [KI]), ('Operatori', [CARBONARA, VITTORIA]),
+               ('Assistenti operatore', [SONIA, CIPRI]), ('Montaggio', [ANGELICA]), ('Aiuto regia', [MICHELE]), ('Scenografia', [LUCA]),
+               ('Fonico', [DAVIDE]), ('Segretario di edizione', [ANDREA]), ('Ciak', [GIADA]),
+               ('Capo reparto trucco', [LAERA]), ('Trucco', [BETTY, ZAGARIA])]),
     dict(slug='paranoia', img='img/amarcord/paranoia.jpg', t='Paranoia', gen='Dramma psicologico', ruolo='Operatore', min=7, vimeo='1220653465/634fa7dd97',
          line='Un campus, un sospetto, una voce che non smette di suggerire.',
          cast=[('Luna', DONATELLA), ('Mirta', FEDERICA), ('Francesca', MAYA), ('Stefano', ALLEGRETTI), ('Alessandro', LORENZO)],
@@ -143,7 +151,7 @@ AMARCORD = [
                ('Direzione della fotografia', [VENDOLA]), ('Operatori', [DAVIDE, KI]), ('Assistenti operatore', [GIADA, VITTORIA]),
                ('Montaggio', [ANGELICA]), ('Aiuto regia', [LUCA]), ('Scenografia', [MICHELE]), ('Fonico', [CARBONARA]),
                ('Segretaria di edizione', [MARIANNA]), ('Ciak', [SONIA]), ('Backstage', [ANDREA]),
-               ('Capo reparto trucco', ['Simona Zagaria']), ('Trucco', [VITA, 'Annachiara De Palo'])]),
+               ('Capo reparto trucco', [ZAGARIA]), ('Trucco', [VITA, 'Annachiara De Palo'])]),
     dict(slug='sbaglio-dunque-esisto', img='img/amarcord/sbaglio-dunque-esisto.jpg', t='Sbaglio dunque esisto', gen='Dramma psicologico', ruolo='Operatore e fonico', min=6, vimeo='1220653421/520923c76a',
          line='Una terapia sperimentale, una stanza chiusa e un viaggio dentro i ricordi.',
          cast=[('Selene', VANESSA), ('Infermiera', EMMA), ('Dottore', PIETRO), ('Infermiere', TIGRANO), ('Mamma', FEDERICA), ('Papà', LORENZO)],
@@ -183,7 +191,7 @@ AMARCORD = [
                ('Direzione della fotografia', [KI, GIADA]), ('Operatore', [SONIA]), ('Assistente operatore', [CIPRI]),
                ('Montaggio', [CARDONE, DAVIDE]), ('Aiuto regia', [MARTIN]), ('Scenografia', [ROBERTA]), ('Fonico', [DAVIDE]),
                ('Segretaria di edizione', [ROBERTA]), ('Ciak', [VITTORIA]), ('Backstage', [MICHELE]),
-               ('Capo reparto trucco', ['Maria Rosa Laera']), ('Trucco', ['Betty Corradini', SABRINA])]),
+               ('Capo reparto trucco', [LAERA]), ('Trucco', [BETTY, SABRINA])]),
     dict(slug='il-tanga-e-la-cravatta', img='img/amarcord/il-tanga-e-la-cravatta.jpg', t='Il tanga e la cravatta', gen='', ruolo='Fonico', min=5, vimeo='1205098451/48cd24e2f4',
          line='Un cortometraggio di AMARCORD girato nel 2026.',
          cast=[('Gerardo', PIETRO), ('Giacinto', FLANOTTE), ('Adelina', VERA), ('Ginevra', FEDERICA)],
