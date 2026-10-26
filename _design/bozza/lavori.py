@@ -394,7 +394,12 @@ SENZA_COPERTINA = {'dynamis', 'schizophrenia'}  # hanno già la loro immagine: n
 def copertina(w):
     """Copertina disegnata (titolo e dati sul fotogramma, da _design/copertine/) se c'è, altrimenti il fotogramma."""
     p = 'img/copertine/%s.jpg' % w['slug']
-    return p if w['slug'] not in SENZA_COPERTINA and os.path.exists(os.path.join(OUT, p)) else w['img']
+    f = os.path.join(OUT, p)
+    if w['slug'] in SENZA_COPERTINA or not os.path.exists(f):
+        return w['img']
+    # ?v= cambia quando cambia l'immagine: i browser non mostrano la copertina vecchia rimasta in memoria
+    import hashlib
+    return p + '?v=' + hashlib.sha1(open(f, 'rb').read()).hexdigest()[:8]
 
 
 def dati_copertine():
