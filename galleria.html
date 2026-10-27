@@ -89,14 +89,15 @@ var show=n==='reload'||(n!=='back_forward'&&!same);if(show&&!matchMedia('(prefer
 </footer>
 
 <div class="if" data-if="lightbox" hidden>
-<div class="lbx" role="dialog" aria-modal="true" aria-label="Foto ingrandita" style="position: fixed; inset: 0; z-index: 50; background: rgba(8,8,8,0.6); -webkit-backdrop-filter: blur(28px) saturate(0.85); backdrop-filter: blur(28px) saturate(0.85); display: flex; flex-direction: column">
-<div style="flex: 1; min-height: 0; display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 96px 12px 104px">
-<button type="button" data-act="prev" aria-label="Foto precedente" style="width: 52px; height: 52px; flex: none; background: transparent; border: 0; color: #E8E4DF; cursor: pointer; display: flex; align-items: center; justify-content: center">
-<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>
+<div class="lbx" role="dialog" aria-modal="true" aria-label="Foto ingrandita" style="position: fixed; top: 0; bottom: 0; left: calc(50% - 50vw); width: 100vw; z-index: 50; background: rgba(8,8,8,0.6); -webkit-backdrop-filter: blur(28px) saturate(0.85); backdrop-filter: blur(28px) saturate(0.85); display: flex; flex-direction: column">
+<div style="position: relative; flex: 1; min-height: 0">
+<!-- foto a tutto schermo; frecce e notch stanno sopra la foto -->
+<img class="big" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; display: block">
+<button type="button" data-act="prev" class="g-freccia" aria-label="Foto precedente" style="position: absolute; top: 50%; left: max(10px, env(safe-area-inset-left)); transform: translateY(-50%); width: 48px; height: 48px; border-radius: 50%; background: rgba(8,8,8,0.45); border: 0; -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); color: #E8E4DF; cursor: pointer; display: flex; align-items: center; justify-content: center">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>
 </button>
-<div style="flex: 1; min-width: 0; height: 100%; display: flex; align-items: center; justify-content: center"><img class="big" alt="" style="max-width: 100%; max-height: 100%; object-fit: contain; display: block; box-shadow: 0 30px 80px rgba(0,0,0,0.5)"></div>
-<button type="button" data-act="next" aria-label="Foto successiva" style="width: 52px; height: 52px; flex: none; background: transparent; border: 0; color: #E8E4DF; cursor: pointer; display: flex; align-items: center; justify-content: center">
-<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M9 5l7 7-7 7"></path></svg>
+<button type="button" data-act="next" class="g-freccia" aria-label="Foto successiva" style="position: absolute; top: 50%; right: max(10px, env(safe-area-inset-right)); transform: translateY(-50%); width: 48px; height: 48px; border-radius: 50%; background: rgba(8,8,8,0.45); border: 0; -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); color: #E8E4DF; cursor: pointer; display: flex; align-items: center; justify-content: center">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M9 5l7 7-7 7"></path></svg>
 </button>
 <div class="g-notch" style="position: absolute; left: 50%; bottom: max(18px, env(safe-area-inset-bottom)); transform: translateX(-50%); display: flex; align-items: center; gap: 6px; padding: 6px 6px 6px 20px; border-radius: 32px; background: rgba(8,8,8,0.78); border: 1px solid #2A2A2A; -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); white-space: nowrap; max-width: calc(100vw - 24px); box-sizing: border-box">
 <span class="g-pos" style="font-size: 12px; letter-spacing: 0.12em; color: #C9C4BD; font-variant-numeric: tabular-nums; overflow: hidden; text-overflow: ellipsis; min-width: 0"></span>
