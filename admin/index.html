@@ -190,7 +190,8 @@ var FORM_G='<form class="item gform" id="gform" style="border-color:var(--steel)
  +'<label>Data<span class="gdata"><input name="data" type="date"><button type="button" data-goggi="1">Oggi</button></span></label><label style="flex-basis:100%">Link Aruba Drive<input name="link" required placeholder="https://….arubadrive.com/s/…"></label></div>'
  +'<div class="az"><button type="submit" class="on">Crea galleria</button></div><p class="gesito" hidden></p></form>';
 function linkG(g){return SITO+'/galleria?c='+g.codice}
-function waG(g){return 'https://wa.me/?text='+encodeURIComponent('Ciao '+g.cliente.split(' ')[0]+'! Le tue foto sono pronte.\nLe trovi qui: '+linkG(g)+'\n\nSe te lo chiede, il codice è: '+g.codice)}
+function waG(g){return 'https://wa.me/?text='+encodeURIComponent('Ciao '+g.cliente.split(' ')[0]+'! 👋\nLe tue foto'+(g.titolo?' ('+g.titolo+')':'')+' sono pronte 📸✨\n\n👉 Le trovi qui:\n'+linkG(g)
+  +'\n\n🔐 Il tuo codice: *'+g.codice+'*\n(ti serve se entri da produkts.it → Area clienti)\n\n⬇️ Puoi scaricarle una alla volta o tutte insieme in alta qualità.\n\nFammi sapere se ti piacciono! 🤍\nKarim · produkts.it')}
 function gal(g){
   return '<div class="item'+(g.attiva?'':' spenta')+'"><div class="meta"><b>'+(g.attiva?'attiva':'spenta')+'</b><span>creata '+e(data(g.creato))+'</span>'
    +'<span>'+(g.aperta?'aperta '+e(data(g.aperta))+' · '+g.aperture+' visite':'non ancora aperta')+'</span>'+(g.download?'<span>'+g.download+' download</span>':'')+'</div>'
