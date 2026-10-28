@@ -212,8 +212,9 @@ function gal(g){
    +'<button type="button" data-gal="'+g.id+'" data-gcod="1">Nuovo codice</button>'
    +'<button type="button" data-gal="'+g.id+'" data-gdel="1">Elimina</button>'
    +'<button type="button" data-gedit="'+g.id+'" data-gcodice="'+e(g.codice)+'">Ordine e copertina</button>'
+   +'<button type="button" data-gagg="'+g.id+'">Aggiorna da Aruba</button>'
    +(g.ultimo_download||g.download?'<button type="button" data-gdl="'+g.id+'">Download</button>':'')+'</div>'
-   +'<div class="gedit" id="ged-'+g.id+'" hidden></div><div class="gedit" id="gdl-'+g.id+'" hidden></div></div>';
+   +'<div class="gedit" id="gagg-'+g.id+'" hidden></div><div class="gedit" id="ged-'+g.id+'" hidden></div><div class="gedit" id="gdl-'+g.id+'" hidden></div></div>';
 }
 document.addEventListener('submit',async function(ev){
   if(ev.target.id!=='gform')return;ev.preventDefault();
@@ -227,7 +228,7 @@ document.addEventListener('submit',async function(ev){
 });
 /* Editor di una galleria: ordine delle sottocartelle (frecce) e foto di copertina (clic su una miniatura) */
 var ED={};
-function mini(id,p,lato){return '/api/galleria/anteprima?c='+encodeURIComponent(ED[id].codice)+'&s='+(lato||240)+'&p='+encodeURIComponent(p)}
+function mini(id,p,lato){var v=(ED[id].versioni||{})[p];return '/api/galleria/anteprima?c='+encodeURIComponent(ED[id].codice)+'&s='+(lato||240)+'&p='+encodeURIComponent(p)+(v?'&v='+encodeURIComponent(v):'')}
 /* Punto di focus della copertina (come Pixieset): tocca o trascina sulla foto; le anteprime mostrano il taglio da computer e da telefono */
 function fuocoHtml(id){
   var st=ED[id],u=mini(id,st.copertina,480),f=st.fuoco||'50% 50%',xy=f.split(' ');
@@ -263,8 +264,33 @@ async function apriEd(id,codice){
   var box=document.getElementById('ged-'+id);
   if(!box.hidden){box.hidden=true;return}
   box.hidden=false;box.innerHTML='<p class="vuoto">Leggo la cartella su Aruba…</p>';
-  try{var r=await api('gallerie/'+id);ED[id]={codice:r.codice,sezioni:r.sezioni,copertina:r.copertina,fuoco:r.fuoco,vista:0};disegnaEd(id)}
+  try{var r=await api('gallerie/'+id);ED[id]={codice:r.codice,sezioni:r.sezioni,copertina:r.copertina,fuoco:r.fuoco,versioni:r.versioni,vista:0};disegnaEd(id)}
   catch(err){box.innerHTML='<p class="err">'+e(err.message)+'</p>'}
+}
+/* "Aggiorna da Aruba": rilegge la cartella condivisa e mostra cosa è cambiato dall'ultima volta (i clienti vedono subito le foto nuove) */
+async function aggiorna(id,b){
+  var box=document.getElementById('gagg-'+id);
+  box.hidden=false;box.innerHTML='<p class="vuoto">Controllo la cartella su Aruba…</p>';b.disabled=true;
+  try{
+    var r=await api('gallerie/'+id,{aggiorna:true}),nome=function(p){return p.split('/').slice(1).join(' · ')};
+    var mini2=function(p){var v=r.versioni[p];return '/api/galleria/anteprima?c='+encodeURIComponent(r.codice)+'&s=240&p='+encodeURIComponent(p)+(v?'&v='+encodeURIComponent(v):'')};
+    var griglia=function(lista){return '<div class="gdlfoto">'+lista.slice(0,60).map(function(p){return '<figure class="gdlf"><img src="'+e(mini2(p))+'" alt="" loading="lazy"><figcaption>'+e(nome(p))+'</figcaption></figure>'}).join('')+'</div>'+(lista.length>60?'<p class="vuoto">e altre '+(lista.length-60)+'</p>':'')};
+    var blocco=function(titolo,lista,foto){return lista.length?'<div class="meta" style="margin-top:8px"><b>'+titolo+'</b><span>'+lista.length+'</span></div>'+(foto?griglia(lista):'<div class="testo">'+lista.map(function(p){return e(nome(p))}).join('<br>')+'</div>'):''};
+    var tot=r.totale+' foto in '+r.sezioni+(r.sezioni===1?' sezione':' sezioni');
+    var h;
+    if(!r.confronto){
+      h='<p class="gesito ok">Galleria aggiornata ('+tot+'): il cliente vede già le foto di adesso.</p>'
+        +'<p class="vuoto">È il primo controllo di questa galleria, quindi non ho un "prima" da confrontare: qui sotto le foto caricate o sostituite dopo la sua creazione. Dalla prossima volta ti mostro nuove, sostituite e tolte.</p>'
+        +blocco('Caricate o cambiate dopo la creazione',r.recenti,true);
+    }else if(!r.aggiunte.length&&!r.modificate.length&&!r.rimosse.length){
+      h='<p class="gesito ok">Nessuna modifica dall’ultimo controllo ('+tot+').</p>';
+    }else{
+      h='<p class="gesito ok">Galleria aggiornata ('+tot+'): il cliente vede già le modifiche.</p>'
+        +blocco('Nuove',r.aggiunte,true)+blocco('Sostituite',r.modificate,true)+blocco('Tolte',r.rimosse,false);
+    }
+    box.innerHTML=h;
+  }catch(err){box.innerHTML='<p class="err">'+e(err.message)+'</p>'}
+  finally{b.disabled=false}
 }
 /* Registro dei download di una galleria: foto scaricate (le più scaricate prima) e ultimi movimenti */
 async function apriDl(id){
@@ -306,6 +332,7 @@ document.addEventListener('click',async function(ev){
     if(b.dataset.goggi){var t=new Date(),z=function(n){return String(n).padStart(2,'0')};b.previousElementSibling.value=t.getFullYear()+'-'+z(t.getMonth()+1)+'-'+z(t.getDate());return}
     if(b.dataset.gedit){apriEd(b.dataset.gedit,b.dataset.gcodice);return}
     if(b.dataset.gdl){apriDl(b.dataset.gdl);return}
+    if(b.dataset.gagg){aggiorna(b.dataset.gagg,b);return}
     if(b.dataset.gsu||b.dataset.ggiu){var id=b.dataset.gsu||b.dataset.ggiu,i=+b.dataset.i,j=b.dataset.gsu?i-1:i+1,a=ED[id].sezioni,t2=a[i];a[i]=a[j];a[j]=t2;disegnaEd(id);return}
     if(b.dataset.gvista){ED[b.dataset.gvista].vista=+b.dataset.i;disegnaEd(b.dataset.gvista);return}
     if(b.dataset.gcop){ED[b.dataset.gcop].copertina=b.dataset.p;ED[b.dataset.gcop].fuoco='50% 50%';disegnaEd(b.dataset.gcop);return}

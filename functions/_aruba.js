@@ -40,7 +40,7 @@ async function chiedi(l, url, init = {}) {
 
 const davUrl = (l, path) => l.base + '/public.php/dav/files/' + l.token + path.split('/').map(encodeURIComponent).join('/');
 
-const PROP = '<?xml version="1.0"?><d:propfind xmlns:d="DAV:"><d:prop><d:getcontenttype/><d:getcontentlength/><d:getlastmodified/><d:resourcetype/></d:prop></d:propfind>';
+const PROP = '<?xml version="1.0"?><d:propfind xmlns:d="DAV:"><d:prop><d:getcontenttype/><d:getcontentlength/><d:getlastmodified/><d:getetag/><d:resourcetype/></d:prop></d:propfind>';
 
 async function elenca(l, path) {
   const r = await chiedi(l, davUrl(l, path), { method: 'PROPFIND', headers: { depth: '1', 'content-type': 'application/xml' }, body: PROP });
@@ -55,7 +55,10 @@ async function elenca(l, path) {
     const nome = rel.replace(/\/$/, '').split('/').pop();
     if (!nome || nome.startsWith('.')) continue;
     voci.push({ nome, path: rel.replace(/\/$/, ''), dir, mime: (/<d:getcontenttype>([^<]*)</.exec(blocco) || [])[1] || '',
-      size: +((/<d:getcontentlength>([^<]*)</.exec(blocco) || [])[1] || 0) });
+      size: +((/<d:getcontentlength>([^<]*)</.exec(blocco) || [])[1] || 0),
+      mod: Date.parse((/<d:getlastmodified>([^<]*)</.exec(blocco) || [])[1] || '') || 0,
+      // versione del file: cambia quando Karim lo sostituisce su Aruba (serve per anteprime e "Aggiorna")
+      v: ((/<d:getetag>([^<]*)</.exec(blocco) || [])[1] || '').replace(/&quot;/g, '').replace(/[^A-Za-z0-9]/g, '').slice(0, 16) });
   }
   const naturale = new Intl.Collator('it', { numeric: true, sensitivity: 'base' });
   return voci.sort((a, b) => naturale.compare(a.nome, b.nome));
@@ -63,12 +66,13 @@ async function elenca(l, path) {
 
 const struttureCache = new Map(); // token → { dati, scade }
 
-/** { sezioni: [{ nome, foto: [{ path, nome, size }] }], totale, peso } — rilette al massimo ogni 5 minuti. */
-export async function struttura(l, fresca = false) {
+/** { sezioni: [{ nome, foto: [{ path, nome, size, mod, v }] }], totale, peso } — rilette al massimo ogni 5 minuti,
+ *  e subito se Karim ha premuto "Aggiorna" dopo l'ultima lettura (`dopo` = quel momento in ms). */
+export async function struttura(l, fresca = false, dopo = 0) {
   const c = struttureCache.get(l.token);
-  if (c && !fresca && c.scade > Date.now()) return c.dati;
+  if (c && !fresca && c.scade > Date.now() && c.letta > dopo) return c.dati;
   const radice = await elenca(l, '/');
-  const foto = (v) => v.filter((x) => !x.dir && IMMAGINI.test(x.mime)).map((x) => ({ path: x.path, nome: x.nome, size: x.size }));
+  const foto = (v) => v.filter((x) => !x.dir && IMMAGINI.test(x.mime)).map((x) => ({ path: x.path, nome: x.nome, size: x.size, mod: x.mod, v: x.v }));
   const sezioni = [];
   const sciolte = foto(radice);
   if (sciolte.length) sezioni.push({ nome: '', foto: sciolte });
@@ -78,7 +82,7 @@ export async function struttura(l, fresca = false) {
   }
   const tutte = sezioni.flatMap((s) => s.foto);
   const dati = { sezioni, totale: tutte.length, peso: tutte.reduce((n, f) => n + f.size, 0) };
-  struttureCache.set(l.token, { dati, scade: Date.now() + 5 * 60 * 1000 });
+  struttureCache.set(l.token, { dati, scade: Date.now() + 5 * 60 * 1000, letta: Date.now() });
   return dati;
 }
 

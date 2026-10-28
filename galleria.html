@@ -122,7 +122,7 @@ var pos=box.querySelector('.g-pos'),big=box.querySelector('.big'),dl=box.querySe
 var input=d.getElementById('g-code'),err=d.querySelector('.g-err'),btn=d.querySelector('[data-act="enter"]');
 var griglia=d.querySelector('.g-griglia'),tabs=d.querySelector('.g-tabs'),zip=d.querySelector('.g-zip'),zipT=d.querySelector('.g-zip-t');
 function q(u,x){return api+u+'?c='+encodeURIComponent(codice)+(x||'')}
-function prev(f,lato){return q('/anteprima','&s='+lato+'&p='+encodeURIComponent(f.p))}
+function prev(f,lato){return q('/anteprima','&s='+lato+'&p='+encodeURIComponent(f.p)+(f.v?'&v='+f.v:''))} /* v: versione del file, cambia se la foto viene sostituita su Aruba */
 function orig(f){return q('/foto','&p='+encodeURIComponent(f.p))}
 function esc(t){return String(t).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
 function errore(m){err.textContent=m||'';err.hidden=!m}
@@ -147,7 +147,7 @@ function disegna(){
   d.querySelector('.g-nome').textContent=G.cliente;
   d.querySelector('.g-kick').textContent=[G.titolo,G.data].filter(Boolean).join(' · ')||'Galleria privata';
   foto=[];G.sezioni.forEach(function(s){s.foto.forEach(function(f){f.sez=s.nome;foto.push(f)})});
-  var cop=d.querySelector('.g-cover'),cf=G.copertina?{p:G.copertina}:foto[0];cop.onload=function(){cop.style.opacity=1};cop.style.objectPosition=G.fuoco||'50% 50%';if(cf)cop.src=prev(cf,1600);
+  var cop=d.querySelector('.g-cover'),cf=G.copertina?(foto.find(function(f){return f.p===G.copertina})||{p:G.copertina}):foto[0];cop.onload=function(){cop.style.opacity=1};cop.style.objectPosition=G.fuoco||'50% 50%';if(cf)cop.src=prev(cf,1600);
   var nomi=G.sezioni.map(function(s){return s.nome});
   tabs.innerHTML=nomi.length>1?['Tutte'].concat(nomi).map(function(n,i){var v=i?n:null;return '<button type="button" data-sez="'+(i?esc(n):'')+'" data-tutte="'+(i?0:1)+'" style="background: transparent; border: 0; border-bottom: 1px solid transparent; color: #9A948C; padding: 12px 0; font-family: \'Space Grotesk\', sans-serif; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; cursor: pointer">'+esc(i?(n||'Altre foto'):'Tutte')+'</button>'}).join(''):'';
   tabs.querySelectorAll('button').forEach(function(b){b.addEventListener('click',function(){var v=b.getAttribute('data-tutte')==='1'?null:b.getAttribute('data-sez');if(v===cur)return;PK.vt(function(){cur=v;filtra()})})});

@@ -9,7 +9,7 @@
 //   POST /api/admin/push/prova          manda una notifica di prova a tutti i dispositivi
 import { json, corpo, autorizzato } from '../../_lib.js';
 import { chiavePubblica, iscrivi, disiscrivi, inviaPush } from '../../_push.js';
-import { tabella, nuovoCodice, ordina, copertina, fuoco } from '../../_gallerie.js';
+import { tabella, nuovoCodice, ordina, copertina, fuoco, istantanea, modifiche } from '../../_gallerie.js';
 import * as aruba from '../../_aruba.js';
 import * as lavori from '../../_lavori.js';
 //   GET  /api/admin/lavori              dati dei lavori (lavori.json sul ramo del sito) per la scheda Lavori
@@ -19,6 +19,7 @@ import * as lavori from '../../_lavori.js';
 //   GET  /api/admin/gallerie/:id        sezioni (nell'ordine scelto) con le foto, copertina: per l'editor del pannello
 //   GET  /api/admin/gallerie/:id?download=1  registro dei download (foto più scaricate, ultimi movimenti)
 //   POST /api/admin/gallerie/:id        { attiva } | { nuovoCodice: true } | { elimina: true } | { cliente, titolo, data } | { ordine: [nomi], copertina: path, fuoco: "x% y%" }
+//   POST /api/admin/gallerie/:id        { aggiorna: true } → rilegge Aruba, dice cosa è cambiato dall'ultima volta e lo mostra subito ai clienti
 
 export async function onRequest({ request, env, params }) {
   if (!(await autorizzato(request, env))) return json({ errore: 'Accesso negato.' }, 401);
@@ -76,8 +77,8 @@ export async function onRequest({ request, env, params }) {
       let codice;
       for (let i = 0; i < 5; i++) {
         codice = nuovoCodice();
-        const r = await env.DB.prepare('INSERT OR IGNORE INTO gallerie (codice, cliente, titolo, data, link) VALUES (?, ?, ?, ?, ?)')
-          .bind(codice, cliente, String(d.titolo || '').trim().slice(0, 120), String(d.data || '').trim().slice(0, 40), linkAruba).run();
+        const r = await env.DB.prepare('INSERT OR IGNORE INTO gallerie (codice, cliente, titolo, data, link, istantanea) VALUES (?, ?, ?, ?, ?, ?)')
+          .bind(codice, cliente, String(d.titolo || '').trim().slice(0, 120), String(d.data || '').trim().slice(0, 40), linkAruba, istantanea(s)).run();
         if (r.meta.changes) break;
       }
       return json({ ok: true, codice, foto: s.totale, sezioni: s.sezioni.map((x) => x.nome || '(cartella principale)') });
@@ -88,10 +89,23 @@ export async function onRequest({ request, env, params }) {
       let s;
       try { s = await aruba.struttura(aruba.link(g.link), true); } catch (err) { return json({ errore: 'Non riesco a leggere il link Aruba: ' + err.message }, 502); }
       const sezioni = ordina(s.sezioni, g.ordine);
-      return json({ codice: g.codice, copertina: copertina(sezioni, g.copertina), fuoco: fuoco(g.fuoco), sezioni: sezioni.map((x) => ({ nome: x.nome, foto: x.foto.map((f) => f.path) })) });
+      return json({ codice: g.codice, copertina: copertina(sezioni, g.copertina), fuoco: fuoco(g.fuoco), sezioni: sezioni.map((x) => ({ nome: x.nome, foto: x.foto.map((f) => f.path) })),
+        versioni: Object.fromEntries(s.sezioni.flatMap((x) => x.foto).map((f) => [f.path, f.v || f.mod])) });
     }
     if (request.method === 'POST' && n > 0) {
       const d = (await corpo(request)) || {};
+      if (d.aggiorna === true) {
+        // "Aggiorna": rilegge Aruba, confronta con l'ultima istantanea, salva la nuova; da adesso i clienti vedono le foto nuove
+        const g = await env.DB.prepare('SELECT * FROM gallerie WHERE id = ?').bind(n).first();
+        if (!g) return json({ errore: 'Galleria non trovata.' }, 404);
+        let s;
+        try { s = await aruba.struttura(aruba.link(g.link), true); } catch (err) { return json({ errore: 'Non riesco a leggere il link Aruba: ' + err.message }, 502); }
+        const m = modifiche(s, g.istantanea, g.creato);
+        await env.DB.prepare("UPDATE gallerie SET istantanea = ?, aggiornata = datetime('now') WHERE id = ?").bind(istantanea(s), n).run();
+        const tutte = s.sezioni.flatMap((x) => x.foto);
+        return json({ ...m, codice: g.codice, totale: s.totale, sezioni: s.sezioni.length,
+          versioni: Object.fromEntries(tutte.map((f) => [f.path, f.v || f.mod])) });
+      }
       if (Array.isArray(d.ordine)) await env.DB.prepare('UPDATE gallerie SET ordine = ? WHERE id = ?').bind(JSON.stringify(d.ordine.map(String).slice(0, 200)), n).run();
       if (typeof d.copertina === 'string') await env.DB.prepare('UPDATE gallerie SET copertina = ? WHERE id = ?').bind(d.copertina.slice(0, 500), n).run();
       if (typeof d.fuoco === 'string') await env.DB.prepare('UPDATE gallerie SET fuoco = ? WHERE id = ?').bind(fuoco(d.fuoco), n).run();

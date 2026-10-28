@@ -18,8 +18,9 @@ export async function tabella(env) {
     download INTEGER NOT NULL DEFAULT 0
   )`).run();
   // Colonne aggiunte dopo: ordine delle sezioni (JSON con i nomi delle sottocartelle), foto di copertina (percorso)
-  // e suo punto di focus ("x% y%", come object-position)
-  for (const col of ['ordine TEXT', 'copertina TEXT', 'fuoco TEXT']) {
+  // e suo punto di focus ("x% y%", come object-position); istantanea delle foto all'ultimo "Aggiorna" (JSON percorso → versione)
+  // e momento di quell'aggiornamento (le pagine dei clienti rileggono Aruba da lì in poi)
+  for (const col of ['ordine TEXT', 'copertina TEXT', 'fuoco TEXT', 'istantanea TEXT', 'aggiornata TEXT']) {
     try { await env.DB.prepare('ALTER TABLE gallerie ADD COLUMN ' + col).run(); } catch (e) { /* esiste già */ }
   }
   // Registro dei download (solo cosa e quando, niente dati del dispositivo): tipo 'foto' (cosa = percorso) o 'zip' (cosa = sezione, '' = tutto)
@@ -77,3 +78,28 @@ export async function trova(env, codice) {
   if (!g) await new Promise((r) => setTimeout(r, 600));
   return g;
 }
+
+/** Versione di ogni foto (percorso → versione), da salvare nella colonna istantanea. */
+export const istantanea = (s) => JSON.stringify(Object.fromEntries(s.sezioni.flatMap((x) => x.foto).map((f) => [f.path, f.v || String(f.mod)])));
+
+/** Cosa è cambiato su Aruba rispetto all'ultima istantanea. Senza istantanea (gallerie create prima del pulsante Aggiorna)
+ *  si possono solo indicare le foto caricate o modificate dopo la creazione della galleria. */
+export function modifiche(s, primaJson, creato) {
+  const tutte = s.sezioni.flatMap((x) => x.foto);
+  let prima = null;
+  try { prima = primaJson ? JSON.parse(primaJson) : null; } catch (e) { /* istantanea rovinata: come se non ci fosse */ }
+  if (!prima) {
+    const da = Date.parse(String(creato || '').replace(' ', 'T') + 'Z') || 0;
+    return { confronto: false, recenti: tutte.filter((f) => f.mod > da).map((f) => f.path), aggiunte: [], modificate: [], rimosse: [] };
+  }
+  const ora = new Set(tutte.map((f) => f.path));
+  return {
+    confronto: true, recenti: [],
+    aggiunte: tutte.filter((f) => !(f.path in prima)).map((f) => f.path),
+    modificate: tutte.filter((f) => f.path in prima && prima[f.path] !== (f.v || String(f.mod))).map((f) => f.path),
+    rimosse: Object.keys(prima).filter((p) => !ora.has(p)),
+  };
+}
+
+/** Momento dell'ultimo "Aggiorna" in ms (0 se mai premuto). */
+export const aggiornataMs = (g) => (g.aggiornata ? Date.parse(g.aggiornata.replace(' ', 'T') + 'Z') || 0 : 0);

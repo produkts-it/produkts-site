@@ -1,10 +1,10 @@
 // API pubbliche delle gallerie clienti (servono il codice):
 //   GET /api/galleria?c=CODICE                       dati della galleria: cliente, titolo, data, sezioni e foto
-//   GET /api/galleria/anteprima?c=CODICE&p=PATH&s=L  anteprima (L = 240 | 480 | 1600 px), dalla cache di Cloudflare quando c'è
+//   GET /api/galleria/anteprima?c=CODICE&p=PATH&s=L[&v=VERSIONE]  anteprima (L = 240 | 480 | 1600 px), dalla cache di Cloudflare quando c'è
 //   GET /api/galleria/foto?c=CODICE&p=PATH           originale a piena qualità, come download
 //   GET /api/galleria/zip?c=CODICE[&p=SEZIONE]       zip di tutta la galleria o di una sezione
 import { json, notifica } from '../../_lib.js';
-import { trova, ordina, copertina, fuoco, registra } from '../../_gallerie.js';
+import { trova, ordina, copertina, fuoco, registra, aggiornataMs } from '../../_gallerie.js';
 import * as aruba from '../../_aruba.js';
 
 const nomeFile = (s) => String(s).replace(/[\\/:*?"<>|]+/g, ' ').replace(/\s+/g, ' ').trim() || 'foto';
@@ -28,9 +28,10 @@ export async function onRequestGet(context) {
   if (!l) return json({ errore: 'Galleria non disponibile.' }, 500);
 
   try {
-    const s = await aruba.struttura(l);
+    const s = await aruba.struttura(l, false, aggiornataMs(g)); // dopo un "Aggiorna" del pannello rilegge subito Aruba
     const p = url.searchParams.get('p') || '';
-    const esiste = (path) => s.sezioni.some((x) => x.foto.some((f) => f.path === path));
+    const cerca = (path) => s.sezioni.flatMap((x) => x.foto).find((f) => f.path === path);
+    const esiste = (path) => !!cerca(path);
 
     if (!cosa) {
       // Prima apertura: avviso Karim
@@ -42,14 +43,16 @@ export async function onRequestGet(context) {
       context.waitUntil(env.DB.prepare('UPDATE gallerie SET aperture = aperture + 1 WHERE id = ?').bind(g.id).run());
       const sezioni = ordina(s.sezioni, g.ordine);
       return json({ cliente: g.cliente, titolo: g.titolo, data: g.data, totale: s.totale, peso: s.peso, copertina: copertina(sezioni, g.copertina), fuoco: fuoco(g.fuoco),
-        sezioni: sezioni.map((x) => ({ nome: x.nome, foto: x.foto.map((f) => ({ p: f.path, n: f.nome, s: f.size })) })) });
+        sezioni: sezioni.map((x) => ({ nome: x.nome, foto: x.foto.map((f) => ({ p: f.path, n: f.nome, s: f.size, v: f.v })) })) });
     }
 
     if (cosa === 'anteprima') {
-      if (!esiste(p)) return json({ errore: 'Foto non trovata.' }, 404);
+      const f = cerca(p);
+      if (!f) return json({ errore: 'Foto non trovata.' }, 404);
       const lato = { 1600: 1600, 240: 240 }[url.searchParams.get('s')] || 480;
-      // Cache di Cloudflare per foto, non per codice: chiave interna senza il codice
-      const chiave = new Request('https://cache.produkts.it/anteprima/' + l.token + '/' + lato + '/' + encodeURIComponent(p));
+      // Cache di Cloudflare per foto, non per codice: chiave interna senza il codice, con la versione del file
+      // (una foto sostituita su Aruba con lo stesso nome ha una versione nuova, quindi un'anteprima nuova)
+      const chiave = new Request('https://cache.produkts.it/anteprima/' + l.token + '/' + lato + '/' + (f.v || f.mod) + '/' + encodeURIComponent(p));
       const cache = caches.default;
       let r = await cache.match(chiave);
       if (!r) {
