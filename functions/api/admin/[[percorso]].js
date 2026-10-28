@@ -17,6 +17,7 @@ import * as lavori from '../../_lavori.js';
 //   GET  /api/admin/gallerie            elenco gallerie clienti
 //   POST /api/admin/gallerie            { cliente, titolo, data, link } → crea, con codice nuovo
 //   GET  /api/admin/gallerie/:id        sezioni (nell'ordine scelto) con le foto, copertina: per l'editor del pannello
+//   GET  /api/admin/gallerie/:id?download=1  registro dei download (foto più scaricate, ultimi movimenti)
 //   POST /api/admin/gallerie/:id        { attiva } | { nuovoCodice: true } | { elimina: true } | { cliente, titolo, data } | { ordine: [nomi], copertina: path, fuoco: "x% y%" }
 
 export async function onRequest({ request, env, params }) {
@@ -47,8 +48,20 @@ export async function onRequest({ request, env, params }) {
   if (cosa === 'gallerie') {
     await tabella(env);
     if (request.method === 'GET' && !id) {
-      const { results } = await env.DB.prepare('SELECT * FROM gallerie ORDER BY creato DESC').all();
+      const { results } = await env.DB.prepare(`SELECT g.*,
+          (SELECT COUNT(*) FROM scaricamenti s WHERE s.galleria = g.id AND s.tipo = 'foto') AS foto_scaricate,
+          (SELECT COUNT(DISTINCT cosa) FROM scaricamenti s WHERE s.galleria = g.id AND s.tipo = 'foto') AS foto_diverse,
+          (SELECT MAX(creato) FROM scaricamenti s WHERE s.galleria = g.id) AS ultimo_download
+        FROM gallerie g ORDER BY creato DESC`).all();
       return json(results);
+    }
+    if (request.method === 'GET' && n > 0 && new URL(request.url).searchParams.get('download')) {
+      // Registro dei download di una galleria: foto più scaricate e ultimi 100 movimenti
+      const g = await env.DB.prepare('SELECT codice FROM gallerie WHERE id = ?').bind(n).first();
+      if (!g) return json({ errore: 'Galleria non trovata.' }, 404);
+      const foto = await env.DB.prepare("SELECT cosa, COUNT(*) AS volte, MAX(creato) AS ultima FROM scaricamenti WHERE galleria = ? AND tipo = 'foto' GROUP BY cosa ORDER BY volte DESC, ultima DESC").bind(n).all();
+      const ultimi = await env.DB.prepare('SELECT tipo, cosa, creato FROM scaricamenti WHERE galleria = ? ORDER BY creato DESC, id DESC LIMIT 100').bind(n).all();
+      return json({ codice: g.codice, foto: foto.results, ultimi: ultimi.results });
     }
     if (request.method === 'POST' && !id) {
       // Nuova galleria: controlla subito che il link Aruba si legga e conta le foto
@@ -84,6 +97,7 @@ export async function onRequest({ request, env, params }) {
       if (typeof d.fuoco === 'string') await env.DB.prepare('UPDATE gallerie SET fuoco = ? WHERE id = ?').bind(fuoco(d.fuoco), n).run();
       if (d.elimina === true) {
         await env.DB.prepare('DELETE FROM gallerie WHERE id = ?').bind(n).run();
+        await env.DB.prepare('DELETE FROM scaricamenti WHERE galleria = ?').bind(n).run();
         return json({ ok: true });
       }
       if (typeof d.attiva === 'boolean') await env.DB.prepare('UPDATE gallerie SET attiva = ? WHERE id = ?').bind(d.attiva ? 1 : 0, n).run();

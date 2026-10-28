@@ -4,7 +4,7 @@
 //   GET /api/galleria/foto?c=CODICE&p=PATH           originale a piena qualità, come download
 //   GET /api/galleria/zip?c=CODICE[&p=SEZIONE]       zip di tutta la galleria o di una sezione
 import { json, notifica } from '../../_lib.js';
-import { trova, ordina, copertina, fuoco } from '../../_gallerie.js';
+import { trova, ordina, copertina, fuoco, registra } from '../../_gallerie.js';
 import * as aruba from '../../_aruba.js';
 
 const nomeFile = (s) => String(s).replace(/[\\/:*?"<>|]+/g, ' ').replace(/\s+/g, ' ').trim() || 'foto';
@@ -65,6 +65,14 @@ export async function onRequestGet(context) {
       if (!esiste(p)) return json({ errore: 'Foto non trovata.' }, 404);
       const o = await aruba.originale(l, p);
       if (!o.ok) return json({ errore: 'Foto non disponibile.' }, 502);
+      context.waitUntil((async () => {
+        // Avviso Karim solo alla prima foto scaricata (le altre si vedono nel pannello)
+        const prima = !(await env.DB.prepare("SELECT 1 FROM scaricamenti WHERE galleria = ? AND tipo = 'foto'").bind(g.id).first());
+        if ((await registra(env, g.id, 'foto', p)) && prima) {
+          notifica(context, [{ b: 'Prima foto scaricata' }, `${g.cliente} ha scaricato una foto dalla galleria${g.titolo ? ' «' + g.titolo + '»' : ''}.`],
+            [{ text: 'Apri il pannello', url: `${url.origin}/admin/#gallerie` }]);
+        }
+      })());
       return scaricabile(o, nomeFile(p.split('/').pop()));
     }
 
@@ -73,8 +81,10 @@ export async function onRequestGet(context) {
       if (p && !sez) return json({ errore: 'Sezione non trovata.' }, 404);
       const z = await aruba.zip(l, p);
       if (!z.ok) return json({ errore: 'Download non disponibile.' }, 502);
-      context.waitUntil(env.DB.prepare('UPDATE gallerie SET download = download + 1 WHERE id = ?').bind(g.id).run());
-      notifica(context, [{ b: 'Download della galleria' }, `${g.cliente} sta scaricando ${sez ? 'la sezione «' + sez.nome + '»' : 'tutte le foto'}.`]);
+      if (await registra(env, g.id, 'zip', sez ? sez.nome : '')) {
+        context.waitUntil(env.DB.prepare('UPDATE gallerie SET download = download + 1 WHERE id = ?').bind(g.id).run());
+        notifica(context, [{ b: 'Download della galleria' }, `${g.cliente} sta scaricando ${sez ? 'la sezione «' + sez.nome + '»' : 'tutte le foto'}.`]);
+      }
       return scaricabile(z, nomeFile(g.cliente + (g.titolo ? ' - ' + g.titolo : '') + (sez ? ' - ' + sez.nome : '')) + '.zip', 'application/zip');
     }
   } catch (err) {

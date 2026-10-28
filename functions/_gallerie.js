@@ -22,7 +22,25 @@ export async function tabella(env) {
   for (const col of ['ordine TEXT', 'copertina TEXT', 'fuoco TEXT']) {
     try { await env.DB.prepare('ALTER TABLE gallerie ADD COLUMN ' + col).run(); } catch (e) { /* esiste già */ }
   }
+  // Registro dei download (solo cosa e quando, niente dati del dispositivo): tipo 'foto' (cosa = percorso) o 'zip' (cosa = sezione, '' = tutto)
+  await env.DB.prepare(`CREATE TABLE IF NOT EXISTS scaricamenti (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    galleria INTEGER NOT NULL,
+    tipo TEXT NOT NULL,
+    cosa TEXT NOT NULL DEFAULT '',
+    creato TEXT NOT NULL DEFAULT (datetime('now'))
+  )`).run();
+  await env.DB.prepare('CREATE INDEX IF NOT EXISTS scaricamenti_galleria ON scaricamenti (galleria, creato)').run();
   pronta = true;
+}
+
+/** Segna un download; lo stesso file ripreso entro 2 minuti (il telefono a volte lo chiede due volte) conta una volta sola. */
+export async function registra(env, galleria, tipo, cosa) {
+  const doppio = await env.DB.prepare("SELECT 1 FROM scaricamenti WHERE galleria = ? AND tipo = ? AND cosa = ? AND creato > datetime('now', '-2 minutes')")
+    .bind(galleria, tipo, cosa).first();
+  if (doppio) return false;
+  await env.DB.prepare('INSERT INTO scaricamenti (galleria, tipo, cosa) VALUES (?, ?, ?)').bind(galleria, tipo, cosa).run();
+  return true;
 }
 
 // Codici facili da dettare e da copiare: niente 0/O, 1/I/L

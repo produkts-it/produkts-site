@@ -47,10 +47,14 @@ h2{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:400;font
 .item.spenta{opacity:.55}
 .gdata{display:flex;gap:8px}.gdata input{flex:1;color-scheme:dark}
 .gdata button{height:44px;padding:0 14px;border:1px solid #3A3A3A;background:transparent;color:var(--fg);font:inherit;font-size:12px;letter-spacing:.12em;text-transform:uppercase;cursor:pointer}
-.gedit{border-top:1px solid var(--line);padding-top:14px;display:flex;flex-direction:column;gap:10px}
+.gedit{border-top:1px solid var(--line);padding-top:14px;display:flex;flex-direction:column;gap:10px}.gedit[hidden]{display:none}
 .gsez{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:6px 0;border-bottom:1px solid var(--line)}
 .gsez small{color:var(--muted);margin-left:8px}.gsez .az button{width:40px;padding:0}
 .gsez .az button:disabled{opacity:.25;cursor:default}
+.gdlfoto{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px;max-height:420px;overflow:auto}
+.gdlf{margin:0;min-width:0}.gdlf img{width:100%;aspect-ratio:1;object-fit:cover;display:block;background:#161616}
+.gdlf figcaption{font-size:12px;color:var(--muted);margin-top:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.gdlf b{color:var(--ember);font-weight:500}
+.gdlr{display:flex;flex-wrap:wrap;gap:4px 16px;padding:6px 0;border-bottom:1px solid var(--line);font-size:14px}.gdlr span:first-child{color:var(--muted);min-width:150px}
 .gminis{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:6px;max-height:360px;overflow:auto}
 .gmini{padding:0;border:2px solid transparent;background:#161616;cursor:pointer;aspect-ratio:1;overflow:hidden}
 .gmini img{width:100%;height:100%;object-fit:cover;display:block}.gmini.sel{border-color:var(--ember)}
@@ -198,7 +202,7 @@ function waRec(num){return 'https://wa.me/'+(num||'')+'?text='+encodeURIComponen
   +'\n\nPer me conta tantissimo e aiuta altre persone a scegliermi ✨\nGrazie di cuore! 🤍\nKarim · produkts.it')}
 function gal(g){
   return '<div class="item'+(g.attiva?'':' spenta')+'"><div class="meta"><b>'+(g.attiva?'attiva':'spenta')+'</b><span>creata '+e(data(g.creato))+'</span>'
-   +'<span>'+(g.aperta?'aperta '+e(data(g.aperta))+' · '+g.aperture+' visite':'non ancora aperta')+'</span>'+(g.download?'<span>'+g.download+' download</span>':'')+'</div>'
+   +'<span>'+(g.aperta?'aperta '+e(data(g.aperta))+' · '+g.aperture+' visite':'non ancora aperta')+'</span>'+(g.foto_scaricate?'<span>'+g.foto_diverse+(g.foto_diverse>1?' foto scaricate':' foto scaricata')+'</span>':'')+(g.download?'<span>'+g.download+' zip</span>':'')+'</div>'
    +'<div style="font-size:18px">'+e(g.cliente)+(g.titolo||g.data?' <span style="color:var(--muted)">· '+e([g.titolo,g.data].filter(Boolean).join(' · '))+'</span>':'')+'</div>'
    +'<div class="gcod"><span>Codice</span><b>'+e(g.codice)+'</b><a href="'+e(linkG(g))+'" target="_blank" rel="noopener">'+e(linkG(g).replace(/^https?:\/\//,''))+'</a></div>'
    +'<div class="az"><a class="wa" href="'+e(waG(g))+'" target="_blank" rel="noopener">Manda su WhatsApp</a>'
@@ -207,8 +211,9 @@ function gal(g){
    +'<button type="button" data-gal="'+g.id+'" data-gatt="'+(g.attiva?0:1)+'">'+(g.attiva?'Spegni':'Riattiva')+'</button>'
    +'<button type="button" data-gal="'+g.id+'" data-gcod="1">Nuovo codice</button>'
    +'<button type="button" data-gal="'+g.id+'" data-gdel="1">Elimina</button>'
-   +'<button type="button" data-gedit="'+g.id+'" data-gcodice="'+e(g.codice)+'">Ordine e copertina</button></div>'
-   +'<div class="gedit" id="ged-'+g.id+'" hidden></div></div>';
+   +'<button type="button" data-gedit="'+g.id+'" data-gcodice="'+e(g.codice)+'">Ordine e copertina</button>'
+   +(g.ultimo_download||g.download?'<button type="button" data-gdl="'+g.id+'">Download</button>':'')+'</div>'
+   +'<div class="gedit" id="ged-'+g.id+'" hidden></div><div class="gedit" id="gdl-'+g.id+'" hidden></div></div>';
 }
 document.addEventListener('submit',async function(ev){
   if(ev.target.id!=='gform')return;ev.preventDefault();
@@ -261,6 +266,21 @@ async function apriEd(id,codice){
   try{var r=await api('gallerie/'+id);ED[id]={codice:r.codice,sezioni:r.sezioni,copertina:r.copertina,fuoco:r.fuoco,vista:0};disegnaEd(id)}
   catch(err){box.innerHTML='<p class="err">'+e(err.message)+'</p>'}
 }
+/* Registro dei download di una galleria: foto scaricate (le più scaricate prima) e ultimi movimenti */
+async function apriDl(id){
+  var box=document.getElementById('gdl-'+id);
+  if(!box.hidden){box.hidden=true;return}
+  box.hidden=false;box.innerHTML='<p class="vuoto">Carico i download…</p>';
+  try{
+    var r=await api('gallerie/'+id+'?download=1'),nome=function(p){return p.split('/').pop()};
+    var foto=r.foto.map(function(f){return '<figure class="gdlf"><img src="'+e('/api/galleria/anteprima?c='+encodeURIComponent(r.codice)+'&s=240&p='+encodeURIComponent(f.cosa))+'" alt="" loading="lazy">'
+      +'<figcaption>'+(f.volte>1?'<b>×'+f.volte+'</b> ':'')+e(nome(f.cosa))+'</figcaption></figure>'}).join('');
+    var righe=r.ultimi.map(function(x){return '<div class="gdlr"><span>'+e(data(x.creato))+'</span><span>'+(x.tipo==='zip'?'Zip · '+e(x.cosa?'sezione «'+x.cosa+'»':'tutta la galleria'):'Foto · '+e(nome(x.cosa)))+'</span></div>'}).join('');
+    box.innerHTML='<div class="meta"><b>Foto scaricate</b><span>'+(r.foto.length?r.foto.length+' diverse, le più scaricate per prime':'nessuna foto singola, solo zip')+'</span></div>'
+      +(foto?'<div class="gdlfoto">'+foto+'</div>':'')
+      +'<div class="meta" style="margin-top:16px"><b>Ultimi download</b><span>dal più recente</span></div>'+(righe||'<p class="vuoto">Nessun download registrato.</p>');
+  }catch(err){box.innerHTML='<p class="err">'+e(err.message)+'</p>'}
+}
 function rec(r){
   return '<div class="item'+(r.stato==='attesa'?' nuovo':'')+'"><div class="meta"><b>'+e(r.stato)+'</b><span>'+e(data(r.creato))+'</span><span>'+'★'.repeat(r.voto)+'</span><span>'+e(r.servizio)+'</span></div>'
    +'<div style="font-size:18px">'+e((r.nome+' '+(r.cognome||'')).trim())+'</div><div class="testo">'+e(r.testo)+'</div>'
@@ -285,6 +305,7 @@ document.addEventListener('click',async function(ev){
   try{
     if(b.dataset.goggi){var t=new Date(),z=function(n){return String(n).padStart(2,'0')};b.previousElementSibling.value=t.getFullYear()+'-'+z(t.getMonth()+1)+'-'+z(t.getDate());return}
     if(b.dataset.gedit){apriEd(b.dataset.gedit,b.dataset.gcodice);return}
+    if(b.dataset.gdl){apriDl(b.dataset.gdl);return}
     if(b.dataset.gsu||b.dataset.ggiu){var id=b.dataset.gsu||b.dataset.ggiu,i=+b.dataset.i,j=b.dataset.gsu?i-1:i+1,a=ED[id].sezioni,t2=a[i];a[i]=a[j];a[j]=t2;disegnaEd(id);return}
     if(b.dataset.gvista){ED[b.dataset.gvista].vista=+b.dataset.i;disegnaEd(b.dataset.gvista);return}
     if(b.dataset.gcop){ED[b.dataset.gcop].copertina=b.dataset.p;ED[b.dataset.gcop].fuoco='50% 50%';disegnaEd(b.dataset.gcop);return}
