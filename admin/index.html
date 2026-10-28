@@ -192,12 +192,17 @@ var FORM_G='<form class="item gform" id="gform" style="border-color:var(--steel)
 function linkG(g){return SITO+'/galleria?c='+g.codice}
 function waG(g){return 'https://wa.me/?text='+encodeURIComponent('Ciao '+g.cliente.split(' ')[0]+'! 👋\nLe tue foto'+(g.titolo?' ('+g.titolo+')':'')+' sono pronte 📸✨\n\n👉 Le trovi qui:\n'+linkG(g)
   +'\n\n🔐 Il tuo codice: *'+g.codice+'*\n(ti serve se entri da produkts.it → Area clienti)\n\n⬇️ Puoi scaricarle una alla volta o tutte insieme in alta qualità.\n\nFammi sapere se ti piacciono! 🤍\nKarim · produkts.it')}
+/* Richiesta di recensione su WhatsApp (gallerie e richieste di contatto): Karim la manda subito dopo il messaggio col link,
+   quindi niente saluto. num vuoto = si sceglie il contatto in WhatsApp */
+function waRec(num){return 'https://wa.me/'+(num||'')+'?text='+encodeURIComponent('Mi faresti un piccolo favore? 🙏\nLasciami una recensione, ci vuole meno di un minuto:\n👉 '+SITO+'/recensioni#scrivi'
+  +'\n\nPer me conta tantissimo e aiuta altre persone a scegliermi ✨\nGrazie di cuore! 🤍\nKarim · produkts.it')}
 function gal(g){
   return '<div class="item'+(g.attiva?'':' spenta')+'"><div class="meta"><b>'+(g.attiva?'attiva':'spenta')+'</b><span>creata '+e(data(g.creato))+'</span>'
    +'<span>'+(g.aperta?'aperta '+e(data(g.aperta))+' · '+g.aperture+' visite':'non ancora aperta')+'</span>'+(g.download?'<span>'+g.download+' download</span>':'')+'</div>'
    +'<div style="font-size:18px">'+e(g.cliente)+(g.titolo||g.data?' <span style="color:var(--muted)">· '+e([g.titolo,g.data].filter(Boolean).join(' · '))+'</span>':'')+'</div>'
    +'<div class="gcod"><span>Codice</span><b>'+e(g.codice)+'</b><a href="'+e(linkG(g))+'" target="_blank" rel="noopener">'+e(linkG(g).replace(/^https?:\/\//,''))+'</a></div>'
    +'<div class="az"><a class="wa" href="'+e(waG(g))+'" target="_blank" rel="noopener">Manda su WhatsApp</a>'
+   +'<a class="wa" href="'+e(waRec())+'" target="_blank" rel="noopener">Chiedi una recensione</a>'
    +'<button type="button" data-gcopia="'+e(linkG(g))+'">Copia link</button>'
    +'<button type="button" data-gal="'+g.id+'" data-gatt="'+(g.attiva?0:1)+'">'+(g.attiva?'Spegni':'Riattiva')+'</button>'
    +'<button type="button" data-gal="'+g.id+'" data-gcod="1">Nuovo codice</button>'
@@ -267,7 +272,8 @@ function con(c){
   /* Dal 10/2026 il recapito è il telefono (le richieste più vecchie possono avere un'email) */
   var tel=!/@/.test(c.recapito);
   var rec=tel?'<a href="tel:'+e(c.recapito.replace(/[^\d+]/g,''))+'">'+e(c.recapito)+'</a>':'<a href="mailto:'+e(c.recapito)+'">'+e(c.recapito)+'</a>';
-  var waBtn=tel?'<a class="wa" href="https://wa.me/'+e(wa(c.recapito))+'" target="_blank" rel="noopener">Scrivi su WhatsApp</a>':'';
+  var waBtn=tel?'<a class="wa" href="https://wa.me/'+e(wa(c.recapito))+'" target="_blank" rel="noopener">Scrivi su WhatsApp</a>'
+    +'<a class="wa" href="'+e(waRec(wa(c.recapito)))+'" target="_blank" rel="noopener">Chiedi una recensione</a>':'';
   return '<div class="item'+(c.letto?'':' nuovo')+'"><div class="meta"><b>'+(c.letto?'letto':'nuovo')+'</b><span>'+e(data(c.creato))+'</span>'
    +(c.tipo?'<span>'+e(c.tipo)+'</span>':'')+(c.budget?'<span>'+e(c.budget)+'</span>':'')+(c.quando?'<span>'+e(c.quando)+'</span>':'')+(c.dove?'<span>'+e(c.dove)+'</span>':'')+'</div>'
    +'<div style="font-size:18px">'+e((c.nome+' '+(c.cognome||'')).trim())+' · '+rec+'</div><div class="testo">'+e(c.messaggio)+'</div>'
