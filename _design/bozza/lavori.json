@@ -1435,6 +1435,144 @@
      ]
     ]
    ]
+  },
+  {
+   "slug": "spaghetti-all-assassina",
+   "img": "img/amarcord/spaghetti-all-assassina.jpg",
+   "t": "Spaghetti all'assassina",
+   "gen": "",
+   "ruolo": "Assistente operatore",
+   "min": 6,
+   "vimeo": "1236006030/220bb3cbce",
+   "line": "Una trattoria, una tovaglia fucsia e due piatti di spaghetti: una cena che prende una piega inaspettata.",
+   "cast": [
+    [
+     "",
+     "Federica Dalena"
+    ],
+    [
+     "",
+     "Emma Perini"
+    ],
+    [
+     "",
+     "Pietro Di Gioia"
+    ],
+    [
+     "",
+     "Lorenzo Vitucci"
+    ],
+    [
+     "",
+     "Vanessa Ciccolella"
+    ],
+    [
+     "",
+     "Francesco Lanotte"
+    ]
+   ],
+   "crew": [
+    [
+     "Regia",
+     [
+      "Luca Sportelli"
+     ]
+    ],
+    [
+     "Produzione",
+     [
+      "Tiziana Lattuca per AMARCORD"
+     ]
+    ],
+    [
+     "Soggetto",
+     [
+      "Noemi Lorusso"
+     ]
+    ],
+    [
+     "Sceneggiatura",
+     [
+      "Mery Monaco"
+     ]
+    ],
+    [
+     "Direzione della fotografia",
+     [
+      "Antonio Carbonara"
+     ]
+    ],
+    [
+     "Operatori",
+     [
+      "Giada Bellanova",
+      "Davide De Pinto"
+     ]
+    ],
+    [
+     "Assistenti operatore",
+     [
+      "Karim Ismail",
+      "Vittoria Binetti"
+     ]
+    ],
+    [
+     "Montaggio",
+     [
+      "Alessandro N. Cardone",
+      "Davide De Pinto"
+     ]
+    ],
+    [
+     "Aiuto regia",
+     [
+      "Mauro Zeverino"
+     ]
+    ],
+    [
+     "Scenografia",
+     [
+      "Roberta Giovanetti"
+     ]
+    ],
+    [
+     "Segretario di edizione",
+     [
+      "Martin Barletta"
+     ]
+    ],
+    [
+     "Fonico",
+     [
+      "Sonia Sorressa"
+     ]
+    ],
+    [
+     "Ciak",
+     [
+      "Antonio Carbonara"
+     ]
+    ],
+    [
+     "Backstage",
+     [
+      "Martin Barletta"
+     ]
+    ],
+    [
+     "Capo reparto trucco",
+     [
+      "Mariangela Nuzzi"
+     ]
+    ],
+    [
+     "Trucco",
+     [
+      "Anita Donno",
+      "Vita Barberio"
+     ]
+    ]
+   ]
   }
  ],
  "filmografia": [
@@ -1508,7 +1646,7 @@
    "Spaghetti all'Assassina",
    "Assistente operatore",
    "AMARCORD",
-   null
+   "spaghetti-all-assassina"
   ],
   [
    "Il Tanga e la Cravatta",
