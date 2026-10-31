@@ -39,5 +39,8 @@ for f in glob.glob(os.path.join(REPO, '*.html')):
         save(f, h2)
 print('versioni', vjs, vcss)
 
+# Pagine di errore (errori/*.html, dalla 404)
+exec(open(os.path.join(HERE, 'errori.py'), encoding='utf-8').read(), {'__file__': os.path.join(HERE, 'errori.py')})
+
 # Descrizioni, anteprime dei link, sitemap.xml e robots.txt
 exec(open(os.path.join(HERE, 'seo.py'), encoding='utf-8').read(), {'__file__': os.path.join(HERE, 'seo.py')})

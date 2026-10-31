@@ -11,6 +11,6 @@ PY=$(for c in python3 python; do if "$c" -c 'import sys' >/dev/null 2>&1; then e
 rm -rf dist
 mkdir -p dist
 cp ./*.html _headers _redirects robots.txt sitemap.xml dist/
-cp -r assets img brand admin dist/
+cp -r assets img brand admin errori dist/
 cp ./*.png ./*.jpg ./*.svg dist/
 echo "dist pronto: $(find dist -type f | wc -l) file"
