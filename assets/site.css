@@ -264,4 +264,62 @@ header.pk-sticky.pk-hide{transform:translateY(-100%)}
 .lk:hover .lka{transform:translateX(4px);color:#D98A4E!important}
 .soc{color:#E8E4DF;transition:border-color .3s,color .3s,transform .4s cubic-bezier(.2,.7,.2,1)}
 .soc:hover{border-color:#B46428!important;color:#D98A4E;transform:translateY(-2px)}
+/* Ciak all'invio dei moduli (PK.ciak in site.src.js): l'asta batte, un lampo, poi sparisce */
+.pk-ciak{position:fixed;inset:0;z-index:300;display:flex;align-items:center;justify-content:center;padding:16px;box-sizing:border-box;background:rgba(8,8,8,.8);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);pointer-events:none;animation:ckfondo 2.4s ease both}
+.pk-ciak::after{content:'';position:absolute;inset:0;background:#E8E4DF;opacity:0;animation:ckflash .5s ease .74s both}
+.pk-ciak .cb{width:min(100%,440px);animation:ckin .5s cubic-bezier(.2,.7,.2,1) both,ckout .5s cubic-bezier(.7,0,.8,.3) 1.85s forwards}
+.pk-ciak .ca,.pk-ciak .cs{height:38px;box-sizing:border-box;border:2px solid #E8E4DF;background:repeating-linear-gradient(118deg,#E8E4DF 0 24px,#141414 24px 48px)}
+.pk-ciak .ca{transform-origin:0 100%;margin-bottom:3px;animation:ckbatti .5s cubic-bezier(.55,0,.35,1) .28s both}
+.pk-ciak .cs{border-top-width:0;background:repeating-linear-gradient(62deg,#E8E4DF 0 24px,#141414 24px 48px)}
+.pk-ciak .cl{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:#3A3A3A;border:2px solid #E8E4DF;border-top:0}
+.pk-ciak .cf{background:#101010;padding:12px 14px;display:flex;flex-direction:column;gap:4px;min-width:0}
+.pk-ciak .cf.w{grid-column:span 3}
+.pk-ciak .cf span{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#9A948C}
+.pk-ciak .cf b{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:400;font-size:26px;line-height:1.1;color:#E8E4DF;overflow-wrap:anywhere}
+@keyframes ckbatti{0%{transform:rotate(-24deg)}62%{transform:rotate(1.5deg)}80%{transform:rotate(-.8deg)}100%{transform:none}}
+@keyframes ckflash{0%{opacity:0}18%{opacity:.16}100%{opacity:0}}
+@keyframes ckin{from{opacity:0;transform:translateY(24px) scale(.96)}to{opacity:1;transform:none}}
+@keyframes ckout{to{opacity:0;transform:translateY(-16px) scale(.98)}}
+@keyframes ckfondo{0%{opacity:0}10%{opacity:1}82%{opacity:1}100%{opacity:0}}
+
+/* Mirino (tasto R o tocco sull'orologio, PK.mirino): angoli, terzi, guida 2.39:1, fuoco, REC e timecode */
+.pk-mirino{position:fixed;inset:0;z-index:150;pointer-events:none;color:#E8E4DF;font-family:'Space Grotesk',sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-variant-numeric:tabular-nums;text-shadow:0 1px 3px rgba(0,0,0,.9);background:radial-gradient(ellipse at center,rgba(0,0,0,0) 55%,rgba(0,0,0,.5) 100%);animation:mirin .5s ease both}
+.pk-mirino.subito,.pk-mirino.subito *{animation:none!important}
+.pk-mirino.subito .rc i{animation:rec 1.2s steps(1) infinite!important}
+.pk-mirino.out{animation:mirout .45s ease forwards}
+.pk-mirino .k{position:absolute;width:36px;height:36px;border:0 solid #E8E4DF;animation:mirk .6s cubic-bezier(.2,.7,.2,1) both}
+.pk-mirino .tl{top:6px;left:6px;border-top-width:2px;border-left-width:2px;--dx:-40px;--dy:-40px}
+.pk-mirino .tr{top:6px;right:6px;border-top-width:2px;border-right-width:2px;--dx:40px;--dy:-40px}
+.pk-mirino .bl{bottom:6px;left:6px;border-bottom-width:2px;border-left-width:2px;--dx:-40px;--dy:40px}
+.pk-mirino .br{bottom:6px;right:6px;border-bottom-width:2px;border-right-width:2px;--dx:40px;--dy:40px}
+.pk-mirino .g{position:absolute;background:rgba(232,228,223,.14)}
+.pk-mirino .g1,.pk-mirino .g2{top:0;bottom:0;width:1px}.pk-mirino .g1{left:33.333%}.pk-mirino .g2{left:66.666%}
+.pk-mirino .g3,.pk-mirino .g4{left:0;right:0;height:1px}.pk-mirino .g3{top:33.333%}.pk-mirino .g4{top:66.666%}
+.pk-mirino .sc{position:absolute;left:50%;top:50%;width:min(calc(100vw - 120px),calc((100vh - 140px)*2.39));aspect-ratio:2.39/1;transform:translate(-50%,-50%);outline:1px dashed rgba(232,228,223,.28)}
+.pk-mirino .fc{position:absolute;left:50%;top:50%;width:72px;height:48px;margin:-24px 0 0 -36px;border:1px solid #D98A4E;animation:mirfuoco .9s ease .2s both}
+.pk-mirino .hud{position:absolute;display:flex;align-items:center;gap:6px 14px;line-height:1}
+.pk-mirino .tlh{top:9px;left:52px}.pk-mirino .trh{top:9px;right:52px}
+.pk-mirino .blh{bottom:9px;left:52px}.pk-mirino .brh{bottom:9px;right:52px}
+.pk-mirino .rc{display:flex;align-items:center;gap:8px;font-weight:500}.pk-mirino .rc i{width:9px;height:9px;border-radius:50%;background:#B46428;animation:rec 1.2s steps(1) infinite}
+.pk-mirino .tc{font-size:12px;letter-spacing:.1em}
+.pk-mirino .bat{display:inline-block;position:relative;width:26px;height:12px;border:1.5px solid #E8E4DF;box-sizing:border-box}
+.pk-mirino .bat::after{content:'';position:absolute;right:-5px;top:2.5px;width:2.5px;height:4px;background:#E8E4DF}
+.pk-mirino .bat i{position:absolute;top:1.5px;bottom:1.5px;left:1.5px;width:62%;background:#E8E4DF}
+.pk-mirino .esci-t{display:none}
+@media (hover:none),(pointer:coarse){.pk-mirino .esci{display:none}.pk-mirino .esci-t{display:inline}}
+@media (max-width:640px){.pk-mirino{font-size:9px;letter-spacing:.08em}.pk-mirino .k{width:22px;height:22px}.pk-mirino .tlh,.pk-mirino .blh{left:32px}.pk-mirino .trh,.pk-mirino .brh{right:32px}
+  .pk-mirino .tc{font-size:10px}.pk-mirino .trh span+span{display:none}.pk-mirino .sc{width:calc(100vw - 32px)}}
+@keyframes mirin{from{opacity:0}to{opacity:1}}
+@keyframes mirout{to{opacity:0}}
+@keyframes mirk{from{transform:translate(var(--dx),var(--dy));opacity:0}to{transform:none;opacity:1}}
+@keyframes mirfuoco{0%{transform:scale(1.6);opacity:0}40%{transform:scale(.92);opacity:1}55%,75%{border-color:#D98A4E}65%{border-color:transparent}100%{transform:none;opacity:1}}
+/* Tasto R accanto all'orologio (solo con mouse e tastiera) e suggerimento "premi R" */
+.pk-clock{cursor:pointer}
+.pk-r,.pk-mirino kbd,.pk-rhint kbd{font:inherit;font-family:'Space Grotesk',sans-serif;display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 5px;box-sizing:border-box;border:1px solid #6E6A64;border-bottom-width:2px;border-radius:4px;font-size:11px;letter-spacing:0;line-height:1;color:#E8E4DF;background:#141414;text-shadow:none}
+.pk-r{cursor:pointer;transition:background .3s,color .3s,border-color .3s}
+.pk-r:hover,html.pk-mir .pk-r{background:#B46428;border-color:#B46428;color:#080808}
+@media (hover:none),(pointer:coarse){.pk-r{display:none}}
+.pk-rhint{position:fixed;left:24px;bottom:24px;z-index:140;display:flex;align-items:center;gap:12px;max-width:calc(100vw - 48px);box-sizing:border-box;padding:12px 16px;background:rgba(14,14,14,.94);border:1px solid #2A2A2A;font-size:13px;color:#C9C4BD;animation:rhin .6s cubic-bezier(.2,.7,.2,1) both;transition:opacity .4s,transform .4s}
+.pk-rhint.out{opacity:0;transform:translateY(10px)}
+@keyframes rhin{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion: reduce){*,*::before,*::after{animation:none!important;transition:none!important}::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}}

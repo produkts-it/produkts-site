@@ -2,6 +2,9 @@
 (function(){
 var d=document,w=window,h=d.documentElement;
 var still=w.matchMedia&&w.matchMedia('(prefers-reduced-motion: reduce)').matches;
+/* Lingua della pagina: le pagine inglesi (cartella en/) hanno <html lang="en">. T('italiano','English') */
+var EN=h.lang==='en';
+function T(it,en){return EN?en:it}
 
 /* Intro del logo: la classe html.intro la decide lo script in <head> (solo ingresso e ricarica) */
 function intro(){
@@ -26,8 +29,11 @@ function clock(){
   d.querySelectorAll('header').forEach(function(hh){clockIn(hh.querySelector(':scope > div')||hh)});
 }
 function clockIn(hd){
-  var el=d.createElement('div');el.className='pk-clock';el.title='Ora locale ad Altamura';
-  el.innerHTML='<i aria-hidden="true"></i><span>Altamura</span><span class="t" aria-label="Ora locale ad Altamura">--:--:--:--</span>';
+  var el=d.createElement('div');el.className='pk-clock';el.title=T('Ora locale ad Altamura','Local time in Altamura');
+  el.innerHTML='<i aria-hidden="true"></i><span>Altamura</span><span class="t" aria-label="'+T('Ora locale ad Altamura','Local time in Altamura')+'">--:--:--:--</span>'
+    +'<button type="button" class="pk-r" title="'+T('Premi R: guarda il sito dal mirino','Press R: see the site through the viewfinder')+'" aria-label="'+T('Guarda il sito dal mirino (tasto R)','See the site through the viewfinder (R key)')+'">R</button>';
+  /* toccare l'orologio (o il tasto R accanto) accende il mirino: anche da telefono, dove la tastiera non c'è */
+  el.addEventListener('click',function(){if(PK.mirino)PK.mirino()});
   var mb=hd.querySelector('.mb');
   if(mb)hd.insertBefore(el,mb);else hd.appendChild(el);
   hd.classList.add('pk-hdr');
@@ -293,6 +299,75 @@ PK.acts.condividi=function(a,el){var u='https://produkts.it/link',m=d.querySelec
   if(navigator.clipboard)navigator.clipboard.writeText(u).then(ok,function(){prompt('Copia il link:',u)});else prompt('Copia il link:',u)};
 PK.acts.carPrev=function(a,el){var t=el.closest('section').querySelector('.car-track');t.scrollBy({left:-t.clientWidth-16,behavior:still?'auto':'smooth'})};
 PK.acts.carNext=function(a,el){var t=el.closest('section').querySelector('.car-track');t.scrollBy({left:t.clientWidth+16,behavior:still?'auto':'smooth'})};
+
+/* Ciak: quando un modulo parte (richiesta o recensione) un ciak batte a schermo e sparisce. Chi lo ha mandato firma la "regia". */
+function z2(n){return (n<10?'0':'')+n}
+function esc1(s){return String(s==null?'':s).replace(/[&<>"]/g,function(x){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[x]})}
+PK.ciak=function(scena,nome){
+  if(still)return;
+  var oggi=new Date(),c=d.createElement('div');c.className='pk-ciak';c.setAttribute('aria-hidden','true');
+  var f=function(k,v,cl){return '<div class="cf'+(cl?' w':'')+'"><span>'+k+'</span><b>'+v+'</b></div>'};
+  c.innerHTML='<div class="cb"><div class="ca"></div><div class="cs"></div><div class="cl">'
+    +f(T('Produzione','Production'),'produkts.it',1)+f(T('Scena','Scene'),esc1(scena),1)
+    +f(T('Ripresa','Roll'),'A'+z2(oggi.getDate()))+f(T('Ciak','Take'),String(1+Math.floor(Math.random()*9)))
+    +f(T('Data','Date'),z2(oggi.getDate())+'.'+z2(oggi.getMonth()+1)+'.'+String(oggi.getFullYear()).slice(2))
+    +(nome?f(T('Regia','Director'),esc1(nome),1):'')+'</div></div>';
+  d.body.appendChild(c);
+  setTimeout(function(){c.remove()},2400);
+};
+
+/* Mirino (tasto R, o toccando l'orologio): il sito visto dal monitor di una camera, con REC e timecode.
+   Resta acceso cambiando pagina (sessionStorage, il timecode continua) finché non si ripreme R o Esc. */
+var mir=null,mirT=null,hint=null;
+function mirInizio(){try{return +sessionStorage.getItem('pk-mirino')||0}catch(e){return 0}}
+function hintVia(){
+  try{localStorage.setItem('pk-r','1')}catch(e){}
+  if(hint){var x=hint;hint=null;x.classList.add('out');setTimeout(function(){x.remove()},450)}
+}
+PK.mirino=function(on,subito){
+  if(on===undefined)on=!mir;
+  hintVia();
+  if(!on){
+    if(mir){var m=mir;mir=null;clearInterval(mirT);m.classList.add('out');h.classList.remove('pk-mir');setTimeout(function(){m.remove()},still?0:450)}
+    try{sessionStorage.removeItem('pk-mirino')}catch(e){}
+    return;
+  }
+  if(mir)return;
+  var t0=mirInizio()||Date.now();
+  try{sessionStorage.setItem('pk-mirino',String(t0))}catch(e){}
+  mir=d.createElement('div');mir.className='pk-mirino'+(subito?' subito':'');mir.setAttribute('aria-hidden','true');
+  mir.innerHTML='<i class="k tl"></i><i class="k tr"></i><i class="k bl"></i><i class="k br"></i>'
+    +'<i class="g g1"></i><i class="g g2"></i><i class="g g3"></i><i class="g g4"></i><i class="sc"></i><i class="fc"></i>'
+    +'<div class="hud tlh"><span class="rc"><i></i>REC</span><span class="tc">00:00:00:00</span></div>'
+    +'<div class="hud trh"><span>4K DCI · 24p · 180°</span><span>ISO 800 · T2.8 · 5600K</span></div>'
+    +'<div class="hud blh"><span class="bat"><i></i></span><span>CAM A · produkts.it</span></div>'
+    +'<div class="hud brh"><span class="esci">'+T('Premi','Press')+' <kbd>R</kbd> '+T('per uscire','to exit')+'</span><span class="esci-t">'+T('Tocca l’orologio per uscire','Tap the clock to exit')+'</span></div>';
+  d.body.appendChild(mir);h.classList.add('pk-mir');
+  var tc=mir.querySelector('.tc');
+  function tick(){var s=Math.max(0,(Date.now()-t0)/1000),fr=Math.floor((s%1)*24);s=Math.floor(s);
+    tc.textContent=z2(Math.floor(s/3600))+':'+z2(Math.floor(s/60)%60)+':'+z2(s%60)+':'+z2(still?0:fr)}
+  tick();mirT=setInterval(tick,still?1000:1000/24);
+};
+d.addEventListener('keydown',function(e){
+  if(e.ctrlKey||e.metaKey||e.altKey||e.repeat)return;
+  var t=e.target,tag=t&&t.tagName;
+  if(tag==='INPUT'||tag==='TEXTAREA'||tag==='SELECT'||(t&&t.isContentEditable))return;
+  if(e.key==='r'||e.key==='R'){e.preventDefault();PK.mirino()}
+  else if(e.key==='Escape'&&mir&&!h.classList.contains('menu-open'))PK.mirino(false);
+});
+if(mirInizio())PK.mirino(true,true);
+/* Suggerimento, una volta sola e solo con mouse e tastiera: "premi R" */
+(function(){
+  var fine=w.matchMedia&&w.matchMedia('(hover:hover) and (pointer:fine)').matches,visto='1';
+  try{visto=localStorage.getItem('pk-r')}catch(e){}
+  if(!fine||visto||mir)return;
+  setTimeout(function(){
+    if(mir||hint||h.classList.contains('intro')||h.classList.contains('menu-open'))return;
+    hint=d.createElement('div');hint.className='pk-rhint';hint.setAttribute('role','status');
+    hint.innerHTML='<kbd>R</kbd><span>'+T('Psst… premi R e guarda il sito dal mirino.','Psst… press R to see the site through the viewfinder.')+'</span>';
+    d.body.appendChild(hint);setTimeout(hintVia,8000);
+  },6000);
+})();
 
 intro();
 pkCursor();

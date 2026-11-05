@@ -23,7 +23,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&amp;family=Space+Grotesk:wght@400;500&amp;display=swap">
-<link rel="stylesheet" href="assets/site.css?v=29ccca74">
+<link rel="stylesheet" href="assets/site.css?v=b6f7bbc4">
 <script>try{(function(){var n=(performance.getEntriesByType&&performance.getEntriesByType('navigation')[0]||{}).type,r=document.referrer,same=false;try{same=!!r&&new URL(r).origin===location.origin}catch(e){}
 var show=n==='reload'||(n!=='back_forward'&&!same);if(show&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('intro')})()}catch(e){}</script>
 </head>
@@ -146,7 +146,7 @@ var show=n==='reload'||(n!=='back_forward'&&!same);if(show&&!matchMedia('(prefer
 </div>
 </footer>
 </div>
-<script src="assets/site.js?v=910296e4"></script>
+<script src="assets/site.js?v=7f0bc8c4"></script>
 <script>
 (function(){
 var d=document,form=d.querySelector('[data-if="notSent"] form'),err=form.querySelector('.pk-err'),btn=form.querySelector('[data-act="send"]'),ts=form.querySelector('.pk-ts');
@@ -171,7 +171,7 @@ PK.acts.send=function(){
   PK.invia('/api/contatti',{tipo:scelta('type'),budget:scelta('budget'),quando:d.getElementById('c-data').dataset.iso||'',dove:v('c-luogo'),nome:v('c-nome'),cognome:v('c-cognome'),recapito:v('c-tel'),
     messaggio:v('c-msg'),privacy:true,sito:form.querySelector('.pk-hp').value,turnstile:token()}).then(function(r){
     btn.removeAttribute('aria-busy');
-    if(r.ok){form.reset();if(PK.calendario.azzera)PK.calendario.azzera();PK.vt(function(){show('notSent',false);show('sent',true)})}else{errore(r.errore);PK.turnstileReset(ts)}
+    if(r.ok){PK.ciak('Richiesta inviata',v('c-nome'));form.reset();if(PK.calendario.azzera)PK.calendario.azzera();PK.vt(function(){show('notSent',false);show('sent',true)})}else{errore(r.errore);PK.turnstileReset(ts)}
   });
 };
 PK.acts.reset=function(){if(PK.calendario.azzera)PK.calendario.azzera();d.querySelectorAll('[data-act^="chip:"]').forEach(function(b){style(b,false)});PK.turnstileReset(ts);show('sent',false);show('notSent',true)};
