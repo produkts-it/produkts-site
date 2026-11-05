@@ -23,6 +23,19 @@ DESCR = {
     'dynamis.html': 'Dynamis, cortometraggio verticale prodotto da produkts.it, regia di Giada Bellanova: selezionato al VerticalMovie Festival 2026 alla Casa del Cinema di Roma.',
 }
 IMG = {'dynamis.html': SITE + '/dynamis.jpg'}
+# Versione inglese (en/, generata da inglese.py): descrizioni delle pagine principali
+DESCR_EN = {
+    'index.html': 'Karim Ismail, director of photography, videomaker and photographer based in Altamura, southern Italy. Short films, music videos, events and brand content. Dynamis was selected at the VerticalMovie Festival 2026.',
+    'work.html': 'Work by Karim Ismail: short films, music videos, events and corporate videos. Dynamis, Schizophrenia, the AMARCORD short films and more.',
+    'about.html': 'Karim Ismail, AMARCORD certified director of photography, videomaker and photographer from Altamura, Italy: the story of produkts.it and the filmography.',
+    'reviews.html': 'Reviews from people who worked with produkts.it: birthdays, communions, christenings, events and sports photography.',
+    'contact.html': 'Tell me about your project: photography, video, short films and events in Altamura, Apulia, across Italy and beyond. I usually reply within a day.',
+    'privacy.html': 'Privacy and cookie notice of produkts.it: what data I collect, why and for how long.',
+    'dynamis.html': 'Dynamis, vertical short film produced by produkts.it, directed by Giada Bellanova: selected at the VerticalMovie Festival 2026 at the Casa del Cinema in Rome.',
+}
+# pagina italiana → inglese (le pagine dei lavori hanno lo stesso nome)
+EN_NOME = {'index.html': 'index.html', 'lavori.html': 'work.html', 'chi-sono.html': 'about.html', 'recensioni.html': 'reviews.html',
+           'contatti.html': 'contact.html'}
 
 # Dati strutturati (schema.org): chi è Karim Ismail, l'attività produkts.it e il sito. Servono a Google per capire
 # che "Karim Ismail" è questa persona e che produkts.it è il suo sito (stesso @id in tutte le pagine e nei lavori).
@@ -71,16 +84,16 @@ def testo(s):
     return re.sub(r'\s+', ' ', html.unescape(re.sub(r'<[^>]+>', '', s))).strip()
 
 
-def descrizione(nome, s):
-    if nome in DESCR:
-        return DESCR[nome]
+def descrizione(nome, s, en=False):
+    if (DESCR_EN if en else DESCR).get(nome):
+        return (DESCR_EN if en else DESCR)[nome]
     # Pagine dei lavori: la riga di "Il progetto" più il ruolo di Karim (il nome aiuta chi cerca "Karim Ismail")
-    m = re.search(r'>Il progetto</span>\s*<p[^>]*>(.*?)</p>', s, re.S)
-    r = re.search(r'>Il mio ruolo</dt>\s*<dd[^>]*>(.*?)</dd>', s, re.S)
+    m = re.search(r'>%s</span>\s*<p[^>]*>(.*?)</p>' % ('The project' if en else 'Il progetto'), s, re.S)
+    r = re.search(r'>%s</dt>\s*<dd[^>]*>(.*?)</dd>' % ('My role' if en else 'Il mio ruolo'), s, re.S)
     d = testo(m.group(1)) if m else ''
-    g = re.search(r'>Regia</dt>\s*<dd[^>]*>(.*?)</dd>', s, re.S)
+    g = re.search(r'>%s</dt>\s*<dd[^>]*>(.*?)</dd>' % ('Director' if en else 'Regia'), s, re.S)
     if g:
-        d += ' Regia di %s.' % testo(g.group(1)).replace(', ', ' e ')
+        d += (' Directed by %s.' if en else ' Regia di %s.') % testo(g.group(1)).replace(', ', ' and ' if en else ' e ')
     if r:
         ruolo = testo(r.group(1))
         d += ' Karim Ismail: %s.' % (ruolo[:1].lower() + ruolo[1:] if ruolo[1:2].islower() else ruolo)
@@ -98,26 +111,48 @@ def immagine(nome, s):
 
 
 pagine = []
-for f in sorted(glob.glob(os.path.join(REPO, '*.html'))):
+lista = [(f, False) for f in sorted(glob.glob(os.path.join(REPO, '*.html')))]
+lista += [(f, True) for f in sorted(glob.glob(os.path.join(REPO, 'en', '*.html')))]
+esiste_en = {os.path.basename(f) for f, en in lista if en}
+
+
+def indirizzo(nome, en):
+    base = SITE + ('/en/' if en else '/')
+    return base if nome == 'index.html' else base + nome[:-5]
+
+
+for f, en in lista:
     nome = os.path.basename(f)
     if nome in ESCLUSE:
         continue
     s = open(f, encoding='utf-8').read()
     titolo = testo(re.search(r'<title>(.*?)</title>', s, re.S).group(1))
-    url = SITE + '/' if nome == 'index.html' else SITE + '/' + nome[:-5]
-    d = descrizione(nome, s)
+    url = indirizzo(nome, en)
+    d = descrizione(nome, s, en)
+    # la stessa pagina nell'altra lingua (le pagine dei lavori hanno lo stesso nome)
+    if en:
+        nome_it = {v: k for k, v in EN_NOME.items()}.get(nome, nome)
+        coppia = (indirizzo(nome_it, False), url) if os.path.exists(os.path.join(REPO, nome_it)) else None
+    else:
+        nome_en = EN_NOME.get(nome, nome)
+        coppia = (url, indirizzo(nome_en, True)) if nome_en in esiste_en else None
     blocco = ['<!-- seo -->',
               '<meta name="description" content="%s">' % a(d),
-              '<link rel="canonical" href="%s">' % url,
-              '<meta property="og:type" content="website">',
-              '<meta property="og:site_name" content="produkts.it">',
-              '<meta property="og:locale" content="it_IT">',
-              '<meta property="og:title" content="%s">' % a(titolo),
-              '<meta property="og:description" content="%s">' % a(d),
-              '<meta property="og:url" content="%s">' % url,
-              '<meta property="og:image" content="%s">' % immagine(nome, s),
-              '<meta name="twitter:card" content="summary_large_image">']
-    if nome in SCHEMA:
+              '<link rel="canonical" href="%s">' % url]
+    if coppia:
+        blocco += ['<link rel="alternate" hreflang="it" href="%s">' % coppia[0],
+                   '<link rel="alternate" hreflang="en" href="%s">' % coppia[1],
+                   '<link rel="alternate" hreflang="x-default" href="%s">' % coppia[0]]
+    blocco += ['<meta property="og:type" content="website">',
+               '<meta property="og:site_name" content="produkts.it">',
+               '<meta property="og:locale" content="%s">' % ('en_GB' if en else 'it_IT'),
+               '<meta property="og:locale:alternate" content="%s">' % ('it_IT' if en else 'en_GB'),
+               '<meta property="og:title" content="%s">' % a(titolo),
+               '<meta property="og:description" content="%s">' % a(d),
+               '<meta property="og:url" content="%s">' % url,
+               '<meta property="og:image" content="%s">' % immagine(nome if not en else {v: k for k, v in EN_NOME.items()}.get(nome, nome), s),
+               '<meta name="twitter:card" content="summary_large_image">']
+    if nome in SCHEMA and not en:
         blocco.append('<script type="application/ld+json">%s</script>'
                       % json.dumps({'@context': 'https://schema.org', '@graph': SCHEMA[nome]}, ensure_ascii=False))
     blocco.append('<!-- /seo -->')
@@ -130,7 +165,7 @@ for f in sorted(glob.glob(os.path.join(REPO, '*.html'))):
         pagine.append(url)
 
 oggi = datetime.date.today().isoformat()
-pagine.sort(key=lambda u: (u != SITE + '/', u))
+pagine.sort(key=lambda u: (u != SITE + '/', u.startswith(SITE + '/en/'), u))
 with open(os.path.join(REPO, 'sitemap.xml'), 'w', encoding='utf-8', newline='\n') as out:
     out.write('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
               + ''.join('<url><loc>%s</loc><lastmod>%s</lastmod></url>\n' % (u, oggi) for u in pagine) + '</urlset>\n')

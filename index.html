@@ -8,9 +8,13 @@
 <!-- seo -->
 <meta name="description" content="Karim Ismail, direttore della fotografia, videomaker e fotografo ad Altamura (BA). Cortometraggi, videoclip, eventi e contenuti per brand. Dynamis è stato selezionato al VerticalMovie Festival 2026.">
 <link rel="canonical" href="https://produkts.it/">
+<link rel="alternate" hreflang="it" href="https://produkts.it/">
+<link rel="alternate" hreflang="en" href="https://produkts.it/en/">
+<link rel="alternate" hreflang="x-default" href="https://produkts.it/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="produkts.it">
 <meta property="og:locale" content="it_IT">
+<meta property="og:locale:alternate" content="en_GB">
 <meta property="og:title" content="Karim Ismail — Direttore della fotografia e videomaker | produkts.it">
 <meta property="og:description" content="Karim Ismail, direttore della fotografia, videomaker e fotografo ad Altamura (BA). Cortometraggi, videoclip, eventi e contenuti per brand. Dynamis è stato selezionato al VerticalMovie Festival 2026.">
 <meta property="og:url" content="https://produkts.it/">
@@ -24,7 +28,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&amp;family=Space+Grotesk:wght@400;500&amp;display=swap">
-<link rel="stylesheet" href="assets/site.css?v=b6f7bbc4">
+<link rel="stylesheet" href="assets/site.css?v=b780d062">
 <script>try{(function(){var n=(performance.getEntriesByType&&performance.getEntriesByType('navigation')[0]||{}).type,r=document.referrer,same=false;try{same=!!r&&new URL(r).origin===location.origin}catch(e){}
 var show=n==='reload'||(n!=='back_forward'&&!same);if(show&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('intro')})()}catch(e){}</script>
 </head>
@@ -270,7 +274,7 @@ f.addEventListener('submit',async function(ev){
   ev.preventDefault();var c=i.value.toUpperCase().replace(/[^A-Z0-9]/g,'');
   if(c.length<6)return errore('Scrivi il codice che ti ho mandato.');
   errore('');b.disabled=true;
-  try{var r=await fetch('/api/galleria?verifica=1&c='+encodeURIComponent(c)),j=await r.json();if(!r.ok)return errore(j.errore||'Codice non valido.');location.href='galleria?c='+c}
+  try{var r=await fetch('/api/galleria?verifica=1&c='+encodeURIComponent(c)),j=await r.json();if(!r.ok)return errore(j.errore||'Codice non valido.');location.href='/galleria?c='+c}
   catch(e){errore('Connessione assente, riprova tra poco.')}
   finally{b.disabled=false}
 });
@@ -298,7 +302,7 @@ f.addEventListener('submit',async function(ev){
 </div>
 </footer>
 </div>
-<script src="assets/site.js?v=77bcd9db"></script>
+<script src="assets/site.js?v=d37f5347"></script>
 <script>
 </script>
 </body>

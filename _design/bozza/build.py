@@ -21,7 +21,7 @@ src = open(os.path.join(HERE, 'site.src.js'), encoding='utf-8').read()
 wip = open(os.path.join(REPO, '_design', 'wip', 'index.html'), encoding='utf-8').read()
 loader = wip[wip.index('<svg viewBox="0 0 450 251.5"'):]
 loader = loader[:loader.index('</svg>') + len('</svg>')]
-loader += '<span class="skip"><span class="c">Clicca per saltare l\'animazione</span><span class="t">Tocca per saltare l\'animazione</span></span>'
+# la scritta "Clicca/Tocca per saltare l'animazione" la aggiunge site.src.js, nella lingua della pagina
 cursor = open(os.path.join(REPO, '_design', 'wip', 'cursor.js'), encoding='utf-8').read().strip()
 out = src.replace('__LOADER_SVG__', json.dumps(loader, ensure_ascii=False)).replace('__CURSOR__', cursor)
 save(os.path.join(REPO, 'assets', 'site.js'), out)
@@ -49,6 +49,9 @@ except ImportError:
     print('cv: reportlab non installato, PDF non rigenerato')
 else:
     exec(open(os.path.join(HERE, 'cv.py'), encoding='utf-8').read(), {'__file__': os.path.join(HERE, 'cv.py')})
+
+# Versione inglese (en/) dalle pagine italiane, con il dizionario en.json
+exec(open(os.path.join(HERE, 'inglese.py'), encoding='utf-8').read(), {'__file__': os.path.join(HERE, 'inglese.py')})
 
 # Descrizioni, anteprime dei link, sitemap.xml e robots.txt
 exec(open(os.path.join(HERE, 'seo.py'), encoding='utf-8').read(), {'__file__': os.path.join(HERE, 'seo.py')})

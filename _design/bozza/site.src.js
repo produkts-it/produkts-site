@@ -10,7 +10,7 @@ function T(it,en){return EN?en:it}
 function intro(){
   if(!h.classList.contains('intro'))return;
   var l=d.createElement('div');l.className='loader';l.setAttribute('aria-hidden','true');
-  l.innerHTML=__LOADER_SVG__;
+  l.innerHTML=__LOADER_SVG__+T('<span class="skip"><span class="c">Clicca per saltare l\'animazione</span><span class="t">Tocca per saltare l\'animazione</span></span>','<span class="skip"><span class="c">Click to skip the animation</span><span class="t">Tap to skip the animation</span></span>');
   d.body.appendChild(l);
   var done=false;
   function end(){if(done)return;done=true;l.classList.add('out');h.classList.remove('intro');
@@ -28,12 +28,23 @@ function clock(){
   /* Anche le pagine con due stati (galleria: accesso e foto) hanno un'intestazione per stato: orologio in tutte */
   d.querySelectorAll('header').forEach(function(hh){clockIn(hh.querySelector(':scope > div')||hh)});
 }
+var bandiere=0;
 function clockIn(hd){
   var el=d.createElement('div');el.className='pk-clock';el.title=T('Ora locale ad Altamura','Local time in Altamura');
   el.innerHTML='<i aria-hidden="true"></i><span>Altamura</span><span class="t" aria-label="'+T('Ora locale ad Altamura','Local time in Altamura')+'">--:--:--:--</span>'
     +'<button type="button" class="pk-r" title="'+T('Premi R: guarda il sito dal mirino','Press R: see the site through the viewfinder')+'" aria-label="'+T('Guarda il sito dal mirino (tasto R)','See the site through the viewfinder (R key)')+'">R</button>';
+  /* Lingua: bandierine IT/EN verso la stessa pagina nell'altra lingua (link rel="alternate" hreflang messi da seo.py) */
+  var alt=function(l){var x=d.querySelector('link[rel="alternate"][hreflang="'+l+'"]');try{return x?new URL(x.href).pathname:null}catch(e){return null}};
+  var altro=alt(EN?'it':'en');
+  if(altro){
+    var n=++bandiere,it='<svg viewBox="0 0 3 2" width="18" height="12" aria-hidden="true"><rect width="1" height="2" fill="#009246"/><rect x="1" width="1" height="2" fill="#F1F2F1"/><rect x="2" width="1" height="2" fill="#CE2B37"/></svg>';
+    var en='<svg viewBox="0 0 60 30" width="18" height="12" aria-hidden="true"><clipPath id="pk-uk'+n+'"><path d="M30,15h30v15zv15h-30zh-30v-15zv-15h30z"/></clipPath><rect width="60" height="30" fill="#012169"/><path d="M0,0L60,30M60,0L0,30" stroke="#fff" stroke-width="6"/><path d="M0,0L60,30M60,0L0,30" clip-path="url(#pk-uk'+n+')" stroke="#C8102E" stroke-width="4"/><path d="M30,0v30M0,15h60" stroke="#fff" stroke-width="10"/><path d="M30,0v30M0,15h60" stroke="#C8102E" stroke-width="6"/></svg>';
+    var voce=function(l,flag,on){return on?'<span class="on" aria-current="true">'+flag+l.toUpperCase()+'</span>'
+      :'<a href="'+altro+'" hreflang="'+l+'" lang="'+l+'" title="'+(l==='en'?'English version':'Versione italiana')+'">'+flag+l.toUpperCase()+'</a>'};
+    el.insertAdjacentHTML('beforeend','<span class="pk-lang" role="group" aria-label="'+T('Lingua','Language')+'">'+voce('it',it,!EN)+voce('en',en,EN)+'</span>');
+  }
   /* toccare l'orologio (o il tasto R accanto) accende il mirino: anche da telefono, dove la tastiera non c'è */
-  el.addEventListener('click',function(){if(PK.mirino)PK.mirino()});
+  el.addEventListener('click',function(e){if(e.target.closest('.pk-lang'))return;if(PK.mirino)PK.mirino()});
   var mb=hd.querySelector('.mb');
   if(mb)hd.insertBefore(el,mb);else hd.appendChild(el);
   hd.classList.add('pk-hdr');
@@ -52,11 +63,11 @@ function clockIn(hd){
 /* Menu a schermo intero. Ultimo campo: il frame a destra (img, video con poster, frase da una recensione);
    senza frame resta la scritta segnaposto. */
 var ITEMS=[
-  ['01','Home','./','home','[ Showreel ]',{img:'img/menu/home.jpg',alt:'Locandina di Dynamis'}],
-  ['02','Lavori','lavori','lavori','[ Fotogramma da un lavoro ]',{img:'img/menu/lavori.jpg',alt:'Un fotogramma di Dynamis: una ragazza dai capelli rossi'}],
-  ['03','Chi sono','chi-sono','chisono','[ Ritratto sul set ]',{video:'img/menu/chi-sono.mp4',img:'img/menu/chi-sono.jpg',alt:'Karim alla camera sul set'}],
-  ['04','Recensioni','recensioni','recensioni','[ Una frase da una recensione ]',{frase:'Scatti straordinari che catturano emozioni uniche. Consigliato!',nome:'Pietro G.'}],
-  ['05','Contatti','contatti','contatti','[ Dietro le quinte ]',{img:'img/menu/contatti.jpg',alt:'Karim dentro un armadio sul set di Dynamis'}]
+  ['01','Home','./','home','[ Showreel ]',{img:'/img/menu/home.jpg',alt:T('Locandina di Dynamis','Dynamis poster')}],
+  ['02',T('Lavori','Work'),T('lavori','work'),'lavori','[ Fotogramma da un lavoro ]',{img:'/img/menu/lavori.jpg',alt:T('Un fotogramma di Dynamis: una ragazza dai capelli rossi','A frame from Dynamis: a red-haired girl')}],
+  ['03',T('Chi sono','About'),T('chi-sono','about'),'chisono','[ Ritratto sul set ]',{video:'/img/menu/chi-sono.mp4',img:'/img/menu/chi-sono.jpg',alt:T('Karim alla camera sul set','Karim behind the camera on set')}],
+  ['04',T('Recensioni','Reviews'),T('recensioni','reviews'),'recensioni','[ Una frase da una recensione ]',{frase:'Scatti straordinari che catturano emozioni uniche. Consigliato!',nome:'Pietro G.'}],
+  ['05',T('Contatti','Contact'),T('contatti','contact'),'contatti','[ Dietro le quinte ]',{img:'/img/menu/contatti.jpg',alt:T('Karim dentro un armadio sul set di Dynamis','Karim inside a wardrobe on the set of Dynamis')}]
 ];
 function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
 function frameEl(it){
@@ -91,9 +102,9 @@ function menu(){
     mo.setAttribute('role','dialog');mo.setAttribute('aria-modal','true');mo.setAttribute('aria-label','Menu');
     mo.style.cssText='position: fixed; inset: 0; z-index: 80; background: #0B0B0B; display: flex; flex-direction: column; overflow-y: auto';
     mo.innerHTML='<div style="width: 100%; max-width: 1440px; margin: 0 auto; padding: 28px 56px; box-sizing: border-box; display: flex; align-items: center; justify-content: space-between; gap: 24px">'+LOGO
-      +'<button type="button" class="mx" aria-label="Chiudi il menu" style="height: 48px; padding: 0; background: transparent; border: 0; color: #E8E4DF; display: flex; align-items: center; gap: 14px; cursor: pointer; font-family: \'Space Grotesk\', sans-serif; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase">Chiudi<span aria-hidden="true" style="position: relative; width: 28px; height: 28px; display: block"><span class="x1" style="position: absolute; left: 0; top: 14px; width: 28px; height: 1px; background: #E8E4DF; transform: rotate(45deg)"></span><span class="x2" style="position: absolute; left: 0; top: 14px; width: 28px; height: 1px; background: #B46428; transform: rotate(-45deg)"></span></span></button></div>'
+      +'<button type="button" class="mx" aria-label="'+T('Chiudi il menu','Close the menu')+'" style="height: 48px; padding: 0; background: transparent; border: 0; color: #E8E4DF; display: flex; align-items: center; gap: 14px; cursor: pointer; font-family: \'Space Grotesk\', sans-serif; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase">'+T('Chiudi','Close')+'<span aria-hidden="true" style="position: relative; width: 28px; height: 28px; display: block"><span class="x1" style="position: absolute; left: 0; top: 14px; width: 28px; height: 1px; background: #E8E4DF; transform: rotate(45deg)"></span><span class="x2" style="position: absolute; left: 0; top: 14px; width: 28px; height: 1px; background: #B46428; transform: rotate(-45deg)"></span></span></button></div>'
       +'<div style="flex: 1; width: 100%; max-width: 1440px; margin: 0 auto; padding: 24px 56px 40px; box-sizing: border-box; display: flex; flex-wrap: wrap; align-items: center; gap: 48px 96px">'
-      +'<nav aria-label="Principale" style="flex: 999 1 520px; display: flex; flex-direction: column">'+links()+'</nav>'
+      +'<nav aria-label="'+T('Principale','Main')+'" style="flex: 999 1 520px; display: flex; flex-direction: column">'+links()+'</nav>'
       +'<div class="mfade" style="flex: 1 1 340px; max-width: 520px; display: flex; flex-direction: column; gap: 16px">'
       +'<div class="pvbox" style="position: relative; aspect-ratio: 4 / 5; background: #161616; overflow: hidden">'
       +'<span class="pvf"></span>'
@@ -103,12 +114,12 @@ function menu(){
       +'<div class="mfade" style="width: 100%; max-width: 1440px; margin: 0 auto; padding: 0 56px 32px; box-sizing: border-box">'
       +'<div style="border-top: 1px solid #1F1F1F; padding-top: 20px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 32px; font-size: 13px; color: #9A948C">'
       +'<div style="display: flex; flex-wrap: wrap; gap: 8px 32px">'
-      +'<a href="https://wa.me/393711444875?text=Ciao%20Karim%2C%20ti%20scrivo%20dal%20sito%20produkts.it%3A%20" target="_blank" rel="noopener" style="color: #E8E4DF; text-decoration: none; padding: 8px 0">WhatsApp</a>'
+      +'<a href="https://wa.me/393711444875?text='+T('Ciao%20Karim%2C%20ti%20scrivo%20dal%20sito%20produkts.it%3A%20','Hi%20Karim%2C%20I%27m%20writing%20from%20produkts.it%3A%20')+'" target="_blank" rel="noopener" style="color: #E8E4DF; text-decoration: none; padding: 8px 0">WhatsApp</a>'
       +'<a href="mailto:info@produkts.it" style="color: #E8E4DF; text-decoration: none; padding: 8px 0">info@produkts.it</a>'
       +'<a href="https://www.instagram.com/produkts.it/" target="_blank" rel="noopener" style="color: #E8E4DF; text-decoration: none; padding: 8px 0">Instagram</a>'
       +'<a href="https://www.youtube.com/@produkts-it" target="_blank" rel="noopener" style="color: #E8E4DF; text-decoration: none; padding: 8px 0">YouTube</a>'
-      +'<a href="area-clienti" style="color: #D98A4E; text-decoration: none; padding: 8px 0">Area clienti</a>'
-      +'</div><span style="padding: 8px 0">Altamura (BA) · Puglia</span></div></div>';
+      +'<a href="/area-clienti" style="color: #D98A4E; text-decoration: none; padding: 8px 0">'+T('Area clienti','Client area')+'</a>'
+      +'</div><span style="padding: 8px 0">'+T('Altamura (BA) · Puglia','Altamura (BA) · Apulia, Italy')+'</span></div></div>';
     d.body.appendChild(mo);
     h.classList.add('menu-open');
     btn.setAttribute('aria-expanded','true');
@@ -166,18 +177,27 @@ PK.turnstile=function(box){
   var id=null;
   tsLoad=tsLoad||new Promise(function(ok){w.pkTsReady=ok;var s=d.createElement('script');
     s.src='https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=pkTsReady';s.async=true;d.head.appendChild(s)});
-  tsLoad.then(function(){id=w.turnstile.render(box,{sitekey:PK.TURNSTILE_KEY,theme:'dark',language:'it'})});
+  tsLoad.then(function(){id=w.turnstile.render(box,{sitekey:PK.TURNSTILE_KEY,theme:'dark',language:EN?'en':'it'})});
   return function(){return id!==null&&w.turnstile?w.turnstile.getResponse(id)||'':''};
 };
 PK.turnstileReset=function(box){if(w.turnstile&&box&&box.firstChild)try{w.turnstile.reset(box.firstChild)}catch(e){}};
-/* POST JSON; restituisce {ok:true} oppure {errore:'...'} con un messaggio da mostrare */
+/* POST JSON; restituisce {ok:true} oppure {errore:'...'} con un messaggio da mostrare (tradotto sulle pagine inglesi) */
+var ERR_EN={'Richiesta non valida.':'Invalid request.','Scrivi quale servizio.':'Tell me which service.',
+  'Serve il consenso alla pubblicazione.':'Please agree to the review being published.',"Serve il consenso all'informativa privacy.":'Please accept the privacy notice.',
+  'Controlla il numero di telefono: ti ricontatto su WhatsApp.':'Check your phone number: I will get back to you on WhatsApp.',
+  'Servono nome, cognome, numero di telefono e il messaggio.':'Please fill in first name, last name, phone number and your message.',
+  'Servono nome, cognome, servizio, valutazione e il testo.':'Please fill in first name, last name, service, rating and your review.',
+  'Verifica anti-spam non riuscita, riprova.':'Anti-spam check failed, please try again.',
+  'Il modulo non è ancora attivo. Scrivimi su WhatsApp o a info@produkts.it.':'The form is not active yet. Message me on WhatsApp or at info@produkts.it.',
+  'Qualcosa non ha funzionato, riprova tra poco.':'Something went wrong, please try again shortly.','Connessione non riuscita, riprova tra poco.':'Connection failed, please try again shortly.'};
+function trErr(r){if(EN&&r.errore)r.errore=ERR_EN[r.errore]||'Something went wrong: please try again, or message me on WhatsApp.';return r}
 PK.invia=function(url,dati){
   return fetch(url,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(dati)})
     .then(function(r){return r.json().catch(function(){return {}}).then(function(j){
       if(r.ok&&j.ok)return {ok:true};
       if(r.status===404||r.status===405)return {errore:'Il modulo non è ancora attivo. Scrivimi su WhatsApp o a info@produkts.it.'};
       return {errore:j.errore||'Qualcosa non ha funzionato, riprova tra poco.'}})})
-    .catch(function(){return {errore:'Connessione non riuscita, riprova tra poco.'}});
+    .catch(function(){return {errore:'Connessione non riuscita, riprova tra poco.'}}).then(trErr);
 };
 
 /* Campo "Dove": suggerimenti dai comuni italiani (elenco ISTAT in assets/comuni.json, caricato al primo uso).
@@ -192,7 +212,7 @@ PK.luoghi=function(input){
   input.setAttribute('role','combobox');input.setAttribute('aria-autocomplete','list');input.setAttribute('aria-expanded','false');
   input.setAttribute('aria-controls',uid);input.setAttribute('autocomplete','off');
   function prendi(){
-    carica=carica||fetch('assets/comuni.json').then(function(r){return r.json()}).then(function(j){
+    carica=carica||fetch('/assets/comuni.json').then(function(r){return r.json()}).then(function(j){
       dati=j.map(function(c){return {n:c[0],p:c[1],cap:c[2],k:norm(c[0])}});}).catch(function(){dati=[]});
     return carica;
   }
@@ -236,23 +256,24 @@ PK.luoghi=function(input){
 
 /* Campo "Quando": calendario nello stile del sito al posto di quello del sistema.
    Il valore (AAAA-MM-GG) sta in input.dataset.iso; nel campo si legge la data in italiano. */
-var MESI=['gennaio','febbraio','marzo','aprile','maggio','giugno','luglio','agosto','settembre','ottobre','novembre','dicembre'];
-var GIORNI=['lun','mar','mer','gio','ven','sab','dom'];
+var MESI=EN?['January','February','March','April','May','June','July','August','September','October','November','December']
+  :['gennaio','febbraio','marzo','aprile','maggio','giugno','luglio','agosto','settembre','ottobre','novembre','dicembre'];
+var GIORNI=EN?['Mon','Tue','Wed','Thu','Fri','Sat','Sun']:['lun','mar','mer','gio','ven','sab','dom'];
 function iso(dt){return dt.getFullYear()+'-'+('0'+(dt.getMonth()+1)).slice(-2)+'-'+('0'+dt.getDate()).slice(-2)}
 PK.calendario=function(input){
   if(!input)return;
   var box=input.parentNode,oggi=new Date();oggi.setHours(0,0,0,0);
   var vista=new Date(oggi.getFullYear(),oggi.getMonth(),1),fuoco=new Date(oggi),aperto=false;
-  input.type='text';input.readOnly=true;input.setAttribute('inputmode','none');input.placeholder='Scegli una data';
+  input.type='text';input.readOnly=true;input.setAttribute('inputmode','none');input.placeholder=T('Scegli una data','Pick a date');
   input.setAttribute('aria-haspopup','dialog');input.setAttribute('aria-expanded','false');
   box.classList.add('pk-ac');
-  var pop=d.createElement('div');pop.className='pk-cal';pop.setAttribute('role','dialog');pop.setAttribute('aria-label','Scegli una data');pop.hidden=true;
+  var pop=d.createElement('div');pop.className='pk-cal';pop.setAttribute('role','dialog');pop.setAttribute('aria-label',T('Scegli una data','Pick a date'));pop.hidden=true;
   box.appendChild(pop);
   function mostra(){
     var y=vista.getFullYear(),m=vista.getMonth(),primo=(new Date(y,m,1).getDay()+6)%7,tot=new Date(y,m+1,0).getDate();
     var prima=new Date(y,m,1)<=new Date(oggi.getFullYear(),oggi.getMonth(),1);
-    var h='<div class="pk-cal-top"><button type="button" class="pk-cal-nav" data-m="-1" aria-label="Mese precedente"'+(prima?' disabled':'')+'>‹</button>'
-      +'<span class="pk-cal-mese" aria-live="polite">'+MESI[m]+' '+y+'</span><button type="button" class="pk-cal-nav" data-m="1" aria-label="Mese successivo">›</button></div>'
+    var h='<div class="pk-cal-top"><button type="button" class="pk-cal-nav" data-m="-1" aria-label="'+T('Mese precedente','Previous month')+'"'+(prima?' disabled':'')+'>‹</button>'
+      +'<span class="pk-cal-mese" aria-live="polite">'+MESI[m]+' '+y+'</span><button type="button" class="pk-cal-nav" data-m="1" aria-label="'+T('Mese successivo','Next month')+'">›</button></div>'
       +'<div class="pk-cal-grid" role="grid">'+GIORNI.map(function(g){return '<span class="pk-cal-g" aria-hidden="true">'+g+'</span>'}).join('');
     for(var i=0;i<primo;i++)h+='<span></span>';
     for(var g=1;g<=tot;g++){
@@ -260,7 +281,7 @@ PK.calendario=function(input){
       h+='<button type="button" class="pk-cal-d'+(k===input.dataset.iso?' on':'')+(k===iso(oggi)?' oggi':'')+'" data-d="'+k+'"'
         +(passato?' disabled':'')+' tabindex="'+(k===iso(fuoco)?0:-1)+'" aria-label="'+g+' '+MESI[m]+' '+y+'">'+g+'</button>';
     }
-    h+='</div><div class="pk-cal-foot"><button type="button" class="pk-cal-x">Non lo so ancora</button></div>';
+    h+='</div><div class="pk-cal-foot"><button type="button" class="pk-cal-x">'+T('Non lo so ancora','Not sure yet')+'</button></div>';
     pop.innerHTML=h;
   }
   function apri(){if(aperto)return;aperto=true;if(input.dataset.iso){var p=input.dataset.iso.split('-');fuoco=new Date(+p[0],p[1]-1,+p[2]);vista=new Date(fuoco.getFullYear(),fuoco.getMonth(),1)}
@@ -269,7 +290,7 @@ PK.calendario=function(input){
   function imposta(k){
     if(!k){delete input.dataset.iso;input.value='';chiudi(true);return}
     var p=k.split('-'),dt=new Date(+p[0],p[1]-1,+p[2]);
-    input.dataset.iso=k;input.value=dt.toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long',year:'numeric'});chiudi(true);
+    input.dataset.iso=k;input.value=dt.toLocaleDateString(EN?'en-GB':'it-IT',{weekday:'long',day:'numeric',month:'long',year:'numeric'});chiudi(true);
   }
   function sposta(n){fuoco=new Date(fuoco.getFullYear(),fuoco.getMonth(),fuoco.getDate()+n);if(fuoco<oggi)fuoco=new Date(oggi);
     vista=new Date(fuoco.getFullYear(),fuoco.getMonth(),1);mostra();var b=pop.querySelector('[data-d="'+iso(fuoco)+'"]');if(b)b.focus()}
@@ -295,8 +316,8 @@ PK.calendario=function(input){
 /* Link in bio: "Condividi questa pagina" (menu di condivisione del telefono, altrimenti copia il link) */
 PK.acts.condividi=function(a,el){var u='https://produkts.it/link',m=d.querySelector('[data-condiviso]');
   if(navigator.share){navigator.share({title:'Karim Ismail — produkts.it',url:u}).catch(function(){});return}
-  var ok=function(){if(m)m.textContent='Link copiato: incollalo dove vuoi.'};
-  if(navigator.clipboard)navigator.clipboard.writeText(u).then(ok,function(){prompt('Copia il link:',u)});else prompt('Copia il link:',u)};
+  var ok=function(){if(m)m.textContent=T('Link copiato: incollalo dove vuoi.','Link copied: paste it wherever you like.')};
+  if(navigator.clipboard)navigator.clipboard.writeText(u).then(ok,function(){prompt(T('Copia il link:','Copy the link:'),u)});else prompt(T('Copia il link:','Copy the link:'),u)};
 PK.acts.carPrev=function(a,el){var t=el.closest('section').querySelector('.car-track');t.scrollBy({left:-t.clientWidth-16,behavior:still?'auto':'smooth'})};
 PK.acts.carNext=function(a,el){var t=el.closest('section').querySelector('.car-track');t.scrollBy({left:t.clientWidth+16,behavior:still?'auto':'smooth'})};
 

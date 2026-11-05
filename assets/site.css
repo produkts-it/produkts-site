@@ -313,6 +313,13 @@ header.pk-sticky.pk-hide{transform:translateY(-100%)}
 @keyframes mirout{to{opacity:0}}
 @keyframes mirk{from{transform:translate(var(--dx),var(--dy));opacity:0}to{transform:none;opacity:1}}
 @keyframes mirfuoco{0%{transform:scale(1.6);opacity:0}40%{transform:scale(.92);opacity:1}55%,75%{border-color:#D98A4E}65%{border-color:transparent}100%{transform:none;opacity:1}}
+/* Lingua (IT/EN) accanto all'orologio: bandierina + sigla; la lingua attuale in chiaro */
+.pk-lang{display:inline-flex;align-items:center;gap:4px;margin-left:10px;padding-left:14px;border-left:1px solid #2A2A2A;cursor:default}
+.pk-lang a,.pk-lang span{display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 6px;color:#6E6A64;letter-spacing:.12em;transition:color .3s}
+.pk-lang svg{display:block;border-radius:1px;opacity:.55;transition:opacity .3s}
+.pk-lang .on{color:#E8E4DF}.pk-lang .on svg,.pk-lang a:hover svg{opacity:1}
+.pk-lang a:hover{color:#D98A4E}
+@media (max-width:640px){.pk-lang{margin-left:auto}}
 /* Tasto R accanto all'orologio (solo con mouse e tastiera) e suggerimento "premi R" */
 .pk-clock{cursor:pointer}
 .pk-r,.pk-mirino kbd,.pk-rhint kbd{font:inherit;font-family:'Space Grotesk',sans-serif;display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 5px;box-sizing:border-box;border:1px solid #6E6A64;border-bottom-width:2px;border-radius:4px;font-size:11px;letter-spacing:0;line-height:1;color:#E8E4DF;background:#141414;text-shadow:none}
