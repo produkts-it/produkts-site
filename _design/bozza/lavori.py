@@ -432,6 +432,110 @@ def filmo_row(t, role, prod, href, cls, cols, fs, pad):
             '%s\n<span style="font-size: 14px; color: #C9C4BD">%s</span>\n<span style="font-size: 13px; color: #9A948C; text-align: right">%s</span>\n</div>\n') % (cls, cols, pad, title, e(role), e(prod))
 
 
+# ---- Link in bio (produkts.it/link): pagina per Instagram, TikTok ecc., fuori dal menu e dai motori di ricerca.
+# Dati in lavori.json → "link" (modificabili dal pannello, scheda Link): lavoro in evidenza, pulsanti, lavori, social.
+SOCIAL_ICONE = {
+    'instagram': ('Instagram', '<rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="0.6" fill="currentColor"/>'),
+    'tiktok': ('TikTok', '<path d="M14 3v11.5a3.6 3.6 0 1 1-3.6-3.6"/><path d="M14 3c.4 2.7 2.4 4.6 5 4.8"/>'),
+    'youtube': ('YouTube', '<rect x="2.5" y="5" width="19" height="14" rx="4"/><path d="M10 9l5 3-5 3z" fill="currentColor"/>'),
+    'email': ('Email', '<rect x="3" y="5" width="18" height="14" rx="1.5"/><path d="M3.5 6l8.5 7 8.5-7"/>'),
+}
+
+
+def link_esterno(url):
+    return url.startswith(('http://', 'https://')) and not url.startswith('https://produkts.it')
+
+
+def link_video(w):
+    if w['slug'] == 'dynamis' and not w.get('yt'):
+        w = dict(w, yt='nLLtk0Lwxq8')
+    return video(w) if (w.get('yt') or w.get('vimeo') or w.get('ig')) else (None, None)
+
+
+def link_page():
+    L, tutti = DATI['link'], {w['slug']: w for w in griglia()}
+    out = []
+    ev = tutti.get((L.get('evidenza') or {}).get('slug', ''))
+    if ev:
+        poster = ev['slug'] == 'dynamis'
+        url, plat = link_video(ev)
+        occ = L['evidenza'].get('occhiello') or ev.get('kicker') or ev['cats'][0]
+        guarda = ('<a href="%s" target="_blank" rel="noopener" class="btn" style="height: 48px; padding: 0 22px; background: #E8E4DF; color: #080808; display: inline-flex; align-items: center; gap: 10px; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase">'
+                  '<span aria-hidden="true">▶</span> Guarda su %s</a>\n' % (url, plat)) if url else ''
+        out.append('''<section class="fade d2" style="margin-top: 36px">
+<div class="work" style="position: relative">
+<div class="frame" style="position: relative; aspect-ratio: %s; background: #161616; overflow: hidden">
+<img src="%s" alt="%s" style="position: absolute; inset: 0; width: 100%%; height: 100%%; object-fit: cover; object-position: %s">
+<span aria-hidden="true" class="br br-tl" style="position: absolute; top: 14px; left: 14px; width: 18px; height: 18px; border-top: 1px solid #336699; border-left: 1px solid #336699"></span>
+<span aria-hidden="true" class="br br-br" style="position: absolute; bottom: 14px; right: 14px; width: 18px; height: 18px; border-bottom: 1px solid #336699; border-right: 1px solid #336699"></span>
+<span style="position: absolute; top: 14px; right: 14px; display: flex; align-items: center; gap: 8px; padding: 6px 10px; background: rgba(8,8,8,0.6); font-size: 11px; letter-spacing: 0.16em; color: #E8E4DF"><span class="rec" aria-hidden="true" style="width: 8px; height: 8px; border-radius: 50%%; background: #B46428"></span>IN EVIDENZA</span>
+</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px; margin-top: 18px">
+<span style="%s">%s</span>
+<h2 style="margin: 0; font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300; font-size: clamp(44px, 12vw, 64px); line-height: 1">%s</h2>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px">
+%s<a href="%s" class="pill" style="height: 48px; padding: 0 22px; border: 1px solid #3A3A3A; display: inline-flex; align-items: center; gap: 10px; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase">Il progetto <span aria-hidden="true">→</span></a>
+</div>
+</section>
+''' % ('4 / 5' if poster else '2.39 / 1', ev['img'], e(alt(ev)), ev.get('pos', '50% 50%') if poster else '50% 50%',
+       KICK.replace(ACC, '#D98A4E'), e(occ), e(ev['t']), guarda, ev['slug']))
+
+    righe = []
+    for i, x in enumerate(L.get('link') or []):
+        fuori = link_esterno(x['url']) or x['url'].startswith(('mailto:', 'tel:'))
+        scarica = x['url'].endswith(('.pdf', '.vcf'))
+        righe.append('''<a href="%s"%s class="lk reveal" style="display: grid; grid-template-columns: 28px minmax(0, 1fr) auto; gap: 14px; align-items: center; padding: 18px 20px; border: 1px solid #262626; margin-top: -1px">
+<span style="font-size: 12px; color: #B46428; letter-spacing: 0.1em; font-variant-numeric: tabular-nums">%02d</span>
+<span style="display: flex; flex-direction: column; gap: 4px; min-width: 0"><span style="font-size: 17px; line-height: 1.3">%s</span>%s</span>
+<span aria-hidden="true" class="lka" style="color: #9A948C; font-size: 18px">%s</span>
+</a>
+''' % (e(x['url']), (' target="_blank" rel="noopener"' if fuori else '') + (' download' if scarica else ''), i + 1, e(x['t']),
+       ('<span style="font-size: 13px; line-height: 1.45; color: #9A948C">%s</span>' % e(x['sub'])) if x.get('sub') else '',
+       '↓' if scarica else '↗' if fuori else '→'))
+    if righe:
+        out.append('<nav aria-label="Collegamenti" style="margin-top: 36px; display: flex; flex-direction: column">\n%s</nav>\n' % ''.join(righe))
+
+    schede = []
+    for slug in L.get('lavori') or []:
+        w = tutti.get(slug)
+        if not w:
+            continue
+        tipo = w.get('kicker') or 'Cortometraggio · AMARCORD · ' + w['year']
+        cop = copertina(w)
+        # la copertina disegnata ha già titolo e dati: la didascalia serve solo sul fotogramma semplice
+        didascalia = '' if cop.startswith('img/copertine/') else '''<div style="display: flex; justify-content: space-between; gap: 16px; align-items: baseline">
+<span style="font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 26px; line-height: 1.1">%s</span>
+<span style="font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: #9A948C; text-align: right">%s</span>
+</div>
+''' % (e(w['t']), e(tipo.rsplit(' · ', 1)[0]))
+        schede.append('''<a href="%s" class="work reveal" style="display: flex; flex-direction: column; gap: 12px">
+<div class="frame" style="position: relative; aspect-ratio: 2.39 / 1; background: #161616; overflow: hidden">
+<img src="%s" alt="%s" loading="lazy" style="position: absolute; inset: 0; width: 100%%; height: 100%%; object-fit: cover; object-position: %s">
+<span aria-hidden="true" class="br br-tl" style="position: absolute; top: 10px; left: 10px; width: 14px; height: 14px; border-top: 1px solid #336699; border-left: 1px solid #336699"></span>
+<span aria-hidden="true" class="br br-br" style="position: absolute; bottom: 10px; right: 10px; width: 14px; height: 14px; border-bottom: 1px solid #336699; border-right: 1px solid #336699"></span>
+</div>
+%s</a>
+''' % (slug, cop, e(alt(w)), w.get('pos', '50% 50%'), didascalia))
+    if schede:
+        out.append('''<section style="margin-top: 56px; display: flex; flex-direction: column; gap: 16px">
+<div style="display: flex; justify-content: space-between; align-items: baseline; gap: 16px; border-bottom: 1px solid #1F1F1F; padding-bottom: 14px">
+<h2 style="margin: 0; font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 400; font-size: 32px">Ultimi lavori</h2>
+<a href="lavori" style="font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: #9A948C">Tutti <span aria-hidden="true">→</span></a>
+</div>
+%s</section>
+''' % ''.join(schede))
+    return ''.join(out)
+
+
+def link_social():
+    S = DATI['link'].get('social') or {}
+    return ''.join('<a href="%s" target="_blank" rel="noopener" class="soc" aria-label="%s" title="%s" style="width: 48px; height: 48px; border: 1px solid #262626; border-radius: 50%%; display: inline-flex; align-items: center; justify-content: center">'
+                   '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">%s</svg></a>\n'
+                   % (e(S[k]), n, n, svg) for k, (n, svg) in SOCIAL_ICONE.items() if S.get(k))
+
+
 for w in WORKS:
     if w.get('page', True):
         page(w)
@@ -453,5 +557,7 @@ bys = {w['slug']: w for w in WORKS}
 put('index.html', 'home:lavori', ''.join(home_card(bys[s], i) for i, s in enumerate(HOME_WORKS)))
 put('index.html', 'home:filmografia', ''.join(filmo_row(*f, 'reveal', 'minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 0.8fr)', 26, '20px') for f in FILMOGRAFIA[:HOME_FILMO]))
 put('chi-sono.html', 'chisono:filmografia', ''.join(filmo_row(*f, 'row reveal', 'minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 0.7fr)', 24, '18px') for f in FILMOGRAFIA))
+put('link.html', 'link:contenuto', link_page())
+put('link.html', 'link:social', link_social())
 dati_copertine()
 print('ok elenchi')

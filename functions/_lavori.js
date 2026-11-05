@@ -7,7 +7,7 @@ const REPO = 'produkts-it/produkts-site';
 const FILE = '_design/bozza/lavori.json';
 // Indirizzi già usati dal sito: un lavoro non può chiamarsi così
 const RISERVATI = new Set(['index', 'lavori', 'chi-sono', 'recensioni', 'contatti', 'privacy', 'dynamis', 'fotografia', 'galleria',
-  'area-clienti', '404', 'admin', 'api', 'img', 'assets', 'brand', 'functions', 'sitemap', 'robots', 'og', 'favicon']);
+  'area-clienti', 'link', '404', 'admin', 'api', 'img', 'assets', 'brand', 'functions', 'sitemap', 'robots', 'og', 'favicon']);
 const CATS = ['Cortometraggio', 'Videoclip', 'Video aziendale', 'Evento', 'Opera personale'];
 
 /** Ramo su cui salvare: produkts.it → main; anteprima <ramo>.produkts-site.pages.dev → quel ramo. */
@@ -172,20 +172,80 @@ export async function salva(env, branch, d) {
       } else if (fi >= 0 && dati.filmografia[fi][3] === l.slug) dati.filmografia.splice(fi, 1);
     }
 
-    const testo = JSON.stringify(dati, null, 1) + '\n';
-    const blob = async (content, encoding) => (await gh(env, '/git/blobs', { method: 'POST', body: JSON.stringify({ content, encoding }) })).sha;
-    const tree = [{ path: FILE, mode: '100644', type: 'blob', sha: await blob(testo, 'utf-8') }];
-    for (const x of file) tree.push({ path: x.path, mode: '100644', type: 'blob', sha: await blob(x.b64, 'base64') });
-    const t = await gh(env, '/git/trees', { method: 'POST', body: JSON.stringify({ base_tree: s.tree, tree }) });
-    const c = await gh(env, '/git/commits', {
-      method: 'POST',
-      body: JSON.stringify({ message: (d.nuovo ? 'Pannello: nuovo lavoro «' : 'Pannello: aggiornato «') + l.t + '»', tree: t.sha, parents: [s.head] }),
-    });
     try {
-      await gh(env, '/git/refs/heads/' + encodeURIComponent(branch), { method: 'PATCH', body: JSON.stringify({ sha: c.sha, force: false }) });
-      return { ok: true, slug: l.slug, commit: c.sha, ramo: branch };
+      const c = await commit(env, branch, s, dati, file, (d.nuovo ? 'Pannello: nuovo lavoro «' : 'Pannello: aggiornato «') + l.t + '»');
+      return { ok: true, slug: l.slug, commit: c, ramo: branch };
     } catch (err) {
       if (err.stato !== 422 || tentativo) throw err; // qualcun altro ha salvato nel frattempo: riprova sui dati nuovi
+    }
+  }
+}
+
+/** Un commit sul ramo con lavori.json (dati) e gli eventuali file (immagini in base64). Errore 422 = il ramo è andato avanti. */
+async function commit(env, branch, s, dati, file, messaggio) {
+  const testo = JSON.stringify(dati, null, 1) + '\n';
+  const blob = async (content, encoding) => (await gh(env, '/git/blobs', { method: 'POST', body: JSON.stringify({ content, encoding }) })).sha;
+  const tree = [{ path: FILE, mode: '100644', type: 'blob', sha: await blob(testo, 'utf-8') }];
+  for (const x of file) tree.push({ path: x.path, mode: '100644', type: 'blob', sha: await blob(x.b64, 'base64') });
+  const t = await gh(env, '/git/trees', { method: 'POST', body: JSON.stringify({ base_tree: s.tree, tree }) });
+  const c = await gh(env, '/git/commits', { method: 'POST', body: JSON.stringify({ message: messaggio, tree: t.sha, parents: [s.head] }) });
+  await gh(env, '/git/refs/heads/' + encodeURIComponent(branch), { method: 'PATCH', body: JSON.stringify({ sha: c.sha, force: false }) });
+  return c.sha;
+}
+
+// ---- Link in bio (produkts.it/link): lavori.json → "link", pagina generata da lavori.py ----
+const SOCIAL = ['instagram', 'tiktok', 'youtube', 'email'];
+const SITO = /^https?:\/\/(www\.)?produkts\.it\/?/i;
+
+/** Indirizzo di un pulsante: pagina del sito (contatti, recensioni#scrivi, assets/…), https://, mailto: o tel:. */
+export function indirizzo(v) {
+  let u = str(v, 400);
+  if (SITO.test(u)) return u.replace(SITO, '') || './';
+  if (/^https:\/\/[^\s"<>]+\.[^\s"<>]+$/i.test(u)) return u;
+  if (/^http:\/\/[^\s"<>]+\.[^\s"<>]+$/i.test(u)) return 'https://' + u.slice(7);
+  if (/^mailto:[^\s"<>@]+@[^\s"<>@]+\.[a-z]{2,}$/i.test(u)) return u;
+  if (/^tel:\+?[\d ]{6,20}$/i.test(u)) return u.replace(/ /g, '');
+  if (/^[\w.-]+\.(com|it|eu|net|org|me|be|tv|app)(\/[^\s"<>]*)?$/i.test(u)) return 'https://' + u; // es. "instagram.com/produkts.it"
+  if (/^\/?[a-z0-9][\w\-/.]*([?#][^\s"<>:]*)?$/i.test(u) && !u.startsWith('//')) return u.replace(/^\//, '');
+  if (/^#[\w-]+$/.test(u)) return './' + u;
+  throw new Error('Indirizzo non valido: «' + u + '». Usa un link completo (https://…) o una pagina del sito (es. contatti).');
+}
+
+/** Salva il link in bio. d = { evidenza: { slug, occhiello } | null, lavori: [slug], link: [{ t, sub, url }], social: { instagram, tiktok, youtube, email } } */
+export async function salvaLink(env, branch, d) {
+  d = d || {};
+  for (let tentativo = 0; tentativo < 2; tentativo++) {
+    const s = await stato(env, branch);
+    const dati = s.dati;
+    const esiste = new Set([...dati.lavori, ...dati.amarcord].map((x) => x.slug));
+    const ev = str(d.evidenza && d.evidenza.slug, 60);
+    if (ev && !esiste.has(ev)) throw new Error('Il lavoro in evidenza non esiste.');
+    const lavori = [...new Set((Array.isArray(d.lavori) ? d.lavori : []).map((x) => str(x, 60)))].filter((x) => esiste.has(x) && x !== ev);
+    if (lavori.length > 6) throw new Error('Al massimo 6 lavori.');
+    const link = (Array.isArray(d.link) ? d.link : []).slice(0, 12)
+      .map((x) => ({ t: str(x && x.t, 60), sub: str(x && x.sub, 100), url: str(x && x.url, 400) }))
+      .filter((x) => x.t || x.url);
+    for (const x of link) {
+      if (!x.t) throw new Error('Un pulsante non ha il titolo.');
+      if (!x.url) throw new Error('Il pulsante «' + x.t + '» non ha l’indirizzo.');
+      x.url = indirizzo(x.url);
+      if (!x.sub) delete x.sub;
+    }
+    const social = {};
+    for (const k of SOCIAL) {
+      const v = str(d.social && d.social[k], 300);
+      if (!v) continue;
+      social[k] = k === 'email' ? 'mailto:' + v.replace(/^mailto:/i, '') : indirizzo(v);
+      if (k === 'email' ? !/^mailto:[^\s"<>@]+@[^\s"<>@]+\.[a-z]{2,}$/i.test(social[k]) : !social[k].startsWith('https://')) {
+        throw new Error('Indirizzo di ' + k + ' non valido.');
+      }
+    }
+    dati.link = { evidenza: ev ? { slug: ev, occhiello: str(d.evidenza.occhiello, 80) } : null, lavori, link, social };
+    try {
+      const c = await commit(env, branch, s, dati, [], 'Pannello: link in bio aggiornato');
+      return { ok: true, commit: c, ramo: branch, link: dati.link };
+    } catch (err) {
+      if (err.stato !== 422 || tentativo) throw err;
     }
   }
 }

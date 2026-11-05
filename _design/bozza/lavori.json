@@ -2088,5 +2088,54 @@
     ]
    ]
   ]
+ },
+ "link": {
+  "evidenza": {
+   "slug": "dynamis",
+   "occhiello": "Nomination · VerticalMovie 2026"
+  },
+  "lavori": [
+   "schizophrenia",
+   "regressus-ad-uterum",
+   "trick-or-treat"
+  ],
+  "link": [
+   {
+    "t": "Richiedi un preventivo",
+    "sub": "Foto e video per eventi, brand e progetti",
+    "url": "contatti"
+   },
+   {
+    "t": "Scrivimi su WhatsApp",
+    "sub": "Ti rispondo di solito entro un giorno",
+    "url": "https://wa.me/393711444875"
+   },
+   {
+    "t": "Lascia una recensione",
+    "sub": "Abbiamo lavorato insieme? Raccontalo",
+    "url": "recensioni#scrivi"
+   },
+   {
+    "t": "Le tue foto",
+    "sub": "Area clienti: entra con il codice della tua galleria",
+    "url": "area-clienti"
+   },
+   {
+    "t": "Salva il mio contatto",
+    "sub": "Aggiungimi alla rubrica con un tocco",
+    "url": "assets/karim-ismail.vcf"
+   },
+   {
+    "t": "Scarica la filmografia",
+    "sub": "Tutti i lavori in PDF",
+    "url": "assets/karim-ismail-filmografia.pdf"
+   }
+  ],
+  "social": {
+   "instagram": "https://www.instagram.com/produkts.it/",
+   "tiktok": "https://www.tiktok.com/@produkts.it",
+   "youtube": "https://www.youtube.com/@produkts-it",
+   "email": "mailto:info@produkts.it"
+  }
  }
 }

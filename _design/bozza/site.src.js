@@ -286,6 +286,11 @@ PK.calendario=function(input){
 };
 
 /* Carosello dei fotogrammi */
+/* Link in bio: "Condividi questa pagina" (menu di condivisione del telefono, altrimenti copia il link) */
+PK.acts.condividi=function(a,el){var u='https://produkts.it/link',m=d.querySelector('[data-condiviso]');
+  if(navigator.share){navigator.share({title:'Karim Ismail — produkts.it',url:u}).catch(function(){});return}
+  var ok=function(){if(m)m.textContent='Link copiato: incollalo dove vuoi.'};
+  if(navigator.clipboard)navigator.clipboard.writeText(u).then(ok,function(){prompt('Copia il link:',u)});else prompt('Copia il link:',u)};
 PK.acts.carPrev=function(a,el){var t=el.closest('section').querySelector('.car-track');t.scrollBy({left:-t.clientWidth-16,behavior:still?'auto':'smooth'})};
 PK.acts.carNext=function(a,el){var t=el.closest('section').querySelector('.car-track');t.scrollBy({left:t.clientWidth+16,behavior:still?'auto':'smooth'})};
 
