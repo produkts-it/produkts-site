@@ -390,6 +390,16 @@ acts();
   w.addEventListener('scroll',function(){if(!ticking){ticking=true;w.requestAnimationFrame(upd)}},{passive:true});
   upd();
 })();
+/* Statistiche anonime (functions/api/visita.js): pagina, da dove si arriva al primo ingresso, telefono o computer.
+   Niente cookie né identificativi. Solo su produkts.it; non contano i dispositivi dove è aperto il pannello (password salvata). */
+(function(){
+  if(location.hostname!=='produkts.it')return;
+  try{if(localStorage.getItem('pk-admin'))return}catch(e){}
+  var nuova=false;try{nuova=!sessionStorage.getItem('pk-v');sessionStorage.setItem('pk-v','1')}catch(e){}
+  var dati=JSON.stringify({p:location.pathname,r:nuova?d.referrer:'',n:nuova,m:!!(w.matchMedia&&w.matchMedia('(pointer:coarse)').matches)});
+  try{if(navigator.sendBeacon&&navigator.sendBeacon('/api/visita',new Blob([dati],{type:'application/json'})))return}catch(e){}
+  fetch('/api/visita',{method:'POST',body:dati,keepalive:true,headers:{'content-type':'application/json'}}).catch(function(){});
+})();
 /* Video in loop delle pagine (muti, dietro le quinte): fermi sul poster per chi riduce le animazioni */
 d.querySelectorAll('video.pk-loop').forEach(function(v){v.muted=true;if(still){v.removeAttribute('autoplay');v.pause()}else{var p=v.play();if(p&&p.catch)p.catch(function(){})}});
 })();

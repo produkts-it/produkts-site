@@ -12,6 +12,8 @@ import { chiavePubblica, iscrivi, disiscrivi, inviaPush } from '../../_push.js';
 import { tabella, nuovoCodice, ordina, copertina, fuoco, istantanea, modifiche } from '../../_gallerie.js';
 import * as aruba from '../../_aruba.js';
 import * as lavori from '../../_lavori.js';
+import * as statistiche from '../../_statistiche.js';
+//   GET  /api/admin/statistiche?giorni=30  visite per giorno, pagine più viste, provenienza, telefono/computer
 //   GET  /api/admin/lavori              dati dei lavori (lavori.json sul ramo del sito) per la scheda Lavori
 //   POST /api/admin/lavori              { gruppo, nuovo, lavoro, filmografia, fotogramma, copertina } → commit su GitHub
 //   POST /api/admin/link                { evidenza, lavori, link, social } → link in bio (lavori.json → "link"), commit su GitHub
@@ -122,6 +124,10 @@ export async function onRequest({ request, env, params }) {
       }
       return json({ ok: true });
     }
+  }
+  if (cosa === 'statistiche' && !id && request.method === 'GET') {
+    const g = Math.max(1, Math.min(400, Number(new URL(request.url).searchParams.get('giorni')) || 30));
+    return json(await statistiche.riepilogo(env, g));
   }
   if (cosa === 'link' && !id && request.method === 'POST') {
     try {

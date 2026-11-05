@@ -96,6 +96,13 @@ a{color:var(--fg)}
 .lsug{grid-column:2/4;color:#D98A4E;font-size:13px;line-height:1.5}.lsug:empty{display:none}
 .lsug button{background:none;border:0;border-bottom:1px solid currentColor;color:var(--fg);font:inherit;font-size:13px;padding:0;cursor:pointer;margin-left:6px}
 .lcop{width:100%;height:auto;display:block;border:1px solid var(--line)}
+/* Scheda Statistiche (admin/statistiche.js) */
+.sttot{display:flex;flex-wrap:wrap;gap:16px 40px}.sttot div{display:flex;flex-direction:column;gap:4px}
+.sttot b{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:400;font-size:44px;line-height:1}.sttot span{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.stgiorni{display:flex;align-items:flex-end;gap:2px;height:120px;margin-top:8px;border-bottom:1px solid var(--line)}
+.stc{flex:1;height:100%;display:flex;align-items:flex-end;min-width:0}.stc i{display:block;width:100%;min-height:1px;background:var(--ember)}.stc:hover i{background:#D98A4E}
+.stb{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr) 44px;gap:12px;align-items:center;font-size:14px;padding:4px 0}
+.stn{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.stv{height:8px;background:#161616}.stv i{display:block;height:100%;background:var(--steel)}.stb b{font-weight:500;text-align:right;font-variant-numeric:tabular-nums}
 /* Scheda Link in bio (admin/link.js) */
 .lkr{display:grid;grid-template-columns:28px minmax(0,1fr) auto;gap:12px;align-items:start;padding:12px 0;border-bottom:1px solid var(--line)}
 .lkn{color:var(--ember);font-size:12px;letter-spacing:.1em;padding-top:34px}.lkr>.az{align-self:end}
@@ -118,6 +125,7 @@ a{color:var(--fg)}
 <button type="button" data-tab="gallerie" aria-pressed="false">Gallerie</button>
 <button type="button" data-tab="lavori" aria-pressed="false">Lavori</button>
 <button type="button" data-tab="link" aria-pressed="false">Link in bio</button>
+<button type="button" data-tab="statistiche" aria-pressed="false">Statistiche</button>
 <button type="button" id="esci" style="margin-left:auto" hidden>Esci</button>
 </div>
 <form class="login" id="login" hidden>
@@ -129,6 +137,7 @@ a{color:var(--fg)}
 <script src="/admin/copertina.js"></script>
 <script src="/admin/lavori.js"></script>
 <script src="/admin/link.js"></script>
+<script src="/admin/statistiche.js"></script>
 <script>
 (function(){
 var lista=document.getElementById('lista'),login=document.getElementById('login'),esci=document.getElementById('esci'),tab='recensioni';
@@ -138,7 +147,7 @@ function pw(){try{return localStorage.getItem('pk-admin')||''}catch(e){return ''
 login.addEventListener('submit',function(ev){ev.preventDefault();try{localStorage.setItem('pk-admin',document.getElementById('pw').value)}catch(e){}login.hidden=true;carica()});
 esci.addEventListener('click',function(){try{localStorage.removeItem('pk-admin')}catch(e){}esci.hidden=true;document.getElementById('push').hidden=true;lista.innerHTML='';login.hidden=false;document.getElementById('pw').value=''});
 /* Link dalle notifiche Telegram: /admin/#contatti o /admin/#recensioni apre la sezione giusta */
-function daHash(){var h=location.hash.slice(1);if(h==='contatti'||h==='recensioni'||h==='gallerie'||h==='lavori'||h==='link'){tab=h;document.querySelectorAll('[data-tab]').forEach(function(t){t.setAttribute('aria-pressed',t.dataset.tab===h)})}}
+function daHash(){var h=location.hash.slice(1);if(h==='contatti'||h==='recensioni'||h==='gallerie'||h==='lavori'||h==='link'||h==='statistiche'){tab=h;document.querySelectorAll('[data-tab]').forEach(function(t){t.setAttribute('aria-pressed',t.dataset.tab===h)})}}
 daHash();window.addEventListener('hashchange',function(){daHash();carica()});
 /* Numero per wa.me: solo cifre, prefisso 39 se manca */
 function wa(t){var n=t.replace(/[^\d+]/g,'');return n.charAt(0)==='+'?n.slice(1):n.slice(0,2)==='00'?n.slice(2):'39'+n}
@@ -187,6 +196,7 @@ pProva.addEventListener('click',prova);
 async function carica(){
   if(tab==='lavori'){if(!pw()){login.hidden=false;lista.innerHTML='';return}return window.PKLavori.mostra(lista,api,e)} /* admin/lavori.js */
   if(tab==='link'){if(!pw()){login.hidden=false;lista.innerHTML='';return}return window.PKLink.mostra(lista,api,e)} /* admin/link.js */
+  if(tab==='statistiche'){if(!pw()){login.hidden=false;lista.innerHTML='';return}return window.PKStatistiche.mostra(lista,api,e)} /* admin/statistiche.js */
   lista.innerHTML='<p class="vuoto">Caricamento…</p>';
   try{
     var rows=await api(tab);
