@@ -227,4 +227,4 @@ doc = BaseDocTemplate(OUT, pagesize=A4, leftMargin=MX, rightMargin=MX, topMargin
                       subject='Curriculum e filmografia: cinema, videoclip, eventi e video aziendali', creator='produkts.it', invariant=1)
 doc.addPageTemplates([PageTemplate(frames=[Frame(MX, 20 * mm, LARGH, H - 42 * mm, 0, 0, 0, 0)], onPage=sfondo)])
 doc.build(storia)
-print('cv', sum(len(v) for _, _, v in sezioni), 'lavori,', doc.page, 'pagine →', os.path.relpath(OUT, REPO))
+print('cv', sum(len(v) for _, _, v in sezioni), 'lavori,', doc.page, 'pagine ->', os.path.relpath(OUT, REPO))
