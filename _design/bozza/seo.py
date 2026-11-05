@@ -9,6 +9,8 @@ REPO = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..')
 SITE = 'https://produkts.it'
 OG = SITE + '/og.jpg'
 ESCLUSE = {'404.html', 'fotografia.html', 'galleria.html', 'area-clienti.html'}
+# Link in bio: anteprima per i social sì, ma fuori dalla sitemap (ha noindex nella pagina: è solo per le bio)
+SOLO_ANTEPRIMA = {'link.html'}
 
 DESCR = {
     'index.html': 'Karim Ismail, direttore della fotografia, videomaker e fotografo ad Altamura (BA). Cortometraggi, videoclip, eventi e contenuti per brand. Dynamis è stato selezionato al VerticalMovie Festival 2026.',
@@ -17,6 +19,7 @@ DESCR = {
     'recensioni.html': 'Le recensioni di chi ha lavorato con produkts.it: 18 anni, comunioni, battesimi, compleanni, eventi e fotografia sportiva.',
     'contatti.html': 'Raccontami il tuo progetto: fotografia, video, cortometraggi ed eventi ad Altamura, in Puglia e oltre. Ti rispondo di solito entro un giorno.',
     'privacy.html': 'Informativa privacy e cookie di produkts.it: quali dati raccolgo, perché e per quanto tempo.',
+    'link.html': 'Karim Ismail, fotografo, videomaker e D.O.P. di produkts.it: lavori, contatti, WhatsApp e social in un posto solo.',
     'dynamis.html': 'Dynamis, cortometraggio verticale prodotto da produkts.it, regia di Giada Bellanova: selezionato al VerticalMovie Festival 2026 alla Casa del Cinema di Roma.',
 }
 IMG = {'dynamis.html': SITE + '/dynamis.jpg'}
@@ -123,7 +126,8 @@ for f in sorted(glob.glob(os.path.join(REPO, '*.html'))):
     s = re.sub(r'(</title>)', lambda m: m.group(1) + '\n' + blocco, s, count=1)
     with open(f, 'w', encoding='utf-8', newline='\n') as out:
         out.write(s)
-    pagine.append(url)
+    if nome not in SOLO_ANTEPRIMA:
+        pagine.append(url)
 
 oggi = datetime.date.today().isoformat()
 pagine.sort(key=lambda u: (u != SITE + '/', u))

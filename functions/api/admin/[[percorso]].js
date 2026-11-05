@@ -14,6 +14,7 @@ import * as aruba from '../../_aruba.js';
 import * as lavori from '../../_lavori.js';
 //   GET  /api/admin/lavori              dati dei lavori (lavori.json sul ramo del sito) per la scheda Lavori
 //   POST /api/admin/lavori              { gruppo, nuovo, lavoro, filmografia, fotogramma, copertina } → commit su GitHub
+//   POST /api/admin/link                { evidenza, lavori, link, social } → link in bio (lavori.json → "link"), commit su GitHub
 //   GET  /api/admin/gallerie            elenco gallerie clienti
 //   POST /api/admin/gallerie            { cliente, titolo, data, link } → crea, con codice nuovo
 //   GET  /api/admin/gallerie/:id        sezioni (nell'ordine scelto) con le foto, copertina: per l'editor del pannello
@@ -120,6 +121,15 @@ export async function onRequest({ request, env, params }) {
         if (typeof d[k] === 'string') await env.DB.prepare(`UPDATE gallerie SET ${k} = ? WHERE id = ?`).bind(d[k].trim().slice(0, 120), n).run();
       }
       return json({ ok: true });
+    }
+  }
+  if (cosa === 'link' && !id && request.method === 'POST') {
+    try {
+      const d = await request.json().catch(() => null);
+      if (!d) return json({ errore: 'Dati non validi.' }, 400);
+      return json(await lavori.salvaLink(env, lavori.ramo(request, env), d));
+    } catch (err) {
+      return json({ errore: err.message }, err.stato === 401 ? 502 : 400);
     }
   }
   if (cosa === 'lavori' && !id) {
