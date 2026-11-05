@@ -4,9 +4,9 @@
 (function () {
   var KI = 'Karim Ismail', PROD = 'Tiziana Lattuca per AMARCORD';
   var SENZA_COPERTINA = { dynamis: 1 };
-  var TIPI = [['amarcord', 'Cortometraggio AMARCORD'], ['corto', 'Cortometraggio'], ['docufilm', 'Docufilm'], ['videoclip', 'Videoclip'], ['aziendale', 'Video aziendale']];
-  var ETICHETTA = { corto: 'Cortometraggio', docufilm: 'Docufilm', videoclip: 'Videoclip musicale', aziendale: 'Video aziendale' };
-  var CAT = { corto: 'Cortometraggio', docufilm: 'Cortometraggio', videoclip: 'Videoclip', aziendale: 'Video aziendale' };
+  var TIPI = [['amarcord', 'Cortometraggio AMARCORD'], ['corto', 'Cortometraggio'], ['docufilm', 'Docufilm'], ['videoclip', 'Videoclip'], ['aziendale', 'Video aziendale'], ['evento', 'Video evento']];
+  var ETICHETTA = { corto: 'Cortometraggio', docufilm: 'Docufilm', videoclip: 'Videoclip musicale', aziendale: 'Video aziendale', evento: 'Video evento' };
+  var CAT = { corto: 'Cortometraggio', docufilm: 'Cortometraggio', videoclip: 'Videoclip', aziendale: 'Video aziendale', evento: 'Evento' };
   var TROUPE_AM = ['Regia', 'Produzione', 'Soggetto', 'Sceneggiatura', 'Direzione della fotografia', 'Operatore', 'Assistente operatore', 'Montaggio',
     'Aiuto regia', 'Scenografia', 'Fonico', 'Segretaria di edizione', 'Ciak', 'Backstage', 'Capo reparto trucco', 'Trucco'];
 
@@ -22,16 +22,18 @@
     for (i = 1; i <= m; i++) for (j = 1; j <= n; j++) d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
     return d[m][n];
   }
-  /** Link YouTube o Vimeo → { yt } o { vimeo: 'id' | 'id/hash' } */
+  /** Link YouTube, Vimeo o Instagram → { yt } o { vimeo: 'id' | 'id/hash' } o { ig: 'reel/CODICE' | 'p/CODICE' } */
   function video(u) {
     u = String(u || '').trim();
     var m = u.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?(?:.*&)?v=|shorts\/|embed\/|live\/))([\w-]{6,20})/);
     if (m) return { yt: m[1] };
     m = u.match(/vimeo\.com\/(?:video\/)?(\d{5,12})(?:\/([0-9a-f]{6,16}))?/);
     if (m) { var h = m[2] || (u.match(/[?&]h=([0-9a-f]{6,16})/) || [])[1]; return { vimeo: m[1] + (h ? '/' + h : '') }; }
+    m = u.match(/instagram\.com\/(?:[\w.]+\/)?(p|reels?|tv)\/([\w-]{5,40})/);
+    if (m) return { ig: (m[1] === 'p' ? 'p' : 'reel') + '/' + m[2] };
     return null;
   }
-  function linkDi(l) { return l.yt ? 'https://www.youtube.com/watch?v=' + l.yt : l.vimeo ? 'https://vimeo.com/' + l.vimeo : ''; }
+  function linkDi(l) { return l.yt ? 'https://www.youtube.com/watch?v=' + l.yt : l.vimeo ? 'https://vimeo.com/' + l.vimeo : l.ig ? 'https://www.instagram.com/' + l.ig + '/' : ''; }
   function carica(src, cors) {
     return new Promise(function (ok, ko) { var i = new Image(); if (cors) i.crossOrigin = 'anonymous'; i.onload = function () { ok(i); }; i.onerror = ko; i.src = src; });
   }
@@ -81,10 +83,11 @@
     if (/^Docufilm/.test(l.kicker || '')) return 'docufilm';
     if (l.cats.indexOf('Videoclip') >= 0) return 'videoclip';
     if (l.cats.indexOf('Video aziendale') >= 0) return 'aziendale';
+    if (l.cats.indexOf('Evento') >= 0) return 'evento';
     return 'corto';
   }
   function metaPredefinita(tipo) {
-    return tipo === 'videoclip' ? [['Artista', '']] : tipo === 'aziendale' ? [['Produzione', ''], ['Cliente', '']] : [['Produzione', 'produkts.it']];
+    return tipo === 'videoclip' ? [['Artista', '']] : tipo === 'aziendale' ? [['Produzione', ''], ['Cliente', '']] : tipo === 'evento' ? [['Organizzazione', ''], ['Luogo', '']] : [['Produzione', 'produkts.it']];
   }
   function apri(g, slug) {
     var l = slug ? (g === 'amarcord' ? D.amarcord : D.lavori).filter(function (x) { return x.slug === slug; })[0] : null;
@@ -124,7 +127,7 @@
       + (am ? '' : '<label><span>Sottotitolo <small>(facoltativo)</small></span><input name="sub" value="' + e(l.sub || '') + '"></label>')
       + '<label>Anno<input name="anno" inputmode="numeric" maxlength="4" required value="' + e(am ? (l.anno || (ST.nuovo ? String(new Date().getFullYear()) : '2026')) : (l.year || String(new Date().getFullYear()))) + '"></label>'
       + (am ? '' : '<label><span>Uscita <small>(es. 25 aprile 2025)</small></span><input name="date" value="' + e(l.date || '') + '"></label>')
-      + '<label style="flex-basis:100%">Link al video (YouTube o Vimeo)<input name="link" required value="' + e(link) + '" placeholder="https://vimeo.com/…"></label>'
+      + '<label style="flex-basis:100%">Link al video (YouTube, Vimeo o Instagram)<input name="link" required value="' + e(link) + '" placeholder="https://vimeo.com/…"></label>'
       + (am ? '<label>Durata (minuti)<input name="min" inputmode="numeric" required value="' + e(l.min || '') + '"></label><label><span>Genere <small>(facoltativo)</small></span><input name="gen" value="' + e(l.gen || '') + '" placeholder="Dramma psicologico"></label>' : '')
       + '<label style="flex-basis:100%"><span>Riga del progetto <small>— una riga di atmosfera, niente spoiler</small></span><textarea name="line" rows="2" required>' + e(l.line || '') + '</textarea></label>'
       + (am ? '<label style="flex-basis:100%">Il tuo ruolo<input name="ruolo" required value="' + e(l.ruolo || '') + '" placeholder="Direttore della fotografia"></label>'
@@ -138,7 +141,7 @@
       + '<div class="lsez"><div class="meta"><b>Troupe</b><span>un nome per riga; stesso ruolo su più righe se sono in due. Righe senza nome non vengono salvate</span></div><div data-lrighe="crew">'
       + crew.map(function (c) { return riga('lcrew', c[0], c[1], 'Ruolo', 'Nome e cognome', 'pk-ruoli', 'pk-nomi'); }).join('') + '</div><div class="az"><button type="button" data-lagg="crew">+ Ruolo</button></div></div>'
       + '<div class="lsez"><div class="meta"><b>Filmografia</b><span>solo cinema: cortometraggi, film, docufilm. Niente videoclip o aziendali</span></div>'
-      + '<div class="gcampi"><label class="lchk"><input type="checkbox" name="fmostra"' + (f.mostra && ST.tipo !== 'videoclip' && ST.tipo !== 'aziendale' ? ' checked' : '') + '> Mostra in Home e Chi sono</label>'
+      + '<div class="gcampi"><label class="lchk"><input type="checkbox" name="fmostra"' + (f.mostra && ST.tipo !== 'videoclip' && ST.tipo !== 'aziendale' && ST.tipo !== 'evento' ? ' checked' : '') + '> Mostra in Home e Chi sono</label>'
       + '<label><span>Ruolo in filmografia <small>(vuoto = il tuo ruolo)</small></span><input name="fruolo" value="' + e(f.ruolo) + '"></label><label><span>Produzione <small>(vuoto = ' + (am ? 'AMARCORD' : 'produkts.it') + ')</small></span><input name="fprod" value="' + e(f.produzione) + '"></label></div></div>'
       + '<div class="lsez"><div class="meta"><b>Fotogramma e copertina</b><span>' + (SENZA_COPERTINA[l.slug] ? 'questo lavoro tiene la sua immagine' : 'scegli un fotogramma (anche uno screenshot): la copertina con titolo e dati si fa da sola') + '</span></div>'
       + '<div class="gcampi"><label style="flex-basis:100%">Immagine<input type="file" name="file" accept="image/*"></label>'
@@ -167,7 +170,7 @@
       crew[pos[r[0]]][1].push(r[1]);
     });
     var l = { slug: ST.nuovo ? v('slug') : ST.l.slug, t: v('t'), line: v('line'), cast: righe('cast').filter(function (r) { return r[1]; }) };
-    if (vid.yt) l.yt = vid.yt; if (vid.vimeo) l.vimeo = vid.vimeo;
+    if (vid.yt) l.yt = vid.yt; if (vid.vimeo) l.vimeo = vid.vimeo; if (vid.ig) l.ig = vid.ig;
     if (am) {
       l.anno = v('anno'); l.min = parseInt(v('min'), 10) || 0; l.gen = v('gen'); l.ruolo = v('ruolo'); l.crew = crew;
     } else {
@@ -178,10 +181,10 @@
       l.meta = righe('meta').filter(function (m) { return m[0] && m[1]; });
       // L'uscita si scrive da sola; se la data non è cambiata resta com'era (es. "Marzo 2022 · Vimeo")
       var prima = (ST.l.meta || []).filter(function (x) { return x[0] === 'Uscita'; })[0];
-      if (l.date) l.meta.push(prima && ST.l.date === l.date && !!ST.l.yt === !!l.yt ? prima.slice() : ['Uscita', l.date + ' · ' + (l.yt ? 'YouTube' : 'Vimeo')]);
+      if (l.date) l.meta.push(prima && ST.l.date === l.date && !!ST.l.yt === !!l.yt ? prima.slice() : ['Uscita', l.date + ' · ' + (l.yt ? 'YouTube' : l.ig ? 'Instagram' : 'Vimeo')]);
       l.crew = crew.map(function (c) { return [c[0], c[1].join(', ')]; });
     }
-    return { l: l, link: !!(vid.yt || vid.vimeo), filmo: { mostra: !!(f.elements.fmostra && f.elements.fmostra.checked), ruolo: v('fruolo'), produzione: v('fprod') } };
+    return { l: l, link: !!(vid.yt || vid.vimeo || vid.ig), filmo: { mostra: !!(f.elements.fmostra && f.elements.fmostra.checked), ruolo: v('fruolo'), produzione: v('fprod') } };
   }
 
   // Fotogramma (nuovo file ritagliato, o quello già sul sito) e anteprima della copertina
@@ -222,7 +225,7 @@
   async function salva(form) {
     var es = form.querySelector('.gesito'), b = form.querySelector('button[type=submit]'), m = leggiModulo();
     es.hidden = false; es.className = 'gesito err';
-    if (!m.link) { es.textContent = 'Il link al video non è un link YouTube o Vimeo.'; return; }
+    if (!m.link) { es.textContent = 'Il link al video non è un link YouTube, Vimeo o Instagram.'; return; }
     if (ST.tipo === 'amarcord' && !m.l.vimeo) { es.textContent = 'I corti AMARCORD hanno il link Vimeo.'; return; }
     b.disabled = true; b.textContent = 'Salvo…';
     try {

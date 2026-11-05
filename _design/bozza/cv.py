@@ -1,6 +1,6 @@
 """CV / filmografia di Karim in PDF (assets/karim-ismail-filmografia.pdf), con lo stile del sito: fondo scuro,
 Cormorant Garamond + Space Grotesk (file in _design/font), arancio e righe sottili.
-Dati da lavori.json, come le pagine: cinema nell'ordine della filmografia, poi videoclip, video aziendali e altri lavori.
+Dati da lavori.json, come le pagine: cinema nell'ordine della filmografia, poi videoclip, video di eventi, video aziendali e altri lavori.
 Uso: python -X utf8 _design/bozza/cv.py (serve reportlab; lo lancia pubblica.sh dopo build.py)."""
 import datetime, json, os, subprocess
 from reportlab.lib.pagesizes import A4
@@ -85,16 +85,17 @@ for titolo, ruolo, prod, slug in d['filmografia']:
         cinema.append(voce(titolo, '2026' if prod == 'AMARCORD' else '', 'Cortometraggio', ruolo,
                            ['Produzione ' + prod] if prod else [], None))
 
-gruppi = {'Videoclip': [], 'Video aziendali': [], 'Altri lavori': []}
+gruppi = {'Videoclip': [], 'Video eventi': [], 'Video aziendali': [], 'Altri lavori': []}
 for w in sorted(d['lavori'], key=lambda w: w.get('year', ''), reverse=True):
     if w['slug'] in visti:
         continue
     cats = w.get('cats') or []
-    g = 'Videoclip' if 'Videoclip' in cats else 'Video aziendali' if 'Video aziendale' in cats else 'Altri lavori'
+    g = ('Videoclip' if 'Videoclip' in cats else 'Video eventi' if 'Evento' in cats else
+         'Video aziendali' if 'Video aziendale' in cats else 'Altri lavori')
     meta = dict(w.get('meta') or [])
-    extra = [k + ' ' + meta[k] for k in ('Artista', 'Cliente', 'Produzione') if meta.get(k)]
+    extra = [k + ' ' + meta[k] for k in ('Artista', 'Cliente', 'Produzione', 'Organizzazione', 'Luogo') if meta.get(k)]
     tipo = (w.get('kicker') or '').rsplit(' · ', 1)[0]
-    titolo = w['t'] + (' — ' + w['sub'] if w.get('sub') and g != 'Videoclip' else '')
+    titolo = w['t'] + (' — ' + w['sub'] if w.get('sub') and g in ('Video aziendali', 'Altri lavori') else '')
     gruppi[g].append(voce(titolo, w.get('year', ''), tipo, w.get('role') or w.get('role_short', ''),
                           altri_crediti(crediti(w.get('crew')), extra), w['slug']))
 
@@ -206,7 +207,7 @@ storia = [
     Paragraph('Direttore della fotografia, videomaker e fotografo', S(fontName='Corm', fontSize=19, leading=23, textColor=TESTO2)),
     Spacer(1, 5 * mm),
     Paragraph('Direttore della fotografia certificato AMARCORD – Accademia Mediterranea del Cinema, Bari. '
-              'Dal 2021 racconta storie con la camera: cortometraggi, videoclip e video aziendali, '
+              'Dal 2021 racconta storie con la camera: cortometraggi, videoclip, eventi e video aziendali, '
               'spesso curati dall’idea alla consegna (riprese, montaggio, color e VFX).', S(parent=st_testo, fontSize=9.6, leading=15)),
     Spacer(1, 6 * mm),
     contatti(),
@@ -223,7 +224,7 @@ for i, (nome, occhiello, voci) in enumerate(sezioni):
 
 doc = BaseDocTemplate(OUT, pagesize=A4, leftMargin=MX, rightMargin=MX, topMargin=22 * mm, bottomMargin=20 * mm,
                       title='Karim Ismail — Filmografia', author='Karim Ismail · produkts.it',
-                      subject='Curriculum e filmografia: cinema, videoclip e video aziendali', creator='produkts.it', invariant=1)
+                      subject='Curriculum e filmografia: cinema, videoclip, eventi e video aziendali', creator='produkts.it', invariant=1)
 doc.addPageTemplates([PageTemplate(frames=[Frame(MX, 20 * mm, LARGH, H - 42 * mm, 0, 0, 0, 0)], onPage=sfondo)])
 doc.build(storia)
 print('cv', sum(len(v) for _, _, v in sezioni), 'lavori,', doc.page, 'pagine →', os.path.relpath(OUT, REPO))

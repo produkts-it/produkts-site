@@ -63,6 +63,90 @@
   ]
  },
  {
+  "slug": "trick-or-treat",
+  "img": "img/lavori/trick-or-treat.jpg",
+  "kicker": "Video evento · 2024",
+  "t": "Trick or Treat",
+  "sub": "Halloween hip hop",
+  "dati": [
+   [
+    "Organizzazione",
+    "Mezzanota, Rossani Bari"
+   ],
+   [
+    "Karim Ismail",
+    "Riprese e montaggio"
+   ],
+   [
+    "Data",
+    "31 ottobre 2024"
+   ]
+  ]
+ },
+ {
+  "slug": "regressus-ad-uterum",
+  "img": "img/lavori/regressus-ad-uterum.jpg",
+  "kicker": "Videoclip musicale · 2024",
+  "t": "Regressus ad uterum",
+  "sub": "U Kippr",
+  "dati": [
+   [
+    "Artista",
+    "U Kippr"
+   ],
+   [
+    "Karim Ismail",
+    "Riprese e montaggio"
+   ],
+   [
+    "Uscita",
+    "12 novembre 2024"
+   ]
+  ]
+ },
+ {
+  "slug": "420",
+  "img": "img/lavori/420.jpg",
+  "kicker": "Video evento · 2024",
+  "t": "420",
+  "sub": "Mezzanota · Rossani · Wild Free",
+  "dati": [
+   [
+    "Organizzazione",
+    "Mezzanota, Rossani Bari, Wild Free"
+   ],
+   [
+    "Karim Ismail",
+    "Riprese e montaggio"
+   ],
+   [
+    "Data",
+    "Aprile 2024"
+   ]
+  ]
+ },
+ {
+  "slug": "royal-rumble",
+  "img": "img/lavori/royal-rumble.jpg",
+  "kicker": "Video evento · 2024",
+  "t": "Royal Rumble",
+  "sub": "Mezzanota",
+  "dati": [
+   [
+    "Organizzazione",
+    "Mezzanota"
+   ],
+   [
+    "Karim Ismail",
+    "Riprese e montaggio"
+   ],
+   [
+    "Data",
+    "23 marzo 2024"
+   ]
+  ]
+ },
+ {
   "slug": "wake-up",
   "img": "img/lavori/wake-up.jpg",
   "kicker": "Videoclip musicale · 2024",
@@ -80,6 +164,48 @@
    [
     "Uscita",
     "29 marzo 2024"
+   ]
+  ]
+ },
+ {
+  "slug": "sannicandro-di-barre",
+  "img": "img/lavori/sannicandro-di-barre.jpg",
+  "kicker": "Video evento · 2024",
+  "t": "Sannicandro di Barre",
+  "sub": "",
+  "dati": [
+   [
+    "Organizzazione",
+    "Sannicandro di Barre"
+   ],
+   [
+    "Karim Ismail",
+    "Riprese e montaggio"
+   ],
+   [
+    "Data",
+    "29 febbraio 2024"
+   ]
+  ]
+ },
+ {
+  "slug": "parco-rossani",
+  "img": "img/lavori/parco-rossani.jpg",
+  "kicker": "Video evento · 2024",
+  "t": "Parco Rossani",
+  "sub": "Serata freestyle",
+  "dati": [
+   [
+    "Organizzazione",
+    "Mezzanota, Rossani Bari"
+   ],
+   [
+    "Karim Ismail",
+    "Riprese e montaggio"
+   ],
+   [
+    "Data",
+    "21 febbraio 2024"
    ]
   ]
  },

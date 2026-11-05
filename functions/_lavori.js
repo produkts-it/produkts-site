@@ -8,7 +8,7 @@ const FILE = '_design/bozza/lavori.json';
 // Indirizzi già usati dal sito: un lavoro non può chiamarsi così
 const RISERVATI = new Set(['index', 'lavori', 'chi-sono', 'recensioni', 'contatti', 'privacy', 'dynamis', 'fotografia', 'galleria',
   'area-clienti', '404', 'admin', 'api', 'img', 'assets', 'brand', 'functions', 'sitemap', 'robots', 'og', 'favicon']);
-const CATS = ['Cortometraggio', 'Videoclip', 'Video aziendale', 'Opera personale'];
+const CATS = ['Cortometraggio', 'Videoclip', 'Video aziendale', 'Evento', 'Opera personale'];
 
 /** Ramo su cui salvare: produkts.it → main; anteprima <ramo>.produkts-site.pages.dev → quel ramo. */
 export function ramo(request, env) {
@@ -70,10 +70,11 @@ function pulisciLavoro(l, gruppo, esistente) {
   if (!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(out.slug)) throw new Error('Indirizzo della pagina non valido: solo lettere minuscole, numeri e trattini.');
   out.t = str(l.t, 120);
   if (!out.t) throw new Error('Manca il titolo.');
-  const link = str(l.yt || '', 20) ? { yt: str(l.yt, 20) } : str(l.vimeo || '', 40) ? { vimeo: str(l.vimeo, 40) } : null;
-  if (!link) throw new Error('Manca il link al video (YouTube o Vimeo).');
+  const link = str(l.yt || '', 20) ? { yt: str(l.yt, 20) } : str(l.vimeo || '', 40) ? { vimeo: str(l.vimeo, 40) } : str(l.ig || '', 50) ? { ig: str(l.ig, 50) } : null;
+  if (!link) throw new Error('Manca il link al video (YouTube, Vimeo o Instagram).');
   if (link.yt && !/^[\w-]{6,20}$/.test(link.yt)) throw new Error('Link YouTube non valido.');
   if (link.vimeo && !/^\d{5,12}(\/[0-9a-f]{6,16})?$/.test(link.vimeo)) throw new Error('Link Vimeo non valido.');
+  if (link.ig && !/^(p|reel)\/[\w-]{5,40}$/.test(link.ig)) throw new Error('Link Instagram non valido.');
   out.line = str(l.line, 400);
   if (!out.line) throw new Error('Manca la riga del progetto.');
   const cast = coppie(l.cast).map(([p, n]) => [p, nome(n)]).filter((x) => x[1]);
@@ -106,6 +107,7 @@ function pulisciLavoro(l, gruppo, esistente) {
     crew: coppie(l.crew).map(([k, v]) => [k, str(Array.isArray(v) ? v.join(', ') : v, 400)]).filter((x) => x[0] && x[1]),
   };
   if (esistente && esistente.pos) r.pos = esistente.pos;
+  if (esistente && esistente.parti) r.parti = esistente.parti; // lavori in più video (es. Trick or Treat): si cambiano a mano
   if (!r.role || !r.role_short) throw new Error('Manca il tuo ruolo (completo e breve).');
   if (!r.meta.length) throw new Error('Manca almeno un dato (artista, cliente o produzione).');
   if (!r.crew.length) throw new Error('Manca la troupe.');

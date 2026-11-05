@@ -181,8 +181,27 @@ def hero(w, url, plat):
 </a>''' % dict(t=e(w['t']), url=url, plat=plat, mirino=e(w.get('mirino') or w.get('year', '')))
 
 
+def video(w):
+    """Link al video e piattaforma: Vimeo, Instagram (ig = 'reel/CODICE' o 'p/CODICE') o YouTube."""
+    if w.get('vimeo'):
+        return 'https://vimeo.com/' + w['vimeo'], 'Vimeo'
+    if w.get('ig'):
+        return 'https://www.instagram.com/' + w['ig'] + '/', 'Instagram'
+    return 'https://www.youtube.com/watch?v=' + w['yt'], 'YouTube'
+
+
+def parti(w):
+    """Lavori in più video (es. Trick or Treat): sotto il fotogramma, un link per ogni parte."""
+    if not w.get('parti'):
+        return ''
+    link = ''.join('<a href="%s" target="_blank" rel="noopener" class="pill" style="height: 44px; padding: 0 20px; border-radius: 22px; border: 1px solid #3A3A3A; color: #E8E4DF; display: inline-flex; align-items: center; gap: 10px; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; white-space: nowrap">%s <span aria-hidden="true">↗</span></a>\n'
+                   % (video(dict(ig=ig))[0], e(nome)) for nome, ig in w['parti'])
+    return ('<div class="fade d3" style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 20px">\n'
+            '<span style="%s; margin-right: 8px">In %d video</span>\n%s</div>\n' % (KICK, len(w['parti']), link))
+
+
 def page(w):
-    url, plat = ('https://vimeo.com/' + w['vimeo'], 'Vimeo') if w.get('vimeo') else ('https://www.youtube.com/watch?v=' + w['yt'], 'YouTube')
+    url, plat = video(w)
     # Titolo per Google: lavoro e nome di Karim con il suo ruolo («Tra i piedi — Karim Ismail, direttore della fotografia»)
     ruolo = w['role_short'] if 'role_short' in w else w['role']
     if ruolo[1:2].islower():  # «Regia, …» → «regia, …», ma «D.O.P., …» resta com'è
@@ -201,7 +220,7 @@ def page(w):
 <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5l11 7-11 7V5z"></path></svg>Guarda su %(plat)s <span aria-hidden="true">↗</span></a>
 </div>
 %(hero)s
-</section>
+%(parti)s</section>
 
 <section style="border-top: 1px solid #1F1F1F">
 <div style="max-width: 1440px; margin: 0 auto; padding: 96px 56px; box-sizing: border-box; display: flex; flex-wrap: wrap; gap: 48px 96px">
@@ -221,7 +240,7 @@ def page(w):
 %(credits)s</div>
 </div>
 </section>
-''' % dict(kick=KICK, kicker=e(w['kicker']), t=e(w['t']), url=url, plat=plat, hero=hero(w, url, plat), line=e(w['line']),
+''' % dict(kick=KICK, kicker=e(w['kicker']), t=e(w['t']), url=url, plat=plat, hero=hero(w, url, plat), parti=parti(w), line=e(w['line']),
            sub=('<p class="fade d2" style="margin: 0; font-family: \'Cormorant Garamond\', serif; font-style: italic; font-weight: 300; font-size: clamp(24px, 3vw, 36px); line-height: 1.2; color: #C9C4BD">%s</p>\n' % e(w['sub'])) if w.get('sub') else '',
            meta=''.join(meta_item(k, v) for k, v in metas), credits=credits(w, 'Troupe' if w.get('cast') else 'Crediti'))
     save(os.path.join(OUT, w['slug'] + '.html'), head + body + schema_lavoro(w) + FOOT)
@@ -264,8 +283,8 @@ def schema_lavoro(w, descrizione=None):
         d['productionCompany'] = {'@id': ID_PRODUKTS}
     elif prod:
         d['productionCompany'] = {'@type': 'Organization', 'name': prod[0]}
-    if w.get('yt') or w.get('vimeo'):
-        d['sameAs'] = 'https://www.youtube.com/watch?v=' + w['yt'] if w.get('yt') else 'https://vimeo.com/' + w['vimeo']
+    if w.get('yt') or w.get('vimeo') or w.get('ig'):
+        d['sameAs'] = video(w)[0]
     return '<script type="application/ld+json">%s</script>\n' % json.dumps(d, ensure_ascii=False)
 
 
@@ -298,7 +317,7 @@ def dati_copertine():
         if w['slug'] in SENZA_COPERTINA:
             continue
         out.append(dict(slug=w['slug'], img=w['img'], kicker=w['kicker'], t=w['t'], sub=w.get('sub', ''),
-                        dati=[list(w['meta'][0]), [KI, w['role_short']], ['Uscita', w['date']]]))
+                        dati=[list(w['meta'][0]), [KI, w['role_short']], ['Data' if 'Evento' in w['cats'] else 'Uscita', w['date']]]))
     for a in AMARCORD:
         out.append(dict(slug=a['slug'], img=a['img'], kicker='Cortometraggio · AMARCORD · ' + anno(a), t=a['t'], sub='',
                         dati=[['Regia', ' e '.join(dict(a['crew'])['Regia'])], [KI, a['ruolo']], ['Durata', '%d minuti' % a['min']]]))

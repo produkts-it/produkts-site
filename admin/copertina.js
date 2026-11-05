@@ -37,7 +37,7 @@
       return { kicker: 'Cortometraggio · AMARCORD · ' + (l.anno || '2026'), t: l.t, sub: '',
         dati: [['Regia', regia], [KI, l.ruolo], ['Durata', l.min + ' minuti']] };
     }
-    return { kicker: l.kicker, t: l.t, sub: l.sub || '', dati: [l.meta[0] || ['', ''], [KI, l.role_short], ['Uscita', l.date]] };
+    return { kicker: l.kicker, t: l.t, sub: l.sub || '', dati: [l.meta[0] || ['', ''], [KI, l.role_short], [(l.cats || []).indexOf('Evento') >= 0 ? 'Data' : 'Uscita', l.date]] };
   }
 
   /** Disegna la copertina su un canvas 1600×669 a partire dal fotogramma (immagine o canvas) e dai testi. */

@@ -227,6 +227,196 @@
    ]
   },
   {
+   "slug": "trick-or-treat",
+   "t": "Trick or Treat",
+   "sub": "Halloween hip hop",
+   "year": "2024",
+   "date": "31 ottobre 2024",
+   "ig": "reel/DC__EW1spjd",
+   "img": "img/lavori/trick-or-treat.jpg",
+   "cats": [
+    "Evento"
+   ],
+   "kicker": "Video evento · 2024",
+   "line": "Halloween all’Agorateca di Altamura: freestyle, rap e maschere in una serata hip hop raccontata in tre video.",
+   "role": "Riprese e montaggio",
+   "role_short": "Riprese e montaggio",
+   "meta": [
+    [
+     "Organizzazione",
+     "Mezzanota, Rossani Bari"
+    ],
+    [
+     "Luogo",
+     "Agorateca, Altamura"
+    ],
+    [
+     "Data",
+     "31 ottobre 2024"
+    ],
+    [
+     "Uscita",
+     "Novembre 2024 · Instagram"
+    ]
+   ],
+   "crew": [
+    [
+     "Organizzazione",
+     "Mezzanota, Rossani Bari"
+    ],
+    [
+     "Riprese",
+     "Karim Ismail"
+    ],
+    [
+     "Montaggio",
+     "Karim Ismail"
+    ]
+   ],
+   "parti": [
+    [
+     "Parte 1",
+     "reel/DC__EW1spjd"
+    ],
+    [
+     "Parte 2",
+     "reel/DC9aPWINHNH"
+    ],
+    [
+     "Parte 3",
+     "reel/DC61ZPxN8az"
+    ]
+   ]
+  },
+  {
+   "slug": "regressus-ad-uterum",
+   "t": "Regressus ad uterum",
+   "sub": "U Kippr",
+   "year": "2024",
+   "date": "12 novembre 2024",
+   "ig": "reel/DCRh3uZIpwa",
+   "img": "img/lavori/regressus-ad-uterum.jpg",
+   "cats": [
+    "Videoclip"
+   ],
+   "kicker": "Videoclip musicale · 2024",
+   "line": "Binari, cieli grigi e la voglia di tornare alle origini per ricominciare da capo: il videoclip per «Regressus ad uterum» di U Kippr.",
+   "role": "Riprese e montaggio",
+   "role_short": "Riprese e montaggio",
+   "meta": [
+    [
+     "Artista",
+     "U Kippr"
+    ],
+    [
+     "Uscita",
+     "12 novembre 2024 · Instagram"
+    ]
+   ],
+   "crew": [
+    [
+     "Artista",
+     "U Kippr"
+    ],
+    [
+     "Riprese",
+     "Karim Ismail"
+    ],
+    [
+     "Montaggio",
+     "Karim Ismail"
+    ]
+   ]
+  },
+  {
+   "slug": "420",
+   "t": "420",
+   "sub": "Mezzanota · Rossani · Wild Free",
+   "year": "2024",
+   "date": "Aprile 2024",
+   "ig": "p/C6BPZU2Nw9R",
+   "img": "img/lavori/420.jpg",
+   "cats": [
+    "Evento"
+   ],
+   "kicker": "Video evento · 2024",
+   "line": "Graffiti, luci viola e microfoni aperti: il recap della serata 420 con Mezzanota, Rossani e Wild Free.",
+   "role": "Riprese e montaggio",
+   "role_short": "Riprese e montaggio",
+   "meta": [
+    [
+     "Organizzazione",
+     "Mezzanota, Rossani Bari, Wild Free"
+    ],
+    [
+     "Data",
+     "Aprile 2024"
+    ],
+    [
+     "Uscita",
+     "30 aprile 2024 · Instagram"
+    ]
+   ],
+   "crew": [
+    [
+     "Organizzazione",
+     "Mezzanota, Rossani Bari, Wild Free"
+    ],
+    [
+     "Riprese",
+     "Karim Ismail"
+    ],
+    [
+     "Montaggio",
+     "Karim Ismail"
+    ]
+   ]
+  },
+  {
+   "slug": "royal-rumble",
+   "t": "Royal Rumble",
+   "sub": "Mezzanota",
+   "year": "2024",
+   "date": "23 marzo 2024",
+   "ig": "p/C5V7PZHtgf3",
+   "img": "img/lavori/royal-rumble.jpg",
+   "cats": [
+    "Evento"
+   ],
+   "kicker": "Video evento · 2024",
+   "line": "Battle di freestyle a tempo, dj set e il cronometro sullo schermo: il recap della Royal Rumble di Mezzanota.",
+   "role": "Riprese e montaggio",
+   "role_short": "Riprese e montaggio",
+   "meta": [
+    [
+     "Organizzazione",
+     "Mezzanota"
+    ],
+    [
+     "Data",
+     "23 marzo 2024"
+    ],
+    [
+     "Uscita",
+     "4 aprile 2024 · Instagram"
+    ]
+   ],
+   "crew": [
+    [
+     "Organizzazione",
+     "Mezzanota"
+    ],
+    [
+     "Riprese",
+     "Karim Ismail"
+    ],
+    [
+     "Montaggio",
+     "Karim Ismail"
+    ]
+   ]
+  },
+  {
    "slug": "wake-up",
    "t": "Wake Up",
    "sub": "Bartek Dabrowski · Orchestra",
@@ -274,6 +464,101 @@
     ],
     [
      "VFX",
+     "Karim Ismail"
+    ]
+   ]
+  },
+  {
+   "slug": "sannicandro-di-barre",
+   "t": "Sannicandro di Barre",
+   "year": "2024",
+   "date": "29 febbraio 2024",
+   "ig": "p/C4ay6P1NDMl",
+   "img": "img/lavori/sannicandro-di-barre.jpg",
+   "cats": [
+    "Evento"
+   ],
+   "kicker": "Video evento · 2024",
+   "line": "Rime sotto i portici e cerchi di freestyle: il recap di una serata a Sannicandro di Bari.",
+   "role": "Riprese e montaggio",
+   "role_short": "Riprese e montaggio",
+   "meta": [
+    [
+     "Organizzazione",
+     "Sannicandro di Barre"
+    ],
+    [
+     "Luogo",
+     "Sannicandro di Bari"
+    ],
+    [
+     "Data",
+     "29 febbraio 2024"
+    ],
+    [
+     "Uscita",
+     "12 marzo 2024 · Instagram"
+    ]
+   ],
+   "crew": [
+    [
+     "Organizzazione",
+     "Sannicandro di Barre"
+    ],
+    [
+     "Riprese",
+     "Karim Ismail"
+    ],
+    [
+     "Montaggio",
+     "Karim Ismail"
+    ]
+   ]
+  },
+  {
+   "slug": "parco-rossani",
+   "t": "Parco Rossani",
+   "sub": "Serata freestyle",
+   "year": "2024",
+   "date": "21 febbraio 2024",
+   "ig": "p/C3vNx8aM453",
+   "img": "img/lavori/parco-rossani.jpg",
+   "cats": [
+    "Evento"
+   ],
+   "kicker": "Video evento · 2024",
+   "line": "Una notte di freestyle a Parco Rossani, a Bari: il parco illuminato dall’alto e i cerchi di rime tra la gente.",
+   "role": "Riprese e montaggio",
+   "role_short": "Riprese e montaggio",
+   "meta": [
+    [
+     "Organizzazione",
+     "Mezzanota, Rossani Bari"
+    ],
+    [
+     "Luogo",
+     "Parco Rossani, Bari"
+    ],
+    [
+     "Data",
+     "21 febbraio 2024"
+    ],
+    [
+     "Uscita",
+     "24 febbraio 2024 · Instagram"
+    ]
+   ],
+   "crew": [
+    [
+     "Organizzazione",
+     "Mezzanota, Rossani Bari"
+    ],
+    [
+     "Riprese",
+     "Karim Ismail"
+    ],
+    [
+     "Montaggio",
      "Karim Ismail"
     ]
    ]
@@ -1678,6 +1963,10 @@
   [
    "Video aziendale",
    "Video aziendali"
+  ],
+  [
+   "Evento",
+   "Eventi"
   ],
   [
    "Opera personale",
