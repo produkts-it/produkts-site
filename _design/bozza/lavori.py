@@ -442,6 +442,9 @@ SOCIAL_ICONE = {
 }
 
 
+LINK_AUTO = 4  # quanti "Ultimi lavori" in automatico
+
+
 def link_esterno(url):
     return url.startswith(('http://', 'https://')) and not url.startswith('https://produkts.it')
 
@@ -498,7 +501,10 @@ def link_page():
         out.append('<nav aria-label="Collegamenti" style="margin-top: 36px; display: flex; flex-direction: column">\n%s</nav>\n' % ''.join(righe))
 
     schede = []
-    for slug in L.get('lavori') or []:
+    scelti = L.get('lavori')
+    if not isinstance(scelti, list) or not scelti:  # "auto": i più recenti, nell'ordine della pagina Lavori
+        scelti = [w['slug'] for w in griglia() if w['slug'] != (ev or {}).get('slug')][:LINK_AUTO]
+    for slug in scelti:
         w = tutti.get(slug)
         if not w:
             continue

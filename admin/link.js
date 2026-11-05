@@ -1,5 +1,5 @@
 /* Scheda Link del pannello: il link in bio per Instagram, TikTok ecc. (produkts.it/link, fuori dal menu).
-   Si sceglie il lavoro in evidenza, i pulsanti (titolo, riga piccola, indirizzo), fino a 6 lavori e i social.
+   Si sceglie il lavoro in evidenza, i pulsanti (titolo, riga piccola, indirizzo), i lavori (i 4 più recenti in automatico, o fino a 6 scelti) e i social.
    Salvando, le API (functions/_lavori.js → salvaLink) fanno un commit di lavori.json ("link") su GitHub;
    Cloudflare rigenera la pagina con lavori.py in 1–2 minuti. */
 (function () {
@@ -64,23 +64,32 @@
       + '<div class="item"><div class="meta"><b>Pulsanti</b><span>in quest’ordine; l’indirizzo può essere una pagina del sito (contatti, recensioni#scrivi) o un link completo</span></div>'
       + (link || '<p class="vuoto" style="margin:0">Nessun pulsante.</p>')
       + '<div class="az"><button type="button" data-lk-nuovo="1">+ Pulsante vuoto</button>' + pronti + '</div></div>'
-      + '<div class="item"><div class="meta"><b>Ultimi lavori</b><span>fino a 6, sotto i pulsanti, con la copertina</span></div>'
-      + (lavori || '<p class="vuoto" style="margin:0">Nessun lavoro.</p>')
-      + (L.lavori.length < 6 ? '<div class="gcampi"><label>Aggiungi un lavoro<select data-lk-agg="1"><option value="">Scegli…</option>' + opz('', L.lavori.concat(ev.slug ? [ev.slug] : [])) + '</select></label></div>' : '')
+      + '<div class="item"><div class="meta"><b>Ultimi lavori</b><span>sotto i pulsanti, con la copertina</span></div>'
+      + '<div class="az"><button type="button" data-lk-auto="1"' + (L.auto ? ' class="on"' : '') + '>I più recenti, in automatico</button>'
+      + '<button type="button" data-lk-auto="0"' + (L.auto ? '' : ' class="on"') + '>Scelti da me</button></div>'
+      + (L.auto ? '<p class="testo" style="margin:0;font-size:14px">I 4 lavori più recenti, come in cima alla pagina Lavori: si aggiornano da soli quando aggiungi un lavoro.</p>' : '')
+      + (L.auto ? '' : (lavori || '<p class="vuoto" style="margin:0">Nessun lavoro: scegline almeno uno qui sotto.</p>'))
+      + (!L.auto && L.lavori.length < 6 ? '<div class="gcampi"><label>Aggiungi un lavoro<select data-lk-agg="1"><option value="">Scegli…</option>' + opz('', L.lavori.concat(ev.slug ? [ev.slug] : [])) + '</select></label></div>' : '')
       + '</div>'
       + '<div class="item"><div class="meta"><b>Social</b><span>le icone tonde sotto il nome; lascia vuoto per toglierne una</span></div><div class="gcampi">' + social + '</div></div>'
       + '<div class="az" style="margin-top:16px"><button type="submit" class="on" style="height:48px;padding:0 28px">Salva il link in bio</button></div>'
       + '<p class="gesito" id="lkesito"></p></form>';
   }
 
+  function stato(L) {
+    var scelti = Array.isArray(L.lavori) ? L.lavori.slice() : [];
+    return { evidenza: L.evidenza || null, auto: !scelti.length, lavori: scelti,
+      link: (L.link || []).map(function (x) { return { t: x.t, sub: x.sub || '', url: x.url }; }), social: Object.assign({}, L.social || {}) };
+  }
   function sposta(lista, i, j) { var t = lista[i]; lista[i] = lista[j]; lista[j] = t; }
 
   async function salva() {
     var es = document.getElementById('lkesito'), b = el.querySelector('#lkform [type=submit]');
     es.className = 'gesito'; es.textContent = 'Salvataggio…'; b.disabled = true;
     try {
-      var r = await api('link', ST);
-      D.link = r.link; ST = JSON.parse(JSON.stringify(r.link)); ST.evidenza = ST.evidenza || null;
+      if (!ST.auto && !ST.lavori.length) throw new Error('Scegli almeno un lavoro, oppure «I più recenti, in automatico».');
+      var r = await api('link', { evidenza: ST.evidenza, lavori: ST.auto ? 'auto' : ST.lavori, link: ST.link, social: ST.social });
+      D.link = r.link; ST = stato(r.link);
       MSG = 'Salvato. La pagina si aggiorna in 1–2 minuti: <a href="/link" target="_blank" rel="noopener">aprila</a> (se non vedi ancora le modifiche, ricarica tra poco).';
       disegna(); window.scrollTo({ top: el.offsetTop - 16, behavior: 'smooth' });
     } catch (err) {
@@ -109,6 +118,7 @@
       if (d.lkSu) { sposta(ST[d.lkSu], i, i - 1); disegna(); }
       else if (d.lkGiu) { sposta(ST[d.lkGiu], i, i + 1); disegna(); }
       else if (d.lkVia) { ST[d.lkVia].splice(i, 1); disegna(); }
+      else if (d.lkAuto) { ST.auto = d.lkAuto === '1'; disegna(); }
       else if (d.lkNuovo) { ST.link.push({ t: '', sub: '', url: '' }); disegna(); var c = el.querySelectorAll('[data-lk="link"][data-k="t"]'); c[c.length - 1].focus(); }
       else if (d.lkPronto) { var p = PRONTI.filter(function (x) { return x[2] === d.lkPronto; })[0]; ST.link.push({ t: p[0], sub: p[1], url: p[2] }); disegna(); }
     });
@@ -122,8 +132,7 @@
       el.innerHTML = '<p class="vuoto">Caricamento…</p>';
       try {
         var r = await api('lavori'); D = r.dati; RAMO = r.ramo;
-        var L = D.link || {};
-        ST = { evidenza: L.evidenza || null, lavori: (L.lavori || []).slice(), link: (L.link || []).map(function (x) { return { t: x.t, sub: x.sub || '', url: x.url }; }), social: Object.assign({}, L.social || {}) };
+        ST = stato(D.link || {});
         disegna();
       } catch (err) {
         if (!err.login) el.innerHTML = '<p class="err">' + e(err.message) + '</p>';

@@ -211,7 +211,7 @@ export function indirizzo(v) {
   throw new Error('Indirizzo non valido: «' + u + '». Usa un link completo (https://…) o una pagina del sito (es. contatti).');
 }
 
-/** Salva il link in bio. d = { evidenza: { slug, occhiello } | null, lavori: [slug], link: [{ t, sub, url }], social: { instagram, tiktok, youtube, email } } */
+/** Salva il link in bio. d = { evidenza: { slug, occhiello } | null, lavori: 'auto' | [slug], link: [{ t, sub, url }], social: { instagram, tiktok, youtube, email } } */
 export async function salvaLink(env, branch, d) {
   d = d || {};
   for (let tentativo = 0; tentativo < 2; tentativo++) {
@@ -220,8 +220,10 @@ export async function salvaLink(env, branch, d) {
     const esiste = new Set([...dati.lavori, ...dati.amarcord].map((x) => x.slug));
     const ev = str(d.evidenza && d.evidenza.slug, 60);
     if (ev && !esiste.has(ev)) throw new Error('Il lavoro in evidenza non esiste.');
-    const lavori = [...new Set((Array.isArray(d.lavori) ? d.lavori : []).map((x) => str(x, 60)))].filter((x) => esiste.has(x) && x !== ev);
+    // "auto" = i più recenti (come in cima alla pagina Lavori), altrimenti quelli scelti
+    let lavori = [...new Set((Array.isArray(d.lavori) ? d.lavori : []).map((x) => str(x, 60)))].filter((x) => esiste.has(x) && x !== ev);
     if (lavori.length > 6) throw new Error('Al massimo 6 lavori.');
+    if (d.lavori === 'auto' || !lavori.length) lavori = 'auto';
     const link = (Array.isArray(d.link) ? d.link : []).slice(0, 12)
       .map((x) => ({ t: str(x && x.t, 60), sub: str(x && x.sub, 100), url: str(x && x.url, 400) }))
       .filter((x) => x.t || x.url);
