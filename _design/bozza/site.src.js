@@ -421,6 +421,18 @@ acts();
   try{if(navigator.sendBeacon&&navigator.sendBeacon('/api/visita',new Blob([dati],{type:'application/json'})))return}catch(e){}
   fetch('/api/visita',{method:'POST',body:dati,keepalive:true,headers:{'content-type':'application/json'}}).catch(function(){});
 })();
+/* Trailer di Dynamis (Home e pagina Dynamis): parte da solo e muto (i browser lo vogliono così); il pulsante audio accende e spegne
+   il suono. Fuori dallo schermo si ferma. Con le animazioni ridotte resta fermo sulla copertina finché non si preme l'audio. */
+d.querySelectorAll('video.pk-trailer').forEach(function(v){
+  var b=v.parentNode.querySelector('.pk-audio');v.muted=true;
+  function vai(){var p=v.play();if(p&&p.catch)p.catch(function(){})}
+  function aggiorna(){if(!b)return;var t=v.muted?T("Attiva l'audio del trailer",'Turn the trailer sound on'):T("Disattiva l'audio del trailer",'Turn the trailer sound off');
+    b.setAttribute('aria-pressed',String(!v.muted));b.setAttribute('aria-label',t);b.title=t;b.classList.toggle('on',!v.muted)}
+  if(still){v.removeAttribute('autoplay');v.pause()}else vai();
+  if('IntersectionObserver' in w)new IntersectionObserver(function(es){if(es[0].isIntersecting){if(!still||!v.muted)vai()}else v.pause()},{threshold:0.2}).observe(v);
+  if(b)b.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();v.muted=!v.muted;if(!v.muted){if(v.ended)v.currentTime=0;vai()}aggiorna()});
+  aggiorna();
+});
 /* Video in loop delle pagine (muti, dietro le quinte): fermi sul poster per chi riduce le animazioni */
 d.querySelectorAll('video.pk-loop').forEach(function(v){v.muted=true;if(still){v.removeAttribute('autoplay');v.pause()}else{var p=v.play();if(p&&p.catch)p.catch(function(){})}});
 })();

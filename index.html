@@ -28,7 +28,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&amp;family=Space+Grotesk:wght@400;500&amp;display=swap">
-<link rel="stylesheet" href="assets/site.css?v=b780d062">
+<link rel="stylesheet" href="assets/site.css?v=6adbbd0d">
 <script>try{(function(){var n=(performance.getEntriesByType&&performance.getEntriesByType('navigation')[0]||{}).type,r=document.referrer,same=false;try{same=!!r&&new URL(r).origin===location.origin}catch(e){}
 var show=n==='reload'||(n!=='back_forward'&&!same);if(show&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('intro')})()}catch(e){}</script>
 </head>
@@ -45,7 +45,7 @@ var show=n==='reload'||(n!=='back_forward'&&!same);if(show&&!matchMedia('(prefer
 <section id="top" style="max-width: 1440px; margin: 0 auto; padding: 24px 56px 96px; box-sizing: border-box; display: flex; flex-direction: row-reverse; flex-wrap: wrap; align-items: flex-end; gap: 48px 80px">
 <div style="flex: 1 1 340px; max-width: 500px; display: flex; flex-direction: column; gap: 16px">
 <div style="position: relative; width: 100%; aspect-ratio: 4 / 5; background: #161616; overflow: hidden; display: flex; align-items: center; justify-content: center">
-<img src="dynamis.jpg" alt="Locandina di Dynamis: tre interpreti nella penombra, regia di Giada Bellanova" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover">
+<video class="pk-trailer" muted loop playsinline autoplay preload="metadata" poster="img/set/dynamis-trailer.jpg" aria-label="Trailer di Dynamis, cortometraggio verticale di Giada Bellanova" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover"><source src="img/set/dynamis-trailer.mp4" type="video/mp4"></video>
 <span aria-hidden="true" style="position: absolute; inset: 0; background: linear-gradient(rgba(8,8,8,0.45), transparent 22%, transparent 78%, rgba(8,8,8,0.55))"></span>
 <span aria-hidden="true" style="position: absolute; left: 33.333%; top: 0; bottom: 0; border-left: 1px solid rgba(51,102,153,0.18)"></span>
 <span aria-hidden="true" style="position: absolute; left: 66.666%; top: 0; bottom: 0; border-left: 1px solid rgba(51,102,153,0.18)"></span>
@@ -62,7 +62,7 @@ var show=n==='reload'||(n!=='back_forward'&&!same);if(show&&!matchMedia('(prefer
 <a href="https://www.youtube.com/watch?v=nLLtk0Lwxq8" target="_blank" rel="noopener" class="pill" style="position: absolute; left: 50%; bottom: 40px; transform: translateX(-50%); z-index: 1; height: 48px; padding: 0 22px 0 16px; border-radius: 24px; border: 1px solid rgba(232,228,223,0.6); background: rgba(8,8,8,0.45); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); color: #E8E4DF; display: flex; align-items: center; gap: 10px; cursor: pointer; font-family: 'Space Grotesk', sans-serif; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; white-space: nowrap">
 <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5l11 7-11 7V5z"></path></svg>Guarda Dynamis
 </a>
-<span title="Anteprima senza audio" style="position: absolute; top: 28px; right: 28px; z-index: 1; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; color: #C9C4BD" role="img" aria-label="Anteprima senza audio"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4zM17 9l5 6M22 9l-5 6"></path></svg></span>
+<button type="button" class="pk-audio" aria-pressed="false" aria-label="Attiva l'audio del trailer" title="Attiva l'audio del trailer"><svg class="i-muto" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4zM17 9l5 6M22 9l-5 6"></path></svg><svg class="i-suono" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z"></path><path d="M16.5 8.5a5 5 0 0 1 0 7M19 5.5a9 9 0 0 1 0 13"></path></svg></button>
 </div>
 <a href="https://www.youtube.com/watch?v=nLLtk0Lwxq8" target="_blank" rel="noopener" class="fade" style="display: flex; justify-content: space-between; align-items: baseline; gap: 16px; font-size: 13px; letter-spacing: 0.1em; color: #9A948C">
 <span><span style="font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 22px; letter-spacing: 0; color: #E8E4DF">Dynamis</span> · corto verticale · 2026</span>
@@ -302,7 +302,7 @@ f.addEventListener('submit',async function(ev){
 </div>
 </footer>
 </div>
-<script src="assets/site.js?v=d37f5347"></script>
+<script src="assets/site.js?v=e8b00e2a"></script>
 <script>
 </script>
 </body>
