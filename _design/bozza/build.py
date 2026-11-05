@@ -42,5 +42,13 @@ print('versioni', vjs, vcss)
 # Pagine di errore (errori/*.html, dalla 404)
 exec(open(os.path.join(HERE, 'errori.py'), encoding='utf-8').read(), {'__file__': os.path.join(HERE, 'errori.py')})
 
+# CV / filmografia in PDF (assets/karim-ismail-filmografia.pdf) dai dati dei lavori; senza reportlab resta il PDF che c'è
+try:
+    import reportlab  # noqa: F401
+except ImportError:
+    print('cv: reportlab non installato, PDF non rigenerato')
+else:
+    exec(open(os.path.join(HERE, 'cv.py'), encoding='utf-8').read(), {'__file__': os.path.join(HERE, 'cv.py')})
+
 # Descrizioni, anteprime dei link, sitemap.xml e robots.txt
 exec(open(os.path.join(HERE, 'seo.py'), encoding='utf-8').read(), {'__file__': os.path.join(HERE, 'seo.py')})
