@@ -3,11 +3,13 @@
 //   POST /api/admin/contatti/:id        { letto: true|false }
 //   GET  /api/admin/recensioni          tutte le recensioni
 //   POST /api/admin/recensioni/:id      { stato: 'approvata'|'rifiutata'|'attesa', in_evidenza: true|false }
+//   POST /api/admin/recensioni          { nome, cognome, servizio, voto, testo, data } → recensione copiata da Google, subito approvata
+//   GET|POST /api/admin/google          { recensione } link di Google per lasciare una recensione
 //   GET  /api/admin/push/chiave         chiave pubblica VAPID per "Attiva notifiche"
 //   POST /api/admin/push/iscrivi        PushSubscription del dispositivo
 //   POST /api/admin/push/disiscrivi     { endpoint }
 //   POST /api/admin/push/prova          manda una notifica di prova a tutti i dispositivi
-import { json, corpo, autorizzato } from '../../_lib.js';
+import { json, corpo, autorizzato, testo, colonnaCognome, linkGoogle } from '../../_lib.js';
 import { chiavePubblica, iscrivi, disiscrivi, inviaPush } from '../../_push.js';
 import { tabella, nuovoCodice, ordina, copertina, fuoco, istantanea, modifiche } from '../../_gallerie.js';
 import * as aruba from '../../_aruba.js';
@@ -34,6 +36,7 @@ export async function onRequest({ request, env, params }) {
     return json(results);
   }
   if (request.method === 'GET' && cosa === 'recensioni' && !id) {
+    await colonnaCognome(env);
     const { results } = await env.DB.prepare("SELECT * FROM recensioni ORDER BY stato = 'attesa' DESC, creato DESC LIMIT 500").all();
     return json(results);
   }
@@ -41,6 +44,32 @@ export async function onRequest({ request, env, params }) {
     const d = await corpo(request);
     await env.DB.prepare('UPDATE contatti SET letto = ? WHERE id = ?').bind(d && d.letto ? 1 : 0, n).run();
     return json({ ok: true });
+  }
+  // Recensione copiata da Karim dal profilo Google: va subito sul sito, con il bollino «Google»
+  if (request.method === 'POST' && cosa === 'recensioni' && !id) {
+    const d = (await corpo(request)) || {};
+    const nome = testo(d.nome, 60), cognome = testo(d.cognome, 60), servizio = testo(d.servizio, 60) || 'Altro', testoRec = testo(d.testo, 2000);
+    const voto = Math.round(Number(d.voto));
+    if (!nome || !testoRec || !(voto >= 1 && voto <= 5)) return json({ errore: 'Servono nome, stelle e testo.' }, 400);
+    const giorno = /^\d{4}-\d{2}-\d{2}$/.test(d.data || '') ? d.data + ' 12:00:00' : null;
+    await colonnaCognome(env);
+    await env.DB.prepare("INSERT INTO recensioni (nome, cognome, servizio, voto, testo, stato, fonte, creato) VALUES (?, ?, ?, ?, ?, 'approvata', 'google', COALESCE(?, datetime('now')))")
+      .bind(nome, cognome, servizio, voto, testoRec, giorno).run();
+    return json({ ok: true });
+  }
+  // Link di Google per lasciare una recensione (lo usano la pagina Recensioni e il messaggio «Chiedi una recensione»)
+  if (cosa === 'google' && !id) {
+    if (request.method === 'GET') return json({ recensione: await linkGoogle(env) });
+    if (request.method === 'POST') {
+      const d = (await corpo(request)) || {};
+      const u = String(d.recensione || '').trim();
+      let ok = u === '';
+      try { const x = new URL(u); ok = ok || (x.protocol === 'https:' && /(^|\.)(google\.[a-z.]+|g\.page|goo\.gl)$/.test(x.hostname)); } catch (e) { /* non è un indirizzo */ }
+      if (!ok) return json({ errore: 'Incolla il link che ti dà Google (inizia con https://g.page/ o https://search.google.com/…).' }, 400);
+      await linkGoogle(env);
+      await env.DB.prepare("INSERT INTO impostazioni (chiave, valore) VALUES ('google_recensione', ?) ON CONFLICT (chiave) DO UPDATE SET valore = excluded.valore").bind(u).run();
+      return json({ ok: true });
+    }
   }
   if (request.method === 'POST' && cosa === 'recensioni' && n > 0) {
     const d = (await corpo(request)) || {};

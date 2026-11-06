@@ -199,7 +199,9 @@ async function carica(){
   if(tab==='statistiche'){if(!pw()){login.hidden=false;lista.innerHTML='';return}return window.PKStatistiche.mostra(lista,api,e)} /* admin/statistiche.js */
   lista.innerHTML='<p class="vuoto">Caricamento…</p>';
   try{
+    if(GLINK==null){try{GLINK=(await api('google')).recensione||''}catch(x){GLINK=''}}
     var rows=await api(tab);
+    if(tab==='recensioni'){lista.innerHTML=formGoogle()+(rows.length?rows.map(rec).join(''):'<p class="vuoto">Ancora nessuna recensione.</p>');return}
     if(tab==='gallerie'){lista.innerHTML=FORM_G+(rows.length?rows.map(gal).join(''):'<p class="vuoto">Ancora nessuna galleria.</p>');return}
     if(!rows.length){lista.innerHTML='<p class="vuoto">Ancora niente qui.</p>';return}
     lista.innerHTML=rows.map(tab==='recensioni'?rec:con).join('');
@@ -217,6 +219,7 @@ function waG(g){return 'https://wa.me/?text='+encodeURIComponent('Ciao '+g.clien
 /* Richiesta di recensione su WhatsApp (gallerie e richieste di contatto): Karim la manda subito dopo il messaggio col link,
    quindi niente saluto. num vuoto = si sceglie il contatto in WhatsApp */
 function waRec(num){return 'https://wa.me/'+(num||'')+'?text='+encodeURIComponent('Mi faresti un piccolo favore? 🙏\nLasciami una recensione, ci vuole meno di un minuto:\n👉 '+SITO+'/recensioni#scrivi'
+  +(GLINK?'\n\nE se hai un account Google, lasciala anche lì ⭐\n👉 '+GLINK:'')
   +'\n\nPer me conta tantissimo e aiuta altre persone a scegliermi ✨\nGrazie di cuore! 🤍\nKarim · produkts.it')}
 function gal(g){
   return '<div class="item'+(g.attiva?'':' spenta')+'"><div class="meta"><b>'+(g.attiva?'attiva':'spenta')+'</b><span>creata '+e(data(g.creato))+'</span>'
@@ -325,8 +328,38 @@ async function apriDl(id){
       +'<div class="meta" style="margin-top:16px"><b>Ultimi download</b><span>dal più recente</span></div>'+(righe||'<p class="vuoto">Nessun download registrato.</p>');
   }catch(err){box.innerHTML='<p class="err">'+e(err.message)+'</p>'}
 }
+/* Recensioni da Google: Karim copia qui quelle lasciate sul profilo Google (vanno subito sul sito col bollino «Google»).
+   Il link di Google per lasciare una recensione lo usano la pagina Recensioni («Lasciala anche su Google») e «Chiedi una recensione». */
+var GLINK=null;
+function formGoogle(){
+  var oggi=new Date().toISOString().slice(0,10);
+  var servizi=['18 anni','Compleanno','Comunione','Battesimo','Evento','Shooting band o copertina','Fotografia sportiva','Video','Altro'];
+  return '<form class="item gform" id="glink" style="border-color:var(--steel)"><div class="meta"><b>Google</b><span>Link per lasciare una recensione su Google: nel Profilo dell\'attività → «Chiedi recensioni» → copia il link</span></div>'
+   +'<div class="gcampi"><label style="flex-basis:100%">Link di Google<input name="recensione" value="'+e(GLINK||'')+'" placeholder="https://g.page/r/…/review"></label></div>'
+   +'<div class="az"><button type="submit" class="on">Salva link</button><button type="button" data-gnuova="1">Aggiungi recensione da Google</button></div><p class="gesito" hidden></p></form>'
+   +'<form class="item gform" id="gnuova" hidden style="border-color:var(--steel)"><div class="meta"><b>Recensione da Google</b><span>Copiala com\'è dal profilo Google: va subito sul sito, col bollino «Google»</span></div>'
+   +'<div class="gcampi"><label>Nome<input name="nome" required></label><label>Cognome<input name="cognome" placeholder="(se c\'è)"></label>'
+   +'<label>Servizio<select name="servizio">'+servizi.map(function(x){return '<option>'+x+'</option>'}).join('')+'</select></label>'
+   +'<label>Stelle<select name="voto"><option>5</option><option>4</option><option>3</option><option>2</option><option>1</option></select></label>'
+   +'<label>Data<span class="gdata"><input name="data" type="date" value="'+oggi+'"></span></label>'
+   +'<label style="flex-basis:100%">Testo<textarea name="testo" rows="4" required></textarea></label></div>'
+   +'<div class="az"><button type="submit" class="on">Pubblica sul sito</button><button type="button" data-gnuova="0">Annulla</button></div><p class="gesito" hidden></p></form>';
+}
+document.addEventListener('submit',async function(ev){
+  var f=ev.target;if(f.id!=='glink'&&f.id!=='gnuova')return;ev.preventDefault();
+  var es=f.querySelector('.gesito'),b=f.querySelector('button[type=submit]'),t=b.textContent;
+  b.disabled=true;es.hidden=true;
+  try{
+    if(f.id==='glink'){await api('google',{recensione:f.elements.recensione.value.trim()});GLINK=f.elements.recensione.value.trim();es.hidden=false;es.className='gesito ok';es.textContent=GLINK?'Link salvato: ora c\'è nella pagina Recensioni e in «Chiedi una recensione».':'Link tolto.'}
+    else{var d={};['nome','cognome','servizio','voto','data','testo'].forEach(function(k){d[k]=f.elements[k].value.trim()});d.voto=+d.voto;
+      await api('recensioni',d);carica();setTimeout(function(){var n=document.querySelector('#glink .gesito');if(n){n.hidden=false;n.className='gesito ok';n.textContent='Recensione di '+d.nome+' pubblicata sul sito.'}},300)}
+  }catch(err){es.hidden=false;es.className='gesito err';es.textContent=err.message}
+  finally{b.disabled=false;b.textContent=t}
+});
+document.addEventListener('click',function(ev){var b=ev.target.closest('[data-gnuova]');if(!b)return;var f=document.getElementById('gnuova');if(!f)return;
+  f.hidden=b.dataset.gnuova!=='1';if(!f.hidden)f.elements.nome.focus()});
 function rec(r){
-  return '<div class="item'+(r.stato==='attesa'?' nuovo':'')+'"><div class="meta"><b>'+e(r.stato)+'</b><span>'+e(data(r.creato))+'</span><span>'+'★'.repeat(r.voto)+'</span><span>'+e(r.servizio)+'</span></div>'
+  return '<div class="item'+(r.stato==='attesa'?' nuovo':'')+'"><div class="meta"><b>'+e(r.stato)+'</b>'+(r.fonte==='google'?'<span style="color:var(--ember)">da Google</span>':'')+'<span>'+e(data(r.creato))+'</span><span>'+'★'.repeat(r.voto)+'</span><span>'+e(r.servizio)+'</span></div>'
    +'<div style="font-size:18px">'+e((r.nome+' '+(r.cognome||'')).trim())+'</div><div class="testo">'+e(r.testo)+'</div>'
    +'<div class="az"><button type="button" data-rec="'+r.id+'" data-stato="approvata"'+(r.stato==='approvata'?' class="on"':'')+'>Approva</button>'
    +'<button type="button" data-rec="'+r.id+'" data-stato="rifiutata"'+(r.stato==='rifiutata'?' class="on"':'')+'>Rifiuta</button>'

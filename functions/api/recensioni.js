@@ -10,11 +10,11 @@ const CATEGORIA = { '18 anni': '18 anni', Compleanno: 'Compleanni', Comunione: '
 export async function onRequestGet({ env }) {
   await colonnaCognome(env);
   const { results } = await env.DB.prepare(
-    "SELECT id, nome, cognome, servizio, voto, testo, in_evidenza FROM recensioni WHERE stato = 'approvata' ORDER BY in_evidenza DESC, creato DESC LIMIT 200"
+    "SELECT id, nome, cognome, servizio, voto, testo, in_evidenza, fonte FROM recensioni WHERE stato = 'approvata' ORDER BY in_evidenza DESC, creato DESC LIMIT 200"
   ).all();
   return json(results.map((r) => ({
     id: r.id, nome: nomeCognomePubblico(r.nome, r.cognome), servizio: r.servizio, voto: r.voto, testo: r.testo,
-    categoria: CATEGORIA[r.servizio] || '', in_evidenza: !!r.in_evidenza,
+    categoria: CATEGORIA[r.servizio] || '', in_evidenza: !!r.in_evidenza, google: r.fonte === 'google',
   })));
 }
 

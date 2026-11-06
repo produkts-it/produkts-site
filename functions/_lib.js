@@ -40,7 +40,18 @@ export async function colonnaCognome(env) {
   for (const t of ['contatti', 'recensioni']) {
     try { await env.DB.prepare(`ALTER TABLE ${t} ADD COLUMN cognome TEXT NOT NULL DEFAULT ''`).run(); } catch (e) { /* esiste già */ }
   }
+  // da dove arriva la recensione: '' = modulo del sito, 'google' = copiata da Karim dal profilo Google (pannello)
+  try { await env.DB.prepare("ALTER TABLE recensioni ADD COLUMN fonte TEXT NOT NULL DEFAULT ''").run(); } catch (e) { /* esiste già */ }
   cognomePronto = true;
+}
+
+/** Link di Google per lasciare una recensione (tabella impostazioni, chiave google_recensione): lo mette Karim dal pannello. */
+export async function linkGoogle(env) {
+  try {
+    await env.DB.prepare('CREATE TABLE IF NOT EXISTS impostazioni (chiave TEXT PRIMARY KEY, valore TEXT NOT NULL)').run();
+    const r = await env.DB.prepare("SELECT valore FROM impostazioni WHERE chiave = 'google_recensione'").first();
+    return r ? r.valore : '';
+  } catch (e) { return ''; }
 }
 
 /** Sul sito: nome intero e iniziale del cognome ("Carmela Carrassa" -> "Carmela C."). */

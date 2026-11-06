@@ -311,6 +311,13 @@ var show=n==='reload'||(n!=='back_forward'&&!same);if(show&&!matchMedia('(prefer
 <div style="border: 1px solid #336699; padding: 48px; display: flex; flex-direction: column; gap: 16px">
 <span style="font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: #B46428">Ricevuta</span>
 <p style="margin: 0; font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300; font-size: 40px; line-height: 1.2">Grazie. La tua recensione apparirà qui appena approvata.</p>
+<div data-google hidden>
+<div style="display: flex; flex-direction: column; align-items: flex-start; gap: 16px; border-top: 1px solid #1F1F1F; padding-top: 24px; margin-top: 8px">
+<p style="margin: 0; font-size: 15px; line-height: 1.6; color: #C9C4BD">Ti va di lasciarla anche su Google? Aiuta tantissimo chi cerca un videomaker. Premi il pulsante: il tuo testo si copia da solo, su Google devi solo incollarlo.</p>
+<a data-google-link href="https://produkts.it/recensioni" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; gap: 10px; padding: 15px 24px; border: 1px solid #B46428; color: #E8E4DF; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4l-5.9 3.1 1.2-6.5L2.5 9.4l6.6-.9z"></path></svg>Lasciala anche su Google <span aria-hidden="true">↗</span></a>
+<span data-google-ok hidden style="font-size: 13px; color: #9A948C">Testo copiato: su Google tieni premuto nel riquadro e scegli Incolla.</span>
+</div>
+</div>
 <button type="button" data-act="reset" style="align-self: flex-start; background: transparent; border: 0; color: #9A948C; font-family: 'Space Grotesk', sans-serif; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; padding: 12px 0; cursor: pointer">Scrivine un'altra</button>
 </div>
 </div>
@@ -420,6 +427,8 @@ fetch('/api/recensioni').then(function(r){return r.ok?r.json():[]}).then(functio
     var st=a.querySelector('[role="img"]');st.textContent='★'.repeat(r.voto)+'☆'.repeat(5-r.voto);st.setAttribute('aria-label',r.voto+' stelle su 5');
     a.querySelector('p').textContent=r.testo;
     var sp=a.querySelectorAll('span');sp[sp.length-2].textContent=r.nome;sp[sp.length-1].textContent=r.servizio;
+    /* recensione lasciata sul profilo Google (Karim la copia dal pannello): bollino «Google» accanto al nome */
+    if(r.google){var g=d.createElement('small');g.textContent=' · Google';g.style.cssText='font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: #9A948C';sp[sp.length-2].appendChild(g)}
     /* l'elenco arriva già ordinato (in evidenza, poi dalla più recente): inserendo prima dello stesso punto l'ordine resta quello */
     if(r.in_evidenza){a.setAttribute('data-featured','');grid.insertBefore(a,top)}else{a.removeAttribute('data-featured');grid.insertBefore(a,firstPlain)}
     somma+=r.voto;
@@ -437,6 +446,13 @@ PK.acts.star=function(n){stars(+n)};
 PK.acts.service=function(v){var on=v==='Altro';show('isOther',on);d.getElementById('rv-altro').required=on};
 function v(id){return d.getElementById(id).value.trim()}
 function errore(m){err.textContent=m;err.hidden=!m}
+/* Link di Google per lasciare la recensione anche lì (lo mette Karim nel pannello): dopo l'invio il testo si copia al clic */
+var gLink='',gTesto='',gBox=d.querySelector('[data-google]'),gA=d.querySelector('[data-google-link]');
+fetch('/api/google').then(function(r){return r.ok?r.json():{}}).then(function(j){gLink=(j&&j.recensione)||''}).catch(function(){});
+gA.addEventListener('click',function(){
+  try{if(gTesto&&navigator.clipboard)navigator.clipboard.writeText(gTesto)}catch(e){}
+  d.querySelector('[data-google-ok]').hidden=false;
+});
 /* Invio a /api/recensioni: resta in attesa finché non la approvi nel pannello /admin */
 PK.acts.send=function(){
   if(btn.getAttribute('aria-busy')==='true')return;
@@ -448,10 +464,10 @@ PK.acts.send=function(){
   PK.invia('/api/recensioni',{nome:v('rv-nome'),cognome:v('rv-cognome'),servizio:servizio,altro:v('rv-altro'),voto:voto,testo:v('rv-testo'),consenso:true,
     sito:form.querySelector('.pk-hp').value,turnstile:token()}).then(function(r){
     btn.removeAttribute('aria-busy');
-    if(r.ok){PK.ciak('Recensione inviata',v('rv-nome'));form.reset();PK.vt(function(){show('notSent',false);show('sent',true)})}else{errore(r.errore);PK.turnstileReset(ts)}
+    if(r.ok){PK.ciak('Recensione inviata',v('rv-nome'));gTesto=v('rv-testo');if(gLink){gA.href=gLink;gBox.hidden=false}form.reset();PK.vt(function(){show('notSent',false);show('sent',true)})}else{errore(r.errore);PK.turnstileReset(ts)}
   });
 };
-PK.acts.reset=function(){show('sent',false);show('notSent',true);show('isOther',false);stars(5);PK.turnstileReset(ts)};
+PK.acts.reset=function(){gBox.hidden=true;d.querySelector('[data-google-ok]').hidden=true;show('sent',false);show('notSent',true);show('isOther',false);stars(5);PK.turnstileReset(ts)};
 apply();
 })();
 </script>
