@@ -114,11 +114,12 @@ def cerca(k):
     m = re.match(r'^Fotogramma di (.+)$', k)
     if m and resta(m.group(1)):
         return 'Still from ' + m.group(1)
-    m = re.match(r'^(.+) — Karim Ismail, (.+) \| produkts\.it$', k)
-    if m:
+    m = re.match(r'^(.+) — Karim Ismail, (.+?)(?: \| produkts\.it)?$', k)
+    if m and resta(m.group(1)):
         r = cerca(m.group(2))
         if r and r != '=':
-            return '%s — Karim Ismail, %s | produkts.it' % (m.group(1), r[0].lower() + r[1:] if not r[:2].isupper() else r)
+            t = '%s — Karim Ismail, %s | produkts.it' % (m.group(1), r[0].lower() + r[1:] if not r[:2].isupper() else r)
+            return t if len(t) <= 70 else t[:-len(' | produkts.it')]  # come in lavori.py: titoli corti per Google
     m = re.match(r'^(.+), (%s) (\d{4}) — Karim Ismail$' % '|'.join(TIPI), k, re.I)
     if m:
         return '%s, %s %s — Karim Ismail' % (m.group(1), TIPI[m.group(2).lower()], m.group(3))

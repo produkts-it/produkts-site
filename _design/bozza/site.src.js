@@ -587,5 +587,11 @@ d.querySelectorAll('video.pk-trailer').forEach(function(v){
   aggiorna();
 });
 /* Video in loop delle pagine (muti, dietro le quinte): fermi sul poster per chi riduce le animazioni */
-d.querySelectorAll('video.pk-loop').forEach(function(v){v.muted=true;if(still){v.removeAttribute('autoplay');v.pause()}else{var p=v.play();if(p&&p.catch)p.catch(function(){})}});
+/* (si scaricano e partono solo quando arrivano sullo schermo: niente dati sprecati da telefono; fuori schermo si fermano) */
+d.querySelectorAll('video.pk-loop').forEach(function(v){
+  v.muted=true;if(still){v.removeAttribute('autoplay');v.pause();return}
+  function vai(){var p=v.play();if(p&&p.catch)p.catch(function(){})}
+  if(!('IntersectionObserver' in w)){vai();return}
+  new IntersectionObserver(function(es){if(es[0].isIntersecting)vai();else v.pause()},{rootMargin:'200px 0px'}).observe(v);
+});
 })();

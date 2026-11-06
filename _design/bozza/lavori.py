@@ -207,6 +207,8 @@ def page(w):
     if ruolo[1:2].islower():  # «Regia, …» → «regia, …», ma «D.O.P., …» resta com'è
         ruolo = ruolo[:1].lower() + ruolo[1:]
     title = '%s — %s, %s | produkts.it' % (w['t'], KI, ruolo)
+    if len(title) > 70:  # Google mostra circa 60-70 caratteri: senza « | produkts.it» il ruolo resta visibile
+        title = title[:-len(' | produkts.it')]
     head = re.sub(r'<title>.*?</title>', lambda m: '<title>%s</title>' % e(title), HEAD, count=1)
     metas = [('Il mio ruolo', w['role'])] + w['meta']
     body = '''<section style="max-width: 1440px; margin: 0 auto; padding: 24px 56px 72px; box-sizing: border-box">

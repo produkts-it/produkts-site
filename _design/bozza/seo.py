@@ -13,7 +13,7 @@ ESCLUSE = {'404.html', 'fotografia.html', 'galleria.html', 'area-clienti.html'}
 SOLO_ANTEPRIMA = {'link.html'}
 
 DESCR = {
-    'index.html': 'Karim Ismail, direttore della fotografia, videomaker e fotografo ad Altamura (BA). Cortometraggi, videoclip, eventi e contenuti per brand. Dynamis è stato selezionato al VerticalMovie Festival 2026.',
+    'index.html': 'Karim Ismail, direttore della fotografia, videomaker e fotografo ad Altamura (BA): cortometraggi, videoclip, eventi e brand. Dynamis al VerticalMovie 2026.',
     'lavori.html': 'I lavori di Karim Ismail: cortometraggi, videoclip e video aziendali. Dynamis, Schizophrenia, i corti di AMARCORD e altro.',
     'chi-sono.html': "Karim Ismail, direttore della fotografia certificato AMARCORD, videomaker e fotografo di Altamura: la storia di produkts.it e la filmografia.",
     'recensioni.html': 'Le recensioni di chi ha lavorato con produkts.it: 18 anni, comunioni, battesimi, compleanni, eventi e fotografia sportiva.',
@@ -25,7 +25,7 @@ DESCR = {
 IMG = {'dynamis.html': SITE + '/dynamis.jpg'}
 # Versione inglese (en/, generata da inglese.py): descrizioni delle pagine principali
 DESCR_EN = {
-    'index.html': 'Karim Ismail, director of photography, videomaker and photographer based in Altamura, southern Italy. Short films, music videos, events and brand content. Dynamis was selected at the VerticalMovie Festival 2026.',
+    'index.html': 'Karim Ismail, director of photography, videomaker and photographer in Altamura, Italy: short films, music videos, events, brands. Dynamis at VerticalMovie 2026.',
     'work.html': 'Work by Karim Ismail: short films, music videos, events and corporate videos. Dynamis, Schizophrenia, the AMARCORD short films and more.',
     'about.html': 'Karim Ismail, AMARCORD certified director of photography, videomaker and photographer from Altamura, Italy: the story of produkts.it and the filmography.',
     'reviews.html': 'Reviews from people who worked with produkts.it: birthdays, communions, christenings, events and sports photography.',
@@ -92,12 +92,35 @@ def descrizione(nome, s, en=False):
     r = re.search(r'>%s</dt>\s*<dd[^>]*>(.*?)</dd>' % ('My role' if en else 'Il mio ruolo'), s, re.S)
     d = testo(m.group(1)) if m else ''
     g = re.search(r'>%s</dt>\s*<dd[^>]*>(.*?)</dd>' % ('Director' if en else 'Regia'), s, re.S)
-    if g:
-        d += (' Directed by %s.' if en else ' Regia di %s.') % testo(g.group(1)).replace(', ', ' and ' if en else ' e ')
+    regia = ((' Directed by %s.' if en else ' Regia di %s.') % testo(g.group(1)).replace(', ', ' and ' if en else ' e ')) if g else ''
+    ruolo = ''
     if r:
         ruolo = testo(r.group(1))
-        d += ' Karim Ismail: %s.' % (ruolo[:1].lower() + ruolo[1:] if ruolo[1:2].islower() else ruolo)
-    return d.strip()
+        ruolo = ' Karim Ismail: %s.' % (ruolo[:1].lower() + ruolo[1:] if ruolo[1:2].islower() else ruolo)
+    return corta(d, regia + ruolo)
+
+
+MAX = 160  # oltre, Google taglia la descrizione con «…»
+
+
+def corta(d, coda=''):
+    """Descrizione entro MAX caratteri: si accorcia la riga del progetto (prima frase, poi a una virgola o a una parola),
+    mai regia e ruolo di Karim, che stanno in coda."""
+    if len(d + coda) <= MAX:
+        return (d + coda).strip()
+    frasi = re.split(r'(?<=[.!?])\s+', d)
+    if len(frasi) > 1 and len(frasi[0] + coda) <= MAX:
+        return (frasi[0] + coda).strip()
+    d = frasi[0]
+    posto = MAX - len(coda) - 1
+    if posto < 50:
+        return corta(d) if not coda else (d[:MAX - 1].rsplit(' ', 1)[0].rstrip(',;:') + '…')
+    taglio = d[:posto]
+    for sep in (':', ';', ','):
+        i = taglio.rfind(sep)
+        if i >= 30:
+            return (d[:i] + '.' + coda).strip()
+    return (taglio.rsplit(' ', 1)[0].rstrip(',;:') + '…' + coda).strip()
 
 
 def immagine(nome, s):
@@ -159,6 +182,10 @@ for f, en in lista:
     blocco = '\n'.join(blocco)
     s = re.sub(r'\n?<!-- seo -->.*?<!-- /seo -->', '', s, flags=re.S)
     s = re.sub(r'(</title>)', lambda m: m.group(1) + '\n' + blocco, s, count=1)
+    # Le email nella pagina restano come sono: senza questi commenti Cloudflare le nasconde e aggiunge un suo script (email-decode)
+    if '<!--email_off-->' not in s:
+        s = re.sub(r'(<body\b[^>]*>)', r'\1<!--email_off-->', s, count=1)
+        s = s.replace('</body>', '<!--/email_off--></body>', 1)
     with open(f, 'w', encoding='utf-8', newline='\n') as out:
         out.write(s)
     if nome not in SOLO_ANTEPRIMA:
