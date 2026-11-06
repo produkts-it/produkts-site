@@ -44,7 +44,7 @@ function clockIn(hd){
     el.insertAdjacentHTML('beforeend','<span class="pk-lang" role="group" aria-label="'+T('Lingua','Language')+'">'+voce('it',it,!EN)+voce('en',en,EN)+'</span>');
   }
   /* toccare l'orologio (o il tasto R accanto) accende il mirino: anche da telefono, dove la tastiera non c'è */
-  el.addEventListener('click',function(e){if(e.target.closest('.pk-lang'))return;if(PK.mirino)PK.mirino()});
+  el.addEventListener('click',function(e){if(e.target.closest('.pk-lang'))return;if(PK.sensori)PK.sensori();if(PK.mirino)PK.mirino()});
   var mb=hd.querySelector('.mb');
   if(mb)hd.insertBefore(el,mb);else hd.appendChild(el);
   hd.classList.add('pk-hdr');
@@ -337,6 +337,7 @@ PK.ciak=function(scena,nome){
   setTimeout(function(){c.remove()},2400);
 };
 
+var SCUOTI=!!(w.DeviceMotionEvent&&w.matchMedia&&w.matchMedia('(pointer:coarse)').matches);
 /* Mirino (tasto R, o toccando l'orologio): il sito visto dal monitor di una camera, con REC e timecode.
    Resta acceso cambiando pagina (sessionStorage, il timecode continua) finché non si ripreme R o Esc. */
 var mir=null,mirT=null,hint=null;
@@ -362,8 +363,9 @@ PK.mirino=function(on,subito){
     +'<div class="hud tlh"><span class="rc"><i></i>REC</span><span class="tc">00:00:00:00</span></div>'
     +'<div class="hud trh"><span>4K DCI · 24p · 180°</span><span>ISO 800 · T2.8 · 5600K</span></div>'
     +'<div class="hud blh"><span class="bat"><i></i></span><span>CAM A · produkts.it</span></div>'
-    +'<div class="hud brh"><span class="esci">'+T('Premi','Press')+' <kbd>R</kbd> '+T('per uscire','to exit')+'</span><span class="esci-t">'+T('Tocca l’orologio per uscire','Tap the clock to exit')+'</span></div>';
+    +'<div class="hud brh"><span class="esci">'+T('Premi','Press')+' <kbd>R</kbd> '+T('per uscire','to exit')+'</span><span class="esci-t">'+(SCUOTI?T('Scuoti o tocca l’orologio per uscire','Shake or tap the clock to exit'):T('Tocca l’orologio per uscire','Tap the clock to exit'))+'</span></div>';
   d.body.appendChild(mir);h.classList.add('pk-mir');
+  if(!subito&&navigator.vibrate)try{navigator.vibrate([35,70,35])}catch(e){}
   var tc=mir.querySelector('.tc');
   function tick(){var s=Math.max(0,(Date.now()-t0)/1000),fr=Math.floor((s%1)*24);s=Math.floor(s);
     tc.textContent=z2(Math.floor(s/3600))+':'+z2(Math.floor(s/60)%60)+':'+z2(s%60)+':'+z2(still?0:fr)}
@@ -388,6 +390,44 @@ if(mirInizio())PK.mirino(true,true);
     hint.innerHTML='<kbd>R</kbd><span>'+T('Psst… premi R e guarda il sito dal mirino.','Psst… press R to see the site through the viewfinder.')+'</span>';
     d.body.appendChild(hint);setTimeout(hintVia,8000);
   },6000);
+})();
+
+
+/* Da telefono: scuotere il telefono accende e spegne il mirino (vibrazione corta quando parte il REC, dove il telefono la permette).
+   Su iPhone i sensori chiedono il permesso: si chiede al primo tocco sull'orologio o sul suggerimento qui sotto. */
+(function(){
+  if(!SCUOTI)return;
+  var px=null,py=null,pz=null,picchi=[],ferma=0,attivo=false;
+  function mov(e){
+    var a=e.accelerationIncludingGravity;if(!a||a.x===null)return;
+    if(px!==null){
+      var dd=Math.abs(a.x-px)+Math.abs(a.y-py)+Math.abs(a.z-pz),t=Date.now();
+      if(dd>28&&t>ferma){
+        if(!picchi.length||t-picchi[picchi.length-1]>90)picchi.push(t);
+        picchi=picchi.filter(function(x){return t-x<1000});
+        if(picchi.length>=3){picchi=[];ferma=t+1600;if(!h.classList.contains('menu-open'))PK.mirino()}
+      }
+    }
+    px=a.x;py=a.y;pz=a.z;
+  }
+  /* si ascolta subito (Android); dove serve il permesso (iPhone) i dati arrivano solo dopo averlo chiesto con un tocco */
+  w.addEventListener('devicemotion',function(e){attivo=true;mov(e)});
+  PK.sensori=function(){
+    if(attivo||typeof w.DeviceMotionEvent.requestPermission!=='function')return;
+    try{w.DeviceMotionEvent.requestPermission().catch(function(){})}catch(e){}
+  };
+  /* suggerimento, una volta sola: "scuoti il telefono" (toccarlo accende il mirino e, su iPhone, chiede il permesso) */
+  var visto='1';
+  try{visto=localStorage.getItem('pk-r')}catch(e){}
+  if(visto||mir)return;
+  setTimeout(function(){
+    if(mir||hint||h.classList.contains('intro')||h.classList.contains('menu-open'))return;
+    hint=d.createElement('button');hint.type='button';hint.className='pk-rhint tocco';
+    hint.innerHTML='<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><rect x="7" y="3" width="10" height="18" rx="2"/><path d="M11 18h2M3.5 9v6M20.5 9v6"/></svg>'
+      +'<span>'+T('Psst… scuoti il telefono e guarda il sito dal mirino.','Psst… shake your phone to see the site through the viewfinder.')+'</span>';
+    hint.addEventListener('click',function(){PK.sensori();PK.mirino(true)});
+    d.body.appendChild(hint);setTimeout(hintVia,9000);
+  },7000);
 })();
 
 intro();

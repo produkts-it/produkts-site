@@ -333,5 +333,9 @@ header.pk-sticky.pk-hide{transform:translateY(-100%)}
 @media (hover:none),(pointer:coarse){.pk-r{display:none}}
 .pk-rhint{position:fixed;left:24px;bottom:24px;z-index:140;display:flex;align-items:center;gap:12px;max-width:calc(100vw - 48px);box-sizing:border-box;padding:12px 16px;background:rgba(14,14,14,.94);border:1px solid #2A2A2A;font-size:13px;color:#C9C4BD;animation:rhin .6s cubic-bezier(.2,.7,.2,1) both;transition:opacity .4s,transform .4s}
 .pk-rhint.out{opacity:0;transform:translateY(10px)}
+.pk-rhint.tocco{font:inherit;font-family:'Space Grotesk',sans-serif;font-size:13px;line-height:1.4;color:#C9C4BD;text-align:left;cursor:pointer;right:24px;max-width:none}
+.pk-rhint.tocco svg{flex:none;color:#D98A4E;animation:pkscuoti 1.6s ease-in-out infinite}
+@keyframes pkscuoti{0%,55%,100%{transform:rotate(0)}62%{transform:rotate(-14deg)}70%{transform:rotate(12deg)}78%{transform:rotate(-9deg)}86%{transform:rotate(6deg)}}
+@media (prefers-reduced-motion:reduce){.pk-rhint.tocco svg{animation:none}}
 @keyframes rhin{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion: reduce){*,*::before,*::after{animation:none!important;transition:none!important}::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}}
