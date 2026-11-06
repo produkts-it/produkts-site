@@ -126,7 +126,13 @@ function clockIn(hd){
     el.insertAdjacentHTML('beforeend','<span class="pk-lang" role="group" aria-label="'+T('Lingua','Language')+'">'+voce('it',it,!EN)+voce('en',en,EN)+'</span>');
   }
   /* toccare l'orologio (o il tasto R accanto) accende il mirino: anche da telefono, dove la tastiera non c'è */
-  el.addEventListener('click',function(e){if(e.target.closest('.pk-lang'))return;if(PK.sensori)PK.sensori();if(PK.mirino)PK.mirino()});
+  el.addEventListener('click',function(e){if(e.target.closest('.pk-lang'))return;if(lungo){lungo=false;return}if(PK.sensori)PK.sensori();if(PK.mirino)PK.mirino()});
+  /* tenuto premuto da telefono: modalità pellicola (da computer è il tasto G) */
+  var lp=null,lungo=false;
+  el.addEventListener('pointerdown',function(e){if(e.pointerType==='mouse'||e.target.closest('.pk-lang'))return;lungo=false;clearTimeout(lp);
+    lp=setTimeout(function(){lungo=true;if(PK.pellicola)PK.pellicola();if(navigator.vibrate)try{navigator.vibrate(20)}catch(x){}},650)});
+  ['pointerup','pointercancel','pointerleave'].forEach(function(t){el.addEventListener(t,function(){clearTimeout(lp)})});
+  el.addEventListener('contextmenu',function(e){if(lungo||lp)e.preventDefault()});
   var mb=hd.querySelector('.mb');
   if(mb)hd.insertBefore(el,mb);else hd.appendChild(el);
   hd.classList.add('pk-hdr');
@@ -407,6 +413,7 @@ PK.acts.carNext=function(a,el){var t=el.closest('section').querySelector('.car-t
 function z2(n){return (n<10?'0':'')+n}
 function esc1(s){return String(s==null?'':s).replace(/[&<>"]/g,function(x){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[x]})}
 PK.ciak=function(scena,nome){
+  if(PK.contaCiak)PK.contaCiak();
   if(still)return;
   var oggi=new Date(),c=d.createElement('div');c.className='pk-ciak';c.setAttribute('aria-hidden','true');
   var f=function(k,v,cl){return '<div class="cf'+(cl?' w':'')+'"><span>'+k+'</span><b>'+v+'</b></div>'};
@@ -458,6 +465,7 @@ d.addEventListener('keydown',function(e){
   var t=e.target,tag=t&&t.tagName;
   if(tag==='INPUT'||tag==='TEXTAREA'||tag==='SELECT'||(t&&t.isContentEditable))return;
   if(e.key==='r'||e.key==='R'){e.preventDefault();PK.mirino()}
+  else if((e.key==='g'||e.key==='G')&&PK.pellicola){e.preventDefault();PK.pellicola()}
   else if(e.key==='Escape'&&mir&&!h.classList.contains('menu-open'))PK.mirino(false);
 });
 if(mirInizio())PK.mirino(true,true);
@@ -533,6 +541,111 @@ acts();
   w.addEventListener('scroll',function(){if(!ticking){ticking=true;w.requestAnimationFrame(upd)}},{passive:true});
   upd();
 })();
+/* Modalità pellicola (tasto G; da telefono tenendo premuto l'orologio): grana, tremolio, graffi, vignetta e ogni tanto
+   il segno del cambio rullo, come in un proiettore 35mm. Resta accesa cambiando pagina (sessionStorage pk-pellicola).
+   Il rumore del proiettore è fatto con WebAudio (nessun file) e parte solo col pulsante della barretta in basso. */
+var pel=null,pelSuono=null;
+function pelGrana(){
+  try{var c=d.createElement('canvas');c.width=c.height=180;var x=c.getContext('2d'),im=x.createImageData(180,180),a=im.data;
+    for(var i=0;i<a.length;i+=4){var v=Math.random()*255|0;a[i]=a[i+1]=a[i+2]=v;a[i+3]=Math.random()*46|0}
+    x.putImageData(im,0,0);return c.toDataURL('image/png')}catch(e){return ''}
+}
+function pelRumore(){
+  var AC=w.AudioContext||w.webkitAudioContext;if(!AC)return null;
+  var ac=new AC(),sr=ac.sampleRate,b=ac.createBuffer(1,sr,sr),dt=b.getChannelData(0),i,k;
+  for(i=0;i<sr;i++)dt[i]=(Math.random()*2-1)*0.05;                        /* fruscio del motore */
+  for(k=0;k<24;k++){var st=Math.floor(k*sr/24),am=0.55+Math.random()*0.45,ln=Math.floor(sr*0.012);
+    for(i=0;i<ln&&st+i<sr;i++)dt[st+i]+=(Math.random()*2-1)*am*Math.exp(-i/(sr*0.0025))}   /* lo scatto della griffa, 24 al secondo */
+  var src=ac.createBufferSource();src.buffer=b;src.loop=true;
+  var bp=ac.createBiquadFilter();bp.type='bandpass';bp.frequency.value=1500;bp.Q.value=0.6;
+  var hum=ac.createOscillator();hum.type='sawtooth';hum.frequency.value=48;var hg=ac.createGain();hg.gain.value=0.012;
+  var g=ac.createGain();g.gain.value=0;g.gain.linearRampToValueAtTime(0.5,ac.currentTime+0.4);
+  src.connect(bp);bp.connect(g);hum.connect(hg);hg.connect(g);g.connect(ac.destination);src.start();hum.start();
+  return {ferma:function(){try{g.gain.linearRampToValueAtTime(0,ac.currentTime+0.25);setTimeout(function(){ac.close()},350)}catch(e){}}};
+}
+function pelAudio(on){
+  if(on===undefined)on=!pelSuono;
+  if(pelSuono){pelSuono.ferma();pelSuono=null}
+  if(on)pelSuono=pelRumore();
+  if(pel){var b=pel.querySelector('.ps');b.classList.toggle('on',!!pelSuono);b.setAttribute('aria-pressed',String(!!pelSuono));
+    var t=pelSuono?T('Spegni il rumore del proiettore','Turn the projector sound off'):T('Accendi il rumore del proiettore','Turn the projector sound on');b.title=t;b.setAttribute('aria-label',t)}
+}
+PK.pellicola=function(on,subito){
+  if(on===undefined)on=!pel;
+  if(!on){
+    if(pel){var p=pel;pel=null;pelAudio(false);p.classList.add('out');h.classList.remove('pk-pel-on');setTimeout(function(){p.remove()},still?0:500)}
+    try{sessionStorage.removeItem('pk-pellicola')}catch(e){}
+    return;
+  }
+  if(pel)return;
+  try{sessionStorage.setItem('pk-pellicola','1')}catch(e){}
+  pel=d.createElement('div');pel.className='pk-pel'+(subito?' subito':'');
+  pel.innerHTML='<i class="tn"></i><i class="gr"></i><i class="fl"></i><i class="sc s1"></i><i class="sc s2"></i><i class="cue"></i><i class="vg"></i>'
+    +'<div class="pb" role="group" aria-label="'+T('Modalità pellicola','Film mode')+'"><span><i></i>35mm · 24 fps</span>'
+    +'<button type="button" class="ps" aria-pressed="false"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="7" cy="8" r="4"/><circle cx="17" cy="8" r="4"/><path d="M3 20h12l4-4v-2H3z"/></svg>'+T('Proiettore','Projector')+'</button>'
+    +'<button type="button" class="px" title="'+T('Esci dalla pellicola (G)','Leave film mode (G)')+'" aria-label="'+T('Esci dalla modalità pellicola','Leave film mode')+'">×</button></div>';
+  var gr=pelGrana();if(gr)pel.querySelector('.gr').style.backgroundImage='url('+gr+')';
+  pel.querySelector('.ps').addEventListener('click',function(){pelAudio()});
+  pel.querySelector('.px').addEventListener('click',function(){PK.pellicola(false)});
+  d.body.appendChild(pel);h.classList.add('pk-pel-on');pelAudio(false);
+};
+try{if(sessionStorage.getItem('pk-pellicola'))PK.pellicola(true,true)}catch(e){}
+
+/* Stand-by: dopo un minuto senza toccare niente compaiono le barre colore con «Torniamo subito»; al primo movimento spariscono.
+   Non parte con la pagina nascosta, il menu aperto, una foto aperta in galleria, un campo dei moduli attivo o un video con l'audio. */
+(function(){
+  var ATTESA=60000,t=null,sb=null,tt=null;
+  function occupato(){
+    if(d.hidden||h.classList.contains('menu-open')||h.classList.contains('g-lbx')||h.classList.contains('intro'))return true;
+    var a=d.activeElement;if(a&&/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName))return true;
+    var vs=d.querySelectorAll('video');for(var i=0;i<vs.length;i++)if(!vs[i].paused&&!vs[i].muted)return true;
+    return false;
+  }
+  function via(){if(!sb)return;var x=sb;sb=null;clearInterval(tt);x.classList.add('out');setTimeout(function(){x.remove()},still?0:500)}
+  function aspetta(){clearTimeout(t);t=setTimeout(mostra,ATTESA)}
+  function mostra(){
+    if(sb)return;if(occupato()){aspetta();return}
+    var bar=function(c){return c.map(function(x){return '<i style="background:'+x+'"></i>'}).join('')};
+    sb=d.createElement('div');sb.className='pk-sb';sb.setAttribute('role','status');
+    sb.innerHTML='<div class="r1">'+bar(['#BFBFBF','#BFBF00','#00BFBF','#00BF00','#BF00BF','#BF0000','#0000BF'])+'</div>'
+      +'<div class="r2">'+bar(['#0000BF','#131313','#BF00BF','#131313','#00BFBF','#131313','#BFBFBF'])+'</div>'
+      +'<div class="r3">'+bar(['#00214C','#FFFFFF','#32006A','#131313','#090909','#131313','#1D1D1D','#131313'])+'</div>'
+      +'<div class="sbc"><span class="sbt">'+T('Torniamo subito','We’ll be right back')+'</span><span class="sbm">produkts.it · Altamura · <b>--:--:--</b></span>'
+      +'<span class="sbh">'+T('Muovi il mouse o tocca lo schermo','Move the mouse or tap the screen')+'</span></div>';
+    sb.addEventListener('click',function(e){e.preventDefault();e.stopPropagation()},true);
+    d.body.appendChild(sb);
+    var ora=sb.querySelector('.sbm b');
+    var tick=function(){try{ora.textContent=new Date().toLocaleTimeString('it-IT',{timeZone:'Europe/Rome',hour12:false})}catch(e){}};
+    tick();tt=setInterval(tick,1000);
+  }
+  ['mousemove','mousedown','keydown','touchstart','wheel','scroll'].forEach(function(ev){
+    w.addEventListener(ev,function(){if(sb)via();aspetta()},{passive:true,capture:true});
+  });
+  d.addEventListener('visibilitychange',aspetta);
+  aspetta();
+})();
+
+/* Contatore nel footer: «N ciak battuti dal sito» = richieste e recensioni arrivate dai moduli (functions/api/ciak.js).
+   Il numero resta nella sessione (sessionStorage pk-ciak); quando un modulo parte, PK.ciak() lo fa salire di uno. */
+(function(){
+  var f=d.querySelector('footer');if(!f)return;
+  var cp=null;f.querySelectorAll('span').forEach(function(s){if(!cp&&/^©/.test(s.textContent.trim()))cp=s});if(!cp)return;
+  var n=0,el=null;
+  function mostra(salta){
+    if(!(n>0))return;
+    if(!el){el=d.createElement('span');el.className='pk-conta';el.title=T('Richieste e recensioni arrivate dal sito','Enquiries and reviews sent through this site');cp.parentNode.insertBefore(el,cp.nextSibling)}
+    el.innerHTML='<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M3 10h18v10H3zM3 10l1-5 17-2 .6 4z"/><path d="M8 4.5l2.5 4M13.5 3.8l2.5 4"/></svg>'
+      +'<b>'+n+'</b> '+T(n===1?'ciak battuto dal sito':'ciak battuti dal sito',n===1?'take clapped on this site':'takes clapped on this site');
+    if(salta&&!still){el.classList.remove('su');void el.offsetWidth;el.classList.add('su')}
+  }
+  try{n=+sessionStorage.getItem('pk-ciak')||0}catch(e){}
+  if(n)mostra();
+  else fetch('/api/ciak').then(function(r){return r.ok?r.json():null}).then(function(j){
+    if(j&&j.n>0){n=j.n;try{sessionStorage.setItem('pk-ciak',String(n))}catch(e){}mostra()}
+  }).catch(function(){});
+  PK.contaCiak=function(){if(!n)return;n++;try{sessionStorage.setItem('pk-ciak',String(n))}catch(e){}mostra(true)};
+})();
+
 /* Statistiche anonime (functions/api/visita.js): pagina, da dove si arriva al primo ingresso, telefono o computer.
    Niente cookie né identificativi. Solo su produkts.it; non contano i dispositivi dove è aperto il pannello (password salvata). */
 (function(){

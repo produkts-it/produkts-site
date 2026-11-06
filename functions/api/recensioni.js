@@ -1,6 +1,7 @@
 // GET /api/recensioni — recensioni approvate (nome pubblico: nome + iniziale del cognome)
 // POST /api/recensioni — nuova recensione, resta in attesa fino all'approvazione
 import { json, testo, turnstileOk, corpo, nomeCognomePubblico, notifica, pulizia, colonnaCognome } from '../_lib.js';
+import { unCiak } from '../_ciak.js';
 
 const SERVIZI = ['18 anni', 'Compleanno', 'Comunione', 'Battesimo', 'Evento', 'Shooting band o copertina', 'Fotografia sportiva', 'Altro'];
 // Filtri della pagina Recensioni
@@ -41,6 +42,7 @@ export async function onRequestPost(context) {
   await env.DB.prepare('INSERT INTO recensioni (nome, cognome, servizio, voto, testo) VALUES (?, ?, ?, ?, ?)')
     .bind(nome, cognome, servizio, Math.round(voto), testoRec).run();
   pulizia(context);
+  unCiak(context);
   notifica(context, [
     { b: 'Nuova recensione da approvare' },
     `${nome} ${cognome} · ${servizio} · ${'★'.repeat(Math.round(voto))}`,

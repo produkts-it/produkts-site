@@ -339,3 +339,54 @@ header.pk-sticky.pk-hide{transform:translateY(-100%)}
 @media (prefers-reduced-motion:reduce){.pk-rhint.tocco svg{animation:none}}
 @keyframes rhin{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion: reduce){*,*::before,*::after{animation:none!important;transition:none!important}::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}}
+/* Modalità pellicola (tasto G / orologio tenuto premuto, site.src.js): sopra la pagina, non blocca i clic */
+.pk-pel{position:fixed;inset:0;z-index:250;pointer-events:none;animation:pelin .5s ease both}
+.pk-pel.subito{animation:none}
+.pk-pel.out{animation:pelout .5s ease both}
+@keyframes pelin{from{opacity:0}}@keyframes pelout{to{opacity:0}}
+.pk-pel>i{position:absolute;inset:0;display:block}
+.pk-pel .tn{background:#B07A45;mix-blend-mode:soft-light;opacity:.12}
+.pk-pel .gr{inset:-100%;background-size:180px 180px;opacity:.4;mix-blend-mode:screen;animation:pelgr .5s steps(6) infinite}
+@keyframes pelgr{0%{transform:translate(0,0)}17%{transform:translate(-7%,4%)}33%{transform:translate(5%,-9%)}50%{transform:translate(-11%,-3%)}67%{transform:translate(9%,8%)}83%{transform:translate(-4%,11%)}100%{transform:translate(3%,-5%)}}
+.pk-pel .fl{background:#FFF6E8;opacity:0;animation:pelfl .9s steps(1) infinite}
+@keyframes pelfl{0%{opacity:.02}12%{opacity:.045}25%{opacity:0}37%{opacity:.03}50%{opacity:.012}62%{opacity:.05}75%{opacity:.02}87%{opacity:0}}
+.pk-pel .vg{background:radial-gradient(ellipse at center,transparent 55%,rgba(0,0,0,.55) 100%)}
+.pk-pel .sc{left:auto;right:auto;width:1px;background:rgba(255,248,235,.22);opacity:0}
+.pk-pel .s1{animation:pelsc1 3.1s steps(1) infinite}
+.pk-pel .s2{width:2px;background:rgba(0,0,0,.35);animation:pelsc2 4.7s steps(1) infinite}
+@keyframes pelsc1{0%{left:18%;opacity:1}9%{left:19%}18%{opacity:0}46%{left:71%;opacity:1}55%{left:70.6%}62%{opacity:0}80%{left:42%;opacity:.7}86%{opacity:0}}
+@keyframes pelsc2{0%{left:83%;opacity:0}30%{left:63%;opacity:1}36%{left:63.4%}42%{opacity:0}70%{left:27%;opacity:1}75%{opacity:0}}
+.pk-pel .cue{inset:auto;top:7%;right:6%;width:30px;height:30px;border-radius:50%;background:radial-gradient(circle,rgba(255,250,240,.85) 0 45%,rgba(255,250,240,.2) 70%,transparent 72%);opacity:0;animation:pelcue 23s steps(1) infinite}
+@keyframes pelcue{0%,89%{opacity:0}89.5%{opacity:1}90.4%{opacity:0}92%{opacity:1}92.9%{opacity:0}}
+.pk-pel .pb{position:absolute;left:50%;bottom:20px;transform:translateX(-50%);display:flex;align-items:center;gap:6px;padding:6px 6px 6px 16px;border-radius:24px;background:rgba(8,8,8,.78);border:1px solid #2A2A2A;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);pointer-events:auto;font-family:'Space Grotesk',sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#C9C4BD;white-space:nowrap}
+.pk-pel .pb span{display:flex;align-items:center;gap:8px;margin-right:6px}
+.pk-pel .pb span i{width:7px;height:7px;border-radius:50%;background:#B46428;animation:rec 1.2s steps(1) infinite}
+.pk-pel .pb button{font:inherit;color:inherit;background:transparent;border:1px solid #3A3A3A;border-radius:18px;height:32px;padding:0 12px;display:flex;align-items:center;gap:7px;cursor:pointer;transition:background .3s,color .3s,border-color .3s}
+.pk-pel .pb button:hover{border-color:#B46428;color:#D98A4E}
+.pk-pel .pb .ps.on{background:#E8E4DF;border-color:#E8E4DF;color:#080808}
+.pk-pel .pb .px{width:32px;padding:0;justify-content:center;font-size:18px;letter-spacing:0}
+@media (prefers-reduced-motion:reduce){.pk-pel,.pk-pel.out{animation:none}.pk-pel .gr,.pk-pel .fl,.pk-pel .sc,.pk-pel .cue{animation:none}}
+@media (max-width:420px){.pk-pel .pb span{display:none}.pk-pel .pb{padding-left:6px}}
+/* Stand-by dopo un minuto fermo (site.src.js): barre colore e «Torniamo subito» */
+.pk-sb{position:fixed;inset:0;z-index:400;display:flex;flex-direction:column;background:#080808;cursor:default;animation:sbin .7s ease both}
+.pk-sb.out{animation:sbout .45s ease both}
+@keyframes sbin{0%{opacity:0;filter:brightness(3) saturate(0)}35%{opacity:1}100%{opacity:1;filter:none}}
+@keyframes sbout{to{opacity:0;transform:scaleY(.004)}}
+.pk-sb>div:not(.sbc){display:flex}
+.pk-sb>div>i{flex:1;display:block}
+.pk-sb .r1{flex:67}.pk-sb .r2{flex:8}.pk-sb .r3{flex:25}
+.pk-sb .r3 i:nth-child(4){flex:2.2}
+.pk-sb .sbc{position:absolute;left:50%;top:44%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:10px;padding:28px 40px;background:#080808;border:1px solid #2A2A2A;text-align:center;max-width:calc(100vw - 32px);box-sizing:border-box}
+.pk-sb .sbt{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:300;font-size:clamp(34px,6vw,64px);line-height:1;color:#E8E4DF}
+.pk-sb .sbm{font-family:'Space Grotesk',sans-serif;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#9A948C}
+.pk-sb .sbm b{font-weight:400;color:#D98A4E;font-variant-numeric:tabular-nums}
+.pk-sb .sbh{font-family:'Space Grotesk',sans-serif;font-size:11px;letter-spacing:.1em;color:#6E6A64}
+@media (prefers-reduced-motion:reduce){.pk-sb,.pk-sb.out{animation:none}}
+/* Contatore dei ciak nel footer (site.src.js, /api/ciak) */
+.pk-conta{display:inline-flex;align-items:center;gap:7px;color:#9A948C}
+.pk-conta svg{color:#B46428;flex:none}
+.pk-conta b{font-weight:400;color:#E8E4DF;font-variant-numeric:tabular-nums}
+.pk-conta.su b{animation:contasu .9s cubic-bezier(.2,.7,.2,1)}
+@keyframes contasu{0%{color:#D98A4E;transform:translateY(-6px)}100%{transform:none}}
+.pk-conta b{display:inline-block}
+.pk-clock{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}

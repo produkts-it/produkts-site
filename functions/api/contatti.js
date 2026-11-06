@@ -1,5 +1,6 @@
 // POST /api/contatti — salva una richiesta dal modulo Contatti e avvisa Karim su Telegram
 import { json, testo, turnstileOk, corpo, numeroWa, notifica, pulizia, colonnaCognome } from '../_lib.js';
+import { unCiak } from '../_ciak.js';
 
 export async function onRequestPost(context) {
   const { request, env } = context;
@@ -23,6 +24,7 @@ export async function onRequestPost(context) {
     .bind(tipo, budget, quando, dove, nome, cognome, recapito, messaggio)
     .run();
   pulizia(context);
+  unCiak(context);
   const origine = new URL(request.url).origin;
   notifica(context, [
     { b: 'Nuova richiesta dal sito' },
