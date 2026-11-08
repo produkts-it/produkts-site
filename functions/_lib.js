@@ -55,14 +55,20 @@ export async function linkGoogle(env) {
 }
 
 /** Sul sito: nome intero e iniziale del cognome ("Carmela Carrassa" -> "Carmela C."). */
+/** Iniziale maiuscola a ogni parola, anche dopo apostrofo e trattino: "maria de' santis" -> "Maria De' Santis", "d'amico" -> "D'Amico".
+ *  Il resto resta com'è (DiCaprio non diventa Dicaprio). */
+export function maiuscole(s) {
+  return String(s || '').trim().replace(/(^|[\s'’\-])(\p{Ll})/gu, (m, a, l) => a + l.toUpperCase());
+}
+
 export function nomeCognomePubblico(nome, cognome) {
   const c = String(cognome || '').trim();
-  return c ? String(nome).trim() + ' ' + c[0].toUpperCase() + '.' : nomePubblico(nome);
+  return c ? maiuscole(nome) + ' ' + c[0].toUpperCase() + '.' : nomePubblico(nome);
 }
 
 /** Recensioni vecchie, con nome e cognome insieme: "Mario Rossi" -> "Mario R.". */
 export function nomePubblico(nome) {
-  const parti = nome.trim().split(/\s+/);
+  const parti = maiuscole(nome).split(/\s+/);
   if (parti.length < 2) return parti[0] || '';
   return parti[0] + ' ' + parti[parti.length - 1][0].toUpperCase() + '.';
 }

@@ -1,6 +1,6 @@
 // GET /api/recensioni — recensioni approvate (nome pubblico: nome + iniziale del cognome)
 // POST /api/recensioni — nuova recensione, resta in attesa fino all'approvazione
-import { json, testo, turnstileOk, corpo, nomeCognomePubblico, notifica, pulizia, colonnaCognome } from '../_lib.js';
+import { json, testo, turnstileOk, corpo, nomeCognomePubblico, notifica, pulizia, colonnaCognome, maiuscole } from '../_lib.js';
 import { unCiak } from '../_ciak.js';
 
 const SERVIZI = ['18 anni', 'Compleanno', 'Comunione', 'Battesimo', 'Matrimonio', 'Laurea', 'Evento', 'Shooting di moda', 'Ritratto', 'Shooting band o copertina', 'Fotografia sportiva', 'Videoclip', 'Video aziendale', 'Contenuti social', 'Cortometraggio', 'Altro'];
@@ -23,7 +23,7 @@ export async function onRequestPost(context) {
   const d = await corpo(request);
   if (!d) return json({ errore: 'Richiesta non valida.' }, 400);
   if (d.sito) return json({ ok: true }); // campo trappola per i bot
-  const nome = testo(d.nome, 80), cognome = testo(d.cognome, 80), testoRec = testo(d.testo, 3000);
+  const nome = maiuscole(testo(d.nome, 80)), cognome = maiuscole(testo(d.cognome, 80)), testoRec = testo(d.testo, 3000);
   let servizio = testo(d.servizio, 60);
   const voto = Number(d.voto);
   if (!nome || !cognome || !testoRec || !SERVIZI.includes(servizio) || !(voto >= 1 && voto <= 5)) {

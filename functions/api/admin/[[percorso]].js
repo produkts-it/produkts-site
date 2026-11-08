@@ -9,7 +9,7 @@
 //   POST /api/admin/push/iscrivi        PushSubscription del dispositivo
 //   POST /api/admin/push/disiscrivi     { endpoint }
 //   POST /api/admin/push/prova          manda una notifica di prova a tutti i dispositivi
-import { json, corpo, autorizzato, testo, colonnaCognome, linkGoogle } from '../../_lib.js';
+import { json, corpo, autorizzato, testo, colonnaCognome, linkGoogle, maiuscole } from '../../_lib.js';
 import { chiavePubblica, iscrivi, disiscrivi, inviaPush } from '../../_push.js';
 import { tabella, nuovoCodice, ordina, copertina, fuoco, istantanea, modifiche } from '../../_gallerie.js';
 import * as aruba from '../../_aruba.js';
@@ -38,7 +38,7 @@ export async function onRequest({ request, env, params }) {
   if (request.method === 'GET' && cosa === 'recensioni' && !id) {
     await colonnaCognome(env);
     const { results } = await env.DB.prepare("SELECT * FROM recensioni ORDER BY stato = 'attesa' DESC, creato DESC LIMIT 500").all();
-    return json(results);
+    return json(results.map((r) => ({ ...r, nome: maiuscole(r.nome), cognome: maiuscole(r.cognome) })));
   }
   if (request.method === 'POST' && cosa === 'contatti' && n > 0) {
     const d = await corpo(request);
@@ -48,7 +48,7 @@ export async function onRequest({ request, env, params }) {
   // Recensione copiata da Karim dal profilo Google: va subito sul sito, con il bollino «Google»
   if (request.method === 'POST' && cosa === 'recensioni' && !id) {
     const d = (await corpo(request)) || {};
-    const nome = testo(d.nome, 60), cognome = testo(d.cognome, 60), servizio = testo(d.servizio, 60) || 'Altro', testoRec = testo(d.testo, 2000);
+    const nome = maiuscole(testo(d.nome, 60)), cognome = maiuscole(testo(d.cognome, 60)), servizio = testo(d.servizio, 60) || 'Altro', testoRec = testo(d.testo, 2000);
     const voto = Math.round(Number(d.voto));
     if (!nome || !testoRec || !(voto >= 1 && voto <= 5)) return json({ errore: 'Servono nome, stelle e testo.' }, 400);
     const giorno = /^\d{4}-\d{2}-\d{2}$/.test(d.data || '') ? d.data + ' 12:00:00' : null;
