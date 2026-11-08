@@ -32,7 +32,7 @@ ERRORI = {
 }
 
 BTN = '<a href="%s" class="btn" style="padding: 16px 28px; background: #E8E4DF; color: #080808; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase"%s>%s</a>'
-BTN2 = '<a href="%s"%s style="padding: 15px 28px; border: 1px solid #3A3A3A; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase">%s</a>'
+BTN2 = '<a href="%s"%s style="padding: 16px 28px; border: 1px solid #3A3A3A; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase">%s</a>'
 FUORI = ' target="_blank" rel="noopener"'
 PULSANTI = {
     'home': None,  # quelli della 404

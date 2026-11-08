@@ -101,6 +101,15 @@ Sito di Karim Ismail (produkts.it), fotografo, videomaker e D.O.P. ad Altamura (
 - Recensioni: alcune in evidenza + "Guarda tutte"; filtri per evento; testi dei clienti mai corretti; nome + iniziale del cognome. Se il servizio è "Altro", chiedere quale.
 - Palette: fondo #080808, testo #E8E4DF, arancio #B46428 / #D98A4E, blu #336699. Font: Cormorant Garamond (titoli) + Space Grotesk.
 - Contatti pubblici: info@produkts.it, karim@produkts.it, WhatsApp +39 371 144 4875, YouTube @produkts-it.
+- **Scala dei testi e spazi (08/11/2026, revisione con la skill charles-unslop):**
+  - Space Grotesk solo a 11 / 12 / 13 / 16 px. Garamond a 20 / 26 / 34 / 44 px. Titoli di sezione `clamp(40px, 5vw, 64px)`. «Lavoriamo insieme» `clamp(48px, 7vw, 112px)`. Gli h1 di ogni pagina restano come sono. Il logo resta a 30.
+  - Margini, padding e gap sempre multipli di 4.
+  - Nei testi scritti a mano niente informazioni in fila separate da «·»: si usano virgole o frasi. I «·» restano nel footer, nel mirino e negli occhielli dei lavori, che vengono dai dati.
+- **Da non cambiare (deciso con Karim l'08/11/2026):**
+  - le etichette in maiuscolo spaziato;
+  - «Frame the Future», che è il payoff;
+  - il corsivo Cormorant Garamond, che è il font del brand;
+  - i puntini che pulsano e la striscia che scorre in Home.
 - Zero spese aggiuntive: hosting gratuito (Cloudflare Pages, piano Free; niente piani a pagamento né carta per Zero Trust).
 
 ## Cloudflare (migrazione completata il 16/10/2026)

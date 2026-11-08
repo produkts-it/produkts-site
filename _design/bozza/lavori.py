@@ -78,13 +78,13 @@ GIA_VISTI = set()  # una persona ha il suo "anche in" solo la prima volta che co
 
 
 def anche(nome, slug, right=False):
-    """Riga discreta sotto il nome: «anche in Paranoia · La sedia +3». Al massimo due titoli, gli altri nel +N (tooltip)."""
+    """Riga discreta sotto il nome: «anche in Paranoia, La sedia +3». Al massimo due titoli, gli altri nel +N (tooltip)."""
     altri = [x for x in INDICE.get(nome, []) if x[0] != slug]
     if not altri or nome in GIA_VISTI:
         return ''
     GIA_VISTI.add(nome)
     link = lambda x: '<a href="%s" class="also" style="color: #9A948C; border-bottom: 1px solid #2A2A2A">%s</a>' % (x[0], e(x[1]))
-    testo = ' · '.join(link(x) for x in altri[:2])
+    testo = ', '.join(link(x) for x in altri[:2])
     if len(altri) > 2:
         resto = altri[2:]
         testo += ' <span title="%s" style="color: #6E6A64">+%d</span>' % (e(', '.join(x[1] for x in resto)), len(resto))
@@ -99,7 +99,7 @@ FOOT = '''
 <div style="max-width: 1440px; margin: 0 auto; padding: 72px 56px 96px; box-sizing: border-box; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 24px">
 <div style="display: flex; flex-direction: column; gap: 12px">
 <span style="font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: #9A948C">Hai un progetto?</span>
-<span class="nt" style="font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300; font-size: clamp(44px, 6vw, 88px); line-height: 1">Lavoriamo insieme</span>
+<span class="nt" style="font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300; font-size: clamp(48px, 7vw, 112px); line-height: 1">Lavoriamo insieme</span>
 </div>
 <span aria-hidden="true" class="arrow" style="font-size: 40px; color: #B46428">→</span>
 </div>
@@ -121,7 +121,7 @@ KICK = 'font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; colo
 
 
 def meta_item(k, v):
-    return ('<div class="reveal" style="display: flex; flex-direction: column; gap: 6px; border-top: 1px solid #1F1F1F; padding-top: 14px">\n'
+    return ('<div class="reveal" style="display: flex; flex-direction: column; gap: 8px">\n'
             '<dt style="font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: #9A948C">%s</dt>\n'
             '<dd style="margin: 0; font-size: 16px; line-height: 1.5">%s</dd>\n</div>\n') % (e(k), e(v))
 
@@ -135,14 +135,14 @@ def crew_row(k, v, slug):
         nome_html = names(n)
         extra = ''.join(anche(x, slug, True) for x in nomi)
         righe.append('<span style="font-size: 16px; overflow-wrap: anywhere">%s</span>%s' % (nome_html, extra))
-    return ('<div class="crow reveal" style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; padding: 14px 0; border-bottom: 1px solid #1F1F1F">\n'
+    return ('<div class="crow reveal" style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; padding: 16px 0; border-bottom: 1px solid #1F1F1F">\n'
             '<span style="font-size: 13px; letter-spacing: 0.1em; text-transform: uppercase; color: #9A948C; flex: none; max-width: 45%%">%s</span>\n'
-            '<span style="display: flex; flex-direction: column; align-items: flex-end; gap: 6px; text-align: right; min-width: 0">%s</span>\n</div>\n') % (e(k), ''.join(righe))
+            '<span style="display: flex; flex-direction: column; align-items: flex-end; gap: 8px; text-align: right; min-width: 0">%s</span>\n</div>\n') % (e(k), ''.join(righe))
 
 
 def cast_row(k, v, slug):
-    return ('<div class="crow reveal" style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; padding: 14px 0; border-bottom: 1px solid #1F1F1F">\n'
-            '<span style="display: flex; flex-direction: column; gap: 6px; min-width: 0"><span style="font-size: 16px">%s</span>%s</span>\n'
+    return ('<div class="crow reveal" style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; padding: 16px 0; border-bottom: 1px solid #1F1F1F">\n'
+            '<span style="display: flex; flex-direction: column; gap: 8px; min-width: 0"><span style="font-size: 16px">%s</span>%s</span>\n'
             '<span style="font-family: \'Cormorant Garamond\', serif; font-style: italic; font-size: 20px; color: #C9C4BD; text-align: right">%s</span>\n</div>\n') % (names(v), anche(v, w_slug(slug)), e(k))
 
 
@@ -177,7 +177,7 @@ def hero(w, url, plat):
 <span aria-hidden="true" style="position: absolute; top: 24px; left: 24px; width: 36px; height: 36px; border-top: 1px solid #336699; border-left: 1px solid #336699"></span>
 <span aria-hidden="true" style="position: absolute; bottom: 24px; right: 24px; width: 36px; height: 36px; border-bottom: 1px solid #336699; border-right: 1px solid #336699"></span>
 <span aria-hidden="true" style="position: absolute; top: 28px; right: 72px; font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: #6E6A64">%(mirino)s</span>
-<span style="display: inline-flex; align-items: center; gap: 12px; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; border: 1px solid rgba(232,228,223,0.6); border-radius: 26px; height: 52px; padding: 0 26px 0 20px"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5l11 7-11 7V5z"></path></svg>Guarda su %(plat)s</span>
+<span style="display: inline-flex; align-items: center; gap: 12px; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; border: 1px solid rgba(232,228,223,0.6); border-radius: 26px; height: 52px; padding: 0 28px 0 20px"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5l11 7-11 7V5z"></path></svg>Guarda su %(plat)s</span>
 </a>''' % dict(t=e(w['t']), url=url, plat=plat, mirino=e(w.get('mirino') or w.get('year', '')))
 
 
@@ -194,7 +194,7 @@ def parti(w):
     """Lavori in più video (es. Trick or Treat): sotto il fotogramma, un link per ogni parte."""
     if not w.get('parti'):
         return ''
-    link = ''.join('<a href="%s" target="_blank" rel="noopener" class="pill" style="height: 44px; padding: 0 20px; border-radius: 22px; border: 1px solid #3A3A3A; color: #E8E4DF; display: inline-flex; align-items: center; gap: 10px; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; white-space: nowrap">%s <span aria-hidden="true">↗</span></a>\n'
+    link = ''.join('<a href="%s" target="_blank" rel="noopener" class="pill" style="height: 44px; padding: 0 20px; border-radius: 22px; border: 1px solid #3A3A3A; color: #E8E4DF; display: inline-flex; align-items: center; gap: 12px; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; white-space: nowrap">%s <span aria-hidden="true">↗</span></a>\n'
                    % (video(dict(ig=ig))[0], e(nome)) for nome, ig in w['parti'])
     return ('<div class="fade d3" style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 20px">\n'
             '<span style="%s; margin-right: 8px">In %d video</span>\n%s</div>\n' % (KICK, len(w['parti']), link))
@@ -218,7 +218,7 @@ def page(w):
 <span class="fade" style="%(kick)s">%(kicker)s</span>
 <h1 style="margin: 0; font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300; font-size: clamp(56px, 9vw, 144px); line-height: 0.9; overflow: hidden; padding-bottom: 0.2em; margin-bottom: -0.12em; overflow-wrap: anywhere"><span class="rise" style="display: block">%(t)s</span></h1>
 %(sub)s</div>
-<a href="%(url)s" target="_blank" rel="noopener" class="pill fade d3" style="height: 52px; padding: 0 26px 0 20px; border-radius: 26px; border: 1px solid rgba(232,228,223,0.6); color: #E8E4DF; display: inline-flex; align-items: center; gap: 12px; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; white-space: nowrap">
+<a href="%(url)s" target="_blank" rel="noopener" class="pill fade d3" style="height: 52px; padding: 0 28px 0 20px; border-radius: 26px; border: 1px solid rgba(232,228,223,0.6); color: #E8E4DF; display: inline-flex; align-items: center; gap: 12px; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; white-space: nowrap">
 <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5l11 7-11 7V5z"></path></svg>Guarda su %(plat)s <span aria-hidden="true">↗</span></a>
 </div>
 %(hero)s
@@ -230,14 +230,14 @@ def page(w):
 %(meta)s</dl>
 <div style="flex: 999 1 520px; display: flex; flex-direction: column; gap: 24px">
 <span class="reveal" style="%(kick)s">Il progetto</span>
-<p class="reveal" style="margin: 0; font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300; font-size: 30px; line-height: 1.35; max-width: 640px">%(line)s</p>
+<p class="reveal" style="margin: 0; font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300; font-size: 34px; line-height: 1.35; max-width: 640px">%(line)s</p>
 </div>
 </div>
 </section>
 
 <section style="border-top: 1px solid #1F1F1F">
 <div style="max-width: 1440px; margin: 0 auto; padding: 96px 56px; box-sizing: border-box; display: flex; flex-wrap: wrap; gap: 48px 96px">
-<h2 class="reveal" style="margin: 0; flex: 1 1 240px; font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300; font-size: 56px; line-height: 1">Credits</h2>
+<h2 class="reveal" style="margin: 0; flex: 1 1 240px; font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300; font-size: clamp(40px, 5vw, 64px); line-height: 1">Credits</h2>
 <div style="flex: 999 1 640px; min-width: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%%, 300px), 1fr)); gap: 0 48px">
 %(credits)s</div>
 </div>
@@ -340,7 +340,7 @@ def card(w, i):
     """Scheda della griglia Lavori: tipologia, fotogramma 2.39:1 con la freccia sopra, titolo e anno.
     Il lavoro in evidenza ha la locandina verticale alta quanto due schede (il formato lo decide site.css)."""
     evid = w['slug'] == EVIDENZA
-    return '''<a href="%s" class="work stag%s" data-cats="%s" style="view-transition-name: w%d; display: flex; flex-direction: column; gap: 14px; animation-delay: %.2fs">
+    return '''<a href="%s" class="work stag%s" data-cats="%s" style="view-transition-name: w%d; display: flex; flex-direction: column; gap: 16px; animation-delay: %.2fs">
 <span style="font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: #B46428">%s</span>
 <div class="frame" style="position: relative;%s background: #161616; overflow: hidden">
 <img src="%s" alt="%s" loading="lazy" style="position: absolute; inset: 0; width: 100%%; height: 100%%; object-fit: cover; object-position: %s">
@@ -349,7 +349,7 @@ def card(w, i):
 <span aria-hidden="true" class="warr" style="position: absolute; top: 14px; right: 14px; width: 40px; height: 40px; border-radius: 50%%; border: 1px solid rgba(232,228,223,0.5); background: rgba(8,8,8,0.45); color: #E8E4DF; display: flex; align-items: center; justify-content: center; font-size: 18px">→</span>
 </div>
 <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 16px">
-<h2 style="margin: 0; font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 400; font-size: 28px; line-height: 1.15; min-width: 0">%s</h2>
+<h2 style="margin: 0; font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 400; font-size: 26px; line-height: 1.15; min-width: 0">%s</h2>
 <span style="font-size: 13px; color: #9A948C; white-space: nowrap">%s</span>
 </div>
 </a>
@@ -367,7 +367,7 @@ def tab(c, label):
     on = c == 'Tutti'
     tutti = griglia()
     n = len(tutti) if on else sum(c in w['cats'] for w in tutti)
-    return ('<button type="button" data-act="cat:%s" aria-pressed="%s" style="background: transparent; border: 0; border-bottom: 1px solid %s; color: %s; padding: 12px 0; font-family: \'Space Grotesk\', sans-serif; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; cursor: pointer">%s <sup style="font-size: 10px; color: #6E6A64">%d</sup></button>\n'
+    return ('<button type="button" data-act="cat:%s" aria-pressed="%s" style="background: transparent; border: 0; border-bottom: 1px solid %s; color: %s; padding: 12px 0; font-family: \'Space Grotesk\', sans-serif; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; cursor: pointer">%s <sup style="font-size: 11px; color: #6E6A64">%d</sup></button>\n'
             % (c, 'true' if on else 'false', ACC if on else 'transparent', '#E8E4DF' if on else '#9A948C', e(label), n))
 
 
@@ -385,7 +385,7 @@ def home_card(w, i):
 </div>
 <span style="font-size: 13px; color: #9A948C; white-space: nowrap">%s</span>
 </div>
-<div style="display: flex; flex-wrap: wrap; gap: 6px 24px; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: #9A948C; padding-left: 40px">
+<div style="display: flex; flex-wrap: wrap; gap: 8px 24px; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: #9A948C; padding-left: 40px">
 <span>%s</span><span>%s</span>
 </div>
 </a>
@@ -411,7 +411,7 @@ def amarcord_card(a, i):
 <span aria-hidden="true" class="br br-br" style="position: absolute; bottom: 12px; right: 12px; width: 16px; height: 16px; border-bottom: 1px solid #336699; border-right: 1px solid #336699"></span>
 </div>
 <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 16px">
-<h3 style="margin: 0; font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 400; font-size: 28px; line-height: 1.15">%s <span aria-hidden="true" class="arr" style="color: #B46428">→</span></h3>
+<h3 style="margin: 0; font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 400; font-size: 26px; line-height: 1.15">%s <span aria-hidden="true" class="arr" style="color: #B46428">→</span></h3>
 <span style="font-size: 13px; color: #9A948C; white-space: nowrap">%s</span>
 </div>
 <div style="display: flex; flex-wrap: wrap; gap: 4px 20px; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: #9A948C">
@@ -431,7 +431,7 @@ def filmo_row(t, role, prod, href, cls, cols, fs, pad):
     if href:
         title = '<a href="%s" style="font-family: \'Cormorant Garamond\', serif; font-style: italic; font-size: %dpx">%s <span aria-hidden="true" style="color: #B46428">→</span></a>' % (href, fs, e(t))
     return ('<div class="%s" style="display: grid; grid-template-columns: %s; gap: 16px; padding: %s 0; border-bottom: 1px solid #1F1F1F; align-items: baseline">\n'
-            '%s\n<span style="font-size: 14px; color: #C9C4BD">%s</span>\n<span style="font-size: 13px; color: #9A948C; text-align: right">%s</span>\n</div>\n') % (cls, cols, pad, title, e(role), e(prod))
+            '%s\n<span style="font-size: 13px; color: #C9C4BD">%s</span>\n<span style="font-size: 13px; color: #9A948C; text-align: right">%s</span>\n</div>\n') % (cls, cols, pad, title, e(role), e(prod))
 
 
 # ---- Link in bio (produkts.it/link): pagina per Instagram, TikTok ecc., fuori dal menu e dai motori di ricerca.
@@ -465,7 +465,7 @@ def link_page():
         poster = ev['slug'] == 'dynamis'
         url, plat = link_video(ev)
         occ = L['evidenza'].get('occhiello') or ev.get('kicker') or ev['cats'][0]
-        guarda = ('<a href="%s" target="_blank" rel="noopener" class="btn" style="height: 48px; padding: 0 22px; background: #E8E4DF; color: #080808; display: inline-flex; align-items: center; gap: 10px; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase">'
+        guarda = ('<a href="%s" target="_blank" rel="noopener" class="btn" style="height: 48px; padding: 0 24px; background: #E8E4DF; color: #080808; display: inline-flex; align-items: center; gap: 12px; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase">'
                   '<span aria-hidden="true">▶</span> Guarda su %s</a>\n' % (url, plat)) if url else ''
         out.append('''<section class="fade d2" style="margin-top: 36px">
 <div class="work" style="position: relative">
@@ -473,15 +473,15 @@ def link_page():
 <img src="%s" alt="%s" style="position: absolute; inset: 0; width: 100%%; height: 100%%; object-fit: cover; object-position: %s">
 <span aria-hidden="true" class="br br-tl" style="position: absolute; top: 14px; left: 14px; width: 18px; height: 18px; border-top: 1px solid #336699; border-left: 1px solid #336699"></span>
 <span aria-hidden="true" class="br br-br" style="position: absolute; bottom: 14px; right: 14px; width: 18px; height: 18px; border-bottom: 1px solid #336699; border-right: 1px solid #336699"></span>
-<span style="position: absolute; top: 14px; right: 14px; display: flex; align-items: center; gap: 8px; padding: 6px 10px; background: rgba(8,8,8,0.6); font-size: 11px; letter-spacing: 0.16em; color: #E8E4DF"><span class="rec" aria-hidden="true" style="width: 8px; height: 8px; border-radius: 50%%; background: #B46428"></span>IN EVIDENZA</span>
+<span style="position: absolute; top: 14px; right: 14px; display: flex; align-items: center; gap: 8px; padding: 8px 12px; background: rgba(8,8,8,0.6); font-size: 11px; letter-spacing: 0.16em; color: #E8E4DF"><span class="rec" aria-hidden="true" style="width: 8px; height: 8px; border-radius: 50%%; background: #B46428"></span>IN EVIDENZA</span>
 </div>
 </div>
-<div style="display: flex; flex-direction: column; gap: 6px; margin-top: 18px">
+<div style="display: flex; flex-direction: column; gap: 8px; margin-top: 20px">
 <span style="%s">%s</span>
 <h2 style="margin: 0; font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300; font-size: clamp(44px, 12vw, 64px); line-height: 1">%s</h2>
 </div>
-<div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px">
-%s<a href="%s" class="pill" style="height: 48px; padding: 0 22px; border: 1px solid #3A3A3A; display: inline-flex; align-items: center; gap: 10px; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase">Il progetto <span aria-hidden="true">→</span></a>
+<div style="display: flex; flex-wrap: wrap; gap: 12px; margin-top: 16px">
+%s<a href="%s" class="pill" style="height: 48px; padding: 0 24px; border: 1px solid #3A3A3A; display: inline-flex; align-items: center; gap: 12px; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase">Il progetto <span aria-hidden="true">→</span></a>
 </div>
 </section>
 ''' % ('4 / 5' if poster else '2.39 / 1', ev['img'], e(alt(ev)), ev.get('pos', '50% 50%') if poster else '50% 50%',
@@ -491,9 +491,9 @@ def link_page():
     for i, x in enumerate(L.get('link') or []):
         fuori = link_esterno(x['url']) or x['url'].startswith(('mailto:', 'tel:'))
         scarica = x['url'].endswith(('.pdf', '.vcf'))
-        righe.append('''<a href="%s"%s class="lk reveal" style="display: grid; grid-template-columns: 28px minmax(0, 1fr) auto; gap: 14px; align-items: center; padding: 18px 20px; border: 1px solid #262626; margin-top: -1px">
+        righe.append('''<a href="%s"%s class="lk reveal" style="display: grid; grid-template-columns: 28px minmax(0, 1fr) auto; gap: 16px; align-items: center; padding: 20px 20px; border: 1px solid #262626; margin-top: -1px">
 <span style="font-size: 12px; color: #B46428; letter-spacing: 0.1em; font-variant-numeric: tabular-nums">%02d</span>
-<span style="display: flex; flex-direction: column; gap: 4px; min-width: 0"><span style="font-size: 17px; line-height: 1.3">%s</span>%s</span>
+<span style="display: flex; flex-direction: column; gap: 4px; min-width: 0"><span style="font-size: 16px; line-height: 1.3">%s</span>%s</span>
 <span aria-hidden="true" class="lka" style="color: #9A948C; font-size: 18px">%s</span>
 </a>
 ''' % (e(x['url']), (' target="_blank" rel="noopener"' if fuori else '') + (' download' if scarica else ''), i + 1, e(x['t']),
@@ -528,8 +528,8 @@ def link_page():
 ''' % (slug, cop, e(alt(w)), w.get('pos', '50% 50%'), didascalia))
     if schede:
         out.append('''<section style="margin-top: 56px; display: flex; flex-direction: column; gap: 16px">
-<div style="display: flex; justify-content: space-between; align-items: baseline; gap: 16px; border-bottom: 1px solid #1F1F1F; padding-bottom: 14px">
-<h2 style="margin: 0; font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 400; font-size: 32px">Ultimi lavori</h2>
+<div style="display: flex; justify-content: space-between; align-items: baseline; gap: 16px">
+<h2 style="margin: 0; font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 400; font-size: 34px">Ultimi lavori</h2>
 <a href="lavori" style="font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: #9A948C">Tutti <span aria-hidden="true">→</span></a>
 </div>
 %s</section>
