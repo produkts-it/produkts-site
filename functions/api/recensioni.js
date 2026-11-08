@@ -3,14 +3,14 @@
 import { json, testo, turnstileOk, corpo, nomeCognomePubblico, notifica, pulizia, colonnaCognome } from '../_lib.js';
 import { unCiak } from '../_ciak.js';
 
-const SERVIZI = ['18 anni', 'Compleanno', 'Comunione', 'Battesimo', 'Evento', 'Shooting band o copertina', 'Fotografia sportiva', 'Altro'];
+const SERVIZI = ['18 anni', 'Compleanno', 'Comunione', 'Battesimo', 'Matrimonio', 'Laurea', 'Evento', 'Shooting di moda', 'Ritratto', 'Shooting band o copertina', 'Fotografia sportiva', 'Videoclip', 'Video aziendale', 'Contenuti social', 'Cortometraggio', 'Altro'];
 // Filtri della pagina Recensioni
 const CATEGORIA = { '18 anni': '18 anni', Compleanno: 'Compleanni', Comunione: 'Comunioni', Battesimo: 'Battesimi' };
 
 export async function onRequestGet({ env }) {
   await colonnaCognome(env);
   const { results } = await env.DB.prepare(
-    "SELECT id, nome, cognome, servizio, voto, testo, in_evidenza, fonte FROM recensioni WHERE stato = 'approvata' ORDER BY in_evidenza DESC, creato DESC LIMIT 200"
+    "SELECT id, nome, cognome, servizio, voto, testo, in_evidenza, fonte FROM recensioni WHERE stato = 'approvata' ORDER BY creato DESC LIMIT 200"
   ).all();
   return json(results.map((r) => ({
     id: r.id, nome: nomeCognomePubblico(r.nome, r.cognome), servizio: r.servizio, voto: r.voto, testo: r.testo,

@@ -361,13 +361,13 @@ var show=n==='reload'||(n!=='back_forward'&&!same);if(show&&!matchMedia('(prefer
 <div style="display: flex; flex-direction: column; gap: 8px">
 <label for="rv-tipo" style="font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: #9A948C">Servizio</label>
 <select id="rv-tipo" class="field" data-act-change="service" style="height: 52px; background: #080808; border: 1px solid #3A3A3A; color: #E8E4DF; padding: 0 12px; font-family: 'Space Grotesk', sans-serif; font-size: 16px; box-sizing: border-box">
-<option>18 anni</option><option>Compleanno</option><option>Comunione</option><option>Battesimo</option><option>Evento</option><option>Shooting band o copertina</option><option>Fotografia sportiva</option><option>Altro</option>
+<option>18 anni</option><option>Compleanno</option><option>Comunione</option><option>Battesimo</option><option>Matrimonio</option><option>Laurea</option><option>Evento</option><option>Shooting di moda</option><option>Ritratto</option><option>Shooting band o copertina</option><option>Fotografia sportiva</option><option>Videoclip</option><option>Video aziendale</option><option>Contenuti social</option><option>Cortometraggio</option><option>Altro</option>
 </select>
 </div>
 <div class="if" data-if="isOther" hidden>
 <div class="field-in" style="grid-column: 1 / -1; display: flex; flex-direction: column; gap: 8px">
 <label for="rv-altro" style="font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: #9A948C">Quale servizio?</label>
-<input id="rv-altro" class="field" type="text" required placeholder="Es. laurea, ritratto, video aziendale" style="height: 52px; background: #080808; border: 1px solid #3A3A3A; color: #E8E4DF; padding: 0 16px; font-family: 'Space Grotesk', sans-serif; font-size: 16px; box-sizing: border-box">
+<input id="rv-altro" class="field" type="text" required placeholder="Scrivilo in poche parole" style="height: 52px; background: #080808; border: 1px solid #3A3A3A; color: #E8E4DF; padding: 0 16px; font-family: 'Space Grotesk', sans-serif; font-size: 16px; box-sizing: border-box">
 </div>
 </div>
 </div>
@@ -417,10 +417,10 @@ function apply(){
 PK.acts.filter=function(c){if(c===cat)return;PK.vt(function(){cat=c;all=false;apply()})};
 PK.acts.toggleAll=function(){PK.vt(function(){all=!all;apply()})};
 /* Recensioni approvate dal pannello /admin: si aggiungono a quelle già nella pagina.
-   In evidenza in cima; le altre subito dopo quelle in evidenza, dalla più recente. */
+   Sempre in cima, dalla più recente (sono tutte più nuove di quelle scritte nella pagina). */
 fetch('/api/recensioni').then(function(r){return r.ok?r.json():[]}).then(function(list){
   if(!Array.isArray(list)||!list.length)return;
-  var tpl=cards[0],firstPlain=cards.filter(function(c){return !c.hasAttribute('data-featured')})[0]||null,somma=cards.length*5;
+  var tpl=cards[0],somma=cards.length*5;
   var top=grid.firstChild;
   list.forEach(function(r){
     var a=tpl.cloneNode(true);a.setAttribute('data-cat',r.categoria||'');a.style.viewTransitionName='rv-db'+r.id;a.hidden=false;
@@ -429,8 +429,8 @@ fetch('/api/recensioni').then(function(r){return r.ok?r.json():[]}).then(functio
     var sp=a.querySelectorAll('span');sp[sp.length-2].textContent=r.nome;sp[sp.length-1].textContent=r.servizio;
     /* recensione lasciata sul profilo Google (Karim la copia dal pannello): bollino «Google» accanto al nome */
     if(r.google){var g=d.createElement('small');g.textContent=' · Google';g.style.cssText='font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: #9A948C';sp[sp.length-2].appendChild(g)}
-    /* l'elenco arriva già ordinato (in evidenza, poi dalla più recente): inserendo prima dello stesso punto l'ordine resta quello */
-    if(r.in_evidenza){a.setAttribute('data-featured','');grid.insertBefore(a,top)}else{a.removeAttribute('data-featured');grid.insertBefore(a,firstPlain)}
+    /* l'elenco arriva già ordinato dalla più recente: inserendo prima dello stesso punto l'ordine resta quello */
+    if(r.in_evidenza)a.setAttribute('data-featured','');else a.removeAttribute('data-featured');grid.insertBefore(a,top);
     somma+=r.voto;
   });
   cards=[].slice.call(grid.querySelectorAll('article[data-cat]'));

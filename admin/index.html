@@ -333,7 +333,7 @@ async function apriDl(id){
    Il link di Google per lasciare una recensione lo usano la pagina Recensioni («Lasciala anche su Google») e «Chiedi una recensione». */
 var GLINK=null;
 /* Tipologie delle recensioni (le stesse del modulo sul sito, più qualcuna che si può mettere solo da qui) */
-var SERVIZI=['18 anni','Compleanno','Comunione','Battesimo','Evento','Shooting band o copertina','Shooting di moda','Fotografia sportiva','Video','Altro'];
+var SERVIZI=['18 anni','Compleanno','Comunione','Battesimo','Matrimonio','Laurea','Evento','Shooting di moda','Ritratto','Shooting band o copertina','Fotografia sportiva','Videoclip','Video aziendale','Contenuti social','Cortometraggio','Video','Altro'];
 function formGoogle(){
   var oggi=new Date().toISOString().slice(0,10);
   return '<form class="item gform" id="glink" style="border-color:var(--steel)"><div class="meta"><b>Google</b><span>Link per lasciare una recensione su Google: nel Profilo dell\'attività → «Chiedi recensioni» → copia il link</span></div>'

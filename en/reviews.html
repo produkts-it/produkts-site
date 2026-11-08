@@ -361,13 +361,13 @@ var show=n==='reload'||(n!=='back_forward'&&!same);if(show&&!matchMedia('(prefer
 <div style="display: flex; flex-direction: column; gap: 8px">
 <label for="rv-tipo" style="font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: #9A948C">Service</label>
 <select id="rv-tipo" class="field" data-act-change="service" style="height: 52px; background: #080808; border: 1px solid #3A3A3A; color: #E8E4DF; padding: 0 12px; font-family: 'Space Grotesk', sans-serif; font-size: 16px; box-sizing: border-box">
-<option value="18 anni">18th birthday</option><option value="Compleanno">Birthday</option><option value="Comunione">First Communion</option><option value="Battesimo">Christening</option><option value="Evento">Event</option><option value="Shooting band o copertina">Band or cover shoot</option><option value="Fotografia sportiva">Sports photography</option><option value="Altro">Other</option>
+<option value="18 anni">18th birthday</option><option value="Compleanno">Birthday</option><option value="Comunione">First Communion</option><option value="Battesimo">Christening</option><option value="Matrimonio">Wedding</option><option value="Laurea">Graduation</option><option value="Evento">Event</option><option value="Shooting di moda">Fashion shoot</option><option value="Ritratto">Portrait</option><option value="Shooting band o copertina">Band or cover shoot</option><option value="Fotografia sportiva">Sports photography</option><option value="Videoclip">Music video</option><option value="Video aziendale">Corporate video</option><option value="Contenuti social">Social content</option><option value="Cortometraggio">Short film</option><option value="Altro">Other</option>
 </select>
 </div>
 <div class="if" data-if="isOther" hidden>
 <div class="field-in" style="grid-column: 1 / -1; display: flex; flex-direction: column; gap: 8px">
 <label for="rv-altro" style="font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: #9A948C">Which service?</label>
-<input id="rv-altro" class="field" type="text" required placeholder="E.g. graduation, portrait, corporate video" style="height: 52px; background: #080808; border: 1px solid #3A3A3A; color: #E8E4DF; padding: 0 16px; font-family: 'Space Grotesk', sans-serif; font-size: 16px; box-sizing: border-box">
+<input id="rv-altro" class="field" type="text" required placeholder="Tell us in a few words" style="height: 52px; background: #080808; border: 1px solid #3A3A3A; color: #E8E4DF; padding: 0 16px; font-family: 'Space Grotesk', sans-serif; font-size: 16px; box-sizing: border-box">
 </div>
 </div>
 </div>
@@ -417,10 +417,10 @@ function apply(){
 PK.acts.filter=function(c){if(c===cat)return;PK.vt(function(){cat=c;all=false;apply()})};
 PK.acts.toggleAll=function(){PK.vt(function(){all=!all;apply()})};
 /* Recensioni approvate dal pannello /admin: si aggiungono a quelle già nella pagina.
-   In evidenza in cima; le altre subito dopo quelle in evidenza, dalla più recente. */
+   Sempre in cima, dalla più recente (sono tutte più nuove di quelle scritte nella pagina). */
 fetch('/api/recensioni').then(function(r){return r.ok?r.json():[]}).then(function(list){
   if(!Array.isArray(list)||!list.length)return;
-  var tpl=cards[0],firstPlain=cards.filter(function(c){return !c.hasAttribute('data-featured')})[0]||null,somma=cards.length*5;
+  var tpl=cards[0],somma=cards.length*5;
   var top=grid.firstChild;
   list.forEach(function(r){
     var a=tpl.cloneNode(true);a.setAttribute('data-cat',r.categoria||'');a.style.viewTransitionName='rv-db'+r.id;a.hidden=false;
@@ -429,8 +429,8 @@ fetch('/api/recensioni').then(function(r){return r.ok?r.json():[]}).then(functio
     var sp=a.querySelectorAll('span');sp[sp.length-2].textContent=r.nome;sp[sp.length-1].textContent=r.servizio;
     /* recensione lasciata sul profilo Google (Karim la copia dal pannello): bollino «Google» accanto al nome */
     if(r.google){var g=d.createElement('small');g.textContent=' · Google';g.style.cssText='font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: #9A948C';sp[sp.length-2].appendChild(g)}
-    /* l'elenco arriva già ordinato (in evidenza, poi dalla più recente): inserendo prima dello stesso punto l'ordine resta quello */
-    if(r.in_evidenza){a.setAttribute('data-featured','');grid.insertBefore(a,top)}else{a.removeAttribute('data-featured');grid.insertBefore(a,firstPlain)}
+    /* l'elenco arriva già ordinato dalla più recente: inserendo prima dello stesso punto l'ordine resta quello */
+    if(r.in_evidenza)a.setAttribute('data-featured','');else a.removeAttribute('data-featured');grid.insertBefore(a,top);
     somma+=r.voto;
   });
   cards=[].slice.call(grid.querySelectorAll('article[data-cat]'));
