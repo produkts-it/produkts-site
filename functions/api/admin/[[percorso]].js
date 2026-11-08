@@ -2,7 +2,7 @@
 //   GET  /api/admin/contatti            elenco richieste
 //   POST /api/admin/contatti/:id        { letto: true|false }
 //   GET  /api/admin/recensioni          tutte le recensioni
-//   POST /api/admin/recensioni/:id      { stato: 'approvata'|'rifiutata'|'attesa', in_evidenza: true|false }
+//   POST /api/admin/recensioni/:id      { stato: 'approvata'|'rifiutata'|'attesa', in_evidenza: true|false, servizio }
 //   POST /api/admin/recensioni          { nome, cognome, servizio, voto, testo, data } → recensione copiata da Google, subito approvata
 //   GET|POST /api/admin/google          { recensione } link di Google per lasciare una recensione
 //   GET  /api/admin/push/chiave         chiave pubblica VAPID per "Attiva notifiche"
@@ -75,6 +75,11 @@ export async function onRequest({ request, env, params }) {
     const d = (await corpo(request)) || {};
     if (d.stato && !['approvata', 'rifiutata', 'attesa'].includes(d.stato)) return json({ errore: 'Stato non valido.' }, 400);
     if (d.stato) await env.DB.prepare('UPDATE recensioni SET stato = ? WHERE id = ?').bind(d.stato, n).run();
+    if (d.servizio !== undefined) {   // tipologia scelta male dal cliente: la corregge Karim
+      const servizio = testo(d.servizio, 60);
+      if (!servizio) return json({ errore: 'Scegli la tipologia.' }, 400);
+      await env.DB.prepare('UPDATE recensioni SET servizio = ? WHERE id = ?').bind(servizio, n).run();
+    }
     if (typeof d.in_evidenza === 'boolean') await env.DB.prepare('UPDATE recensioni SET in_evidenza = ? WHERE id = ?').bind(d.in_evidenza ? 1 : 0, n).run();
     return json({ ok: true });
   }

@@ -34,6 +34,7 @@ h2{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:400;font
 .az button{height:40px;padding:0 16px;border:1px solid #3A3A3A;background:transparent;color:var(--fg);font:inherit;font-size:12px;letter-spacing:.12em;text-transform:uppercase;cursor:pointer}
 .az a.wa{display:inline-flex;align-items:center;height:40px;padding:0 16px;background:var(--fg);color:var(--bg);font-size:12px;letter-spacing:.12em;text-transform:uppercase;text-decoration:none}
 .az button.on{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.az select{height:40px;padding:0 12px;border:1px solid #3A3A3A;background:var(--bg);color:var(--fg);font:inherit;font-size:13px;max-width:100%}.az select:focus{outline:none;border-color:var(--ember)}
 .push{margin-top:24px;padding:16px 20px;border:1px solid var(--line);display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;justify-content:space-between;color:var(--muted);font-size:14px;line-height:1.5}
 .push.on{border-color:var(--steel)}
 .push[hidden]{display:none}
@@ -331,15 +332,16 @@ async function apriDl(id){
 /* Recensioni da Google: Karim copia qui quelle lasciate sul profilo Google (vanno subito sul sito col bollino «Google»).
    Il link di Google per lasciare una recensione lo usano la pagina Recensioni («Lasciala anche su Google») e «Chiedi una recensione». */
 var GLINK=null;
+/* Tipologie delle recensioni (le stesse del modulo sul sito, più qualcuna che si può mettere solo da qui) */
+var SERVIZI=['18 anni','Compleanno','Comunione','Battesimo','Evento','Shooting band o copertina','Shooting di moda','Fotografia sportiva','Video','Altro'];
 function formGoogle(){
   var oggi=new Date().toISOString().slice(0,10);
-  var servizi=['18 anni','Compleanno','Comunione','Battesimo','Evento','Shooting band o copertina','Fotografia sportiva','Video','Altro'];
   return '<form class="item gform" id="glink" style="border-color:var(--steel)"><div class="meta"><b>Google</b><span>Link per lasciare una recensione su Google: nel Profilo dell\'attività → «Chiedi recensioni» → copia il link</span></div>'
    +'<div class="gcampi"><label style="flex-basis:100%">Link di Google<input name="recensione" value="'+e(GLINK||'')+'" placeholder="https://g.page/r/…/review"></label></div>'
    +'<div class="az"><button type="submit" class="on">Salva link</button><button type="button" data-gnuova="1">Aggiungi recensione da Google</button></div><p class="gesito" hidden></p></form>'
    +'<form class="item gform" id="gnuova" hidden style="border-color:var(--steel)"><div class="meta"><b>Recensione da Google</b><span>Copiala com\'è dal profilo Google: va subito sul sito, col bollino «Google»</span></div>'
    +'<div class="gcampi"><label>Nome<input name="nome" required></label><label>Cognome<input name="cognome" placeholder="(se c\'è)"></label>'
-   +'<label>Servizio<select name="servizio">'+servizi.map(function(x){return '<option>'+x+'</option>'}).join('')+'</select></label>'
+   +'<label>Servizio<select name="servizio">'+SERVIZI.map(function(x){return '<option>'+x+'</option>'}).join('')+'</select></label>'
    +'<label>Stelle<select name="voto"><option>5</option><option>4</option><option>3</option><option>2</option><option>1</option></select></label>'
    +'<label>Data<span class="gdata"><input name="data" type="date" value="'+oggi+'"></span></label>'
    +'<label style="flex-basis:100%">Testo<textarea name="testo" rows="4" required></textarea></label></div>'
@@ -356,6 +358,8 @@ document.addEventListener('submit',async function(ev){
   }catch(err){es.hidden=false;es.className='gesito err';es.textContent=err.message}
   finally{b.disabled=false;b.textContent=t}
 });
+document.addEventListener('change',async function(ev){var sel=ev.target.closest('[data-rserv]');if(!sel)return;
+  try{await api('recensioni/'+sel.dataset.rserv,{servizio:sel.value});carica()}catch(err){lista.insertAdjacentHTML('afterbegin','<p class="err">'+e(err.message)+'</p>')}});
 document.addEventListener('click',function(ev){var b=ev.target.closest('[data-gnuova]');if(!b)return;var f=document.getElementById('gnuova');if(!f)return;
   f.hidden=b.dataset.gnuova!=='1';if(!f.hidden)f.elements.nome.focus()});
 function rec(r){
@@ -363,7 +367,10 @@ function rec(r){
    +'<div style="font-size:18px">'+e((r.nome+' '+(r.cognome||'')).trim())+'</div><div class="testo">'+e(r.testo)+'</div>'
    +'<div class="az"><button type="button" data-rec="'+r.id+'" data-stato="approvata"'+(r.stato==='approvata'?' class="on"':'')+'>Approva</button>'
    +'<button type="button" data-rec="'+r.id+'" data-stato="rifiutata"'+(r.stato==='rifiutata'?' class="on"':'')+'>Rifiuta</button>'
-   +'<button type="button" data-rec="'+r.id+'" data-evid="'+(r.in_evidenza?0:1)+'"'+(r.in_evidenza?' class="on"':'')+'>In evidenza</button></div></div>';
+   +'<button type="button" data-rec="'+r.id+'" data-evid="'+(r.in_evidenza?0:1)+'"'+(r.in_evidenza?' class="on"':'')+'>In evidenza</button>'
+   /* Tipologia sbagliata dal cliente: si corregge da qui (il testo invece non si tocca mai) */
+   +'<select data-rserv="'+r.id+'" aria-label="Tipologia">'+(SERVIZI.indexOf(r.servizio)<0?'<option selected>'+e(r.servizio)+'</option>':'')
+   +SERVIZI.map(function(x){return '<option'+(x===r.servizio?' selected':'')+'>'+x+'</option>'}).join('')+'</select></div></div>';
 }
 function con(c){
   /* Dal 10/2026 il recapito è il telefono (le richieste più vecchie possono avere un'email) */
