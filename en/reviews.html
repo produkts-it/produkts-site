@@ -27,7 +27,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&amp;family=Space+Grotesk:wght@400;500&amp;display=swap">
-<link rel="stylesheet" href="/assets/site.css?v=55d5370d">
+<link rel="stylesheet" href="/assets/site.css?v=8f0dea8d">
 <script>try{(function(){var n=(performance.getEntriesByType&&performance.getEntriesByType('navigation')[0]||{}).type,r=document.referrer,same=false;try{same=!!r&&new URL(r).origin===location.origin}catch(e){}
 var show=n==='reload'||(n!=='back_forward'&&!same);if(show&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('intro')})()}catch(e){}</script>
 </head>
@@ -126,7 +126,7 @@ var show=n==='reload'||(n!=='back_forward'&&!same);if(show&&!matchMedia('(prefer
 </div>
 </article>
 
-<article data-featured class="card reveal" data-cat="" style="view-transition-name: rv-libertasaltamura; border: 1px solid #1F1F1F; padding: 36px; display: flex; flex-direction: column; gap: 24px; justify-content: space-between">
+<article data-featured class="card reveal" data-cat="Sport" style="view-transition-name: rv-libertasaltamura; border: 1px solid #1F1F1F; padding: 36px; display: flex; flex-direction: column; gap: 24px; justify-content: space-between">
 <div style="display: flex; flex-direction: column; gap: 20px">
 <span role="img" aria-label="5 out of 5 stars" style="color: #B46428; letter-spacing: 0.2em; font-size: 16px">★★★★★</span>
 <p style="margin: 0; font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300; font-size: 26px; line-height: 1.35">Il nostro fotografo di basket è stato straordinario, con competenza e passione senza pari nella fotografia sportiva, catturando momenti indimenticabili in ogni partita.</p>
@@ -137,7 +137,7 @@ var show=n==='reload'||(n!=='back_forward'&&!same);if(show&&!matchMedia('(prefer
 </div>
 </article>
 
-<article class="card reveal" data-cat="" style="view-transition-name: rv-davided; border: 1px solid #1F1F1F; padding: 36px; display: flex; flex-direction: column; gap: 24px; justify-content: space-between">
+<article class="card reveal" data-cat="Band e copertine" style="view-transition-name: rv-davided; border: 1px solid #1F1F1F; padding: 36px; display: flex; flex-direction: column; gap: 24px; justify-content: space-between">
 <div style="display: flex; flex-direction: column; gap: 20px">
 <span role="img" aria-label="5 out of 5 stars" style="color: #B46428; letter-spacing: 0.2em; font-size: 16px">★★★★★</span>
 <p style="margin: 0; font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300; font-size: 26px; line-height: 1.35">Molto professionale e molto bravo!</p>
@@ -148,7 +148,7 @@ var show=n==='reload'||(n!=='back_forward'&&!same);if(show&&!matchMedia('(prefer
 </div>
 </article>
 
-<article class="card reveal" data-cat="" style="view-transition-name: rv-felicel; border: 1px solid #1F1F1F; padding: 36px; display: flex; flex-direction: column; gap: 24px; justify-content: space-between">
+<article class="card reveal" data-cat="Eventi" style="view-transition-name: rv-felicel; border: 1px solid #1F1F1F; padding: 36px; display: flex; flex-direction: column; gap: 24px; justify-content: space-between">
 <div style="display: flex; flex-direction: column; gap: 20px">
 <span role="img" aria-label="5 out of 5 stars" style="color: #B46428; letter-spacing: 0.2em; font-size: 16px">★★★★★</span>
 <p style="margin: 0; font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300; font-size: 26px; line-height: 1.35">Bella qualità!</p>
@@ -414,6 +414,22 @@ function apply(){
   d.querySelectorAll('[data-act^="filter:"]').forEach(function(b){var on=b.getAttribute('data-act')==='filter:'+cat;
     b.setAttribute('aria-pressed',on);b.style.color=on?'#E8E4DF':'#9A948C';b.style.borderBottomColor=on?'#B46428':'transparent'});
 }
+/* Filtri: una voce per ogni tipologia che ha almeno una recensione (le nuove si aggiungono da sole) */
+var CAT={'18 anni':'18 anni','Compleanno':'Compleanni','Comunione':'Comunioni','Battesimo':'Battesimi','Matrimonio':'Matrimoni','Laurea':'Lauree',
+  'Evento':'Eventi','Shooting di moda':'Moda','Ritratto':'Ritratti','Shooting band o copertina':'Band e copertine','Fotografia sportiva':'Sport',
+  'Videoclip':'Videoclip','Video aziendale':'Video aziendali','Contenuti social':'Social','Cortometraggio':'Cortometraggi'};
+var CAT_EN={'Matrimoni':'Weddings','Lauree':'Graduations','Eventi':'Events','Moda':'Fashion','Ritratti':'Portraits','Band e copertine':'Bands and covers',
+  'Sport':'Sports','Videoclip':'Music videos','Video aziendali':'Corporate videos','Social':'Social','Cortometraggi':'Short films'};
+function filtri(){
+  var rail=d.querySelector('[data-act="filter:Tutte"]').parentNode,mod=rail.querySelector('[data-act^="filter:"]:last-of-type'),usate={};
+  cards.forEach(function(c){usate[c.getAttribute('data-cat')]=1});
+  var ordine=[];for(var k in CAT)if(ordine.indexOf(CAT[k])<0)ordine.push(CAT[k]);
+  ordine.forEach(function(c){
+    var b=rail.querySelector('[data-act="filter:'+c+'"]');
+    if(!b&&usate[c]){b=mod.cloneNode(true);b.setAttribute('data-act','filter:'+c);b.textContent=d.documentElement.lang==='en'&&CAT_EN[c]||c;rail.appendChild(b)}
+    if(b)b.hidden=!usate[c];
+  });
+}
 PK.acts.filter=function(c){if(c===cat)return;PK.vt(function(){cat=c;all=false;apply()})};
 PK.acts.toggleAll=function(){PK.vt(function(){all=!all;apply()})};
 /* Recensioni approvate dal pannello /admin: si aggiungono a quelle già nella pagina.
@@ -423,7 +439,7 @@ fetch('/api/recensioni').then(function(r){return r.ok?r.json():[]}).then(functio
   var tpl=cards[0],somma=cards.length*5;
   var top=grid.firstChild;
   list.forEach(function(r){
-    var a=tpl.cloneNode(true);a.setAttribute('data-cat',r.categoria||'');a.style.viewTransitionName='rv-db'+r.id;a.hidden=false;
+    var a=tpl.cloneNode(true);a.setAttribute('data-cat',CAT[r.servizio]||'');a.style.viewTransitionName='rv-db'+r.id;a.hidden=false;
     var st=a.querySelector('[role="img"]');st.textContent='★'.repeat(r.voto)+'☆'.repeat(5-r.voto);st.setAttribute('aria-label',r.voto+' out of 5 stars');
     a.querySelector('p').textContent=r.testo;
     var sp=a.querySelectorAll('span');sp[sp.length-2].textContent=r.nome;sp[sp.length-1].textContent=r.servizio;
@@ -434,6 +450,7 @@ fetch('/api/recensioni').then(function(r){return r.ok?r.json():[]}).then(functio
     somma+=r.voto;
   });
   cards=[].slice.call(grid.querySelectorAll('article[data-cat]'));
+  filtri();
   d.getElementById('rv-num').textContent=cards.length;
   d.getElementById('rv-media').textContent=(Math.round(somma/cards.length*10)/10).toFixed(1).replace('.',',');
   apply();
@@ -468,7 +485,7 @@ PK.acts.send=function(){
   });
 };
 PK.acts.reset=function(){gBox.hidden=true;d.querySelector('[data-google-ok]').hidden=true;show('sent',false);show('notSent',true);show('isOther',false);stars(5);PK.turnstileReset(ts)};
-apply();
+filtri();apply();
 })();
 </script>
 <!--/email_off--></body>
